@@ -77,56 +77,15 @@
           rgba(0, 0, 0, 0.10) 100%);
     }
 
-    /* Architectural White Frame & Notched Header Cutouts */
-    .canvas-frame-mask {
-      position: fixed;
-      inset: 14px;
-      border-radius: 26px;
-      box-shadow: 0 0 0 48px #ffffff;
-      pointer-events: none;
-      z-index: 80;
-    }
-
-    .header-wing {
-      position: fixed;
-      top: 14px;
-      height: 58px;
-      background: #ffffff;
-      z-index: 85;
-      pointer-events: none;
-      transition: width 0.35s cubic-bezier(0.16, 1, 0.3, 1),
-        height 0.35s cubic-bezier(0.16, 1, 0.3, 1);
-    }
-
-    /* Full-White Intro Curtain & Centered Flying Logo */
-    .intro-curtain {
+    /* Single Unified Architectural White Frame & Animated Notched Header */
+    .architectural-frame-svg {
       position: fixed;
       inset: 0;
       width: 100vw;
       height: 100vh;
-      z-index: 110;
       pointer-events: none;
-      overflow: hidden;
-      will-change: opacity;
-    }
-
-    .intro-solid-bg {
-      position: absolute;
-      inset: 0;
-      background: #ffffff;
-      pointer-events: none;
-    }
-
-    .intro-window-aperture {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      width: 0px;
-      height: 0px;
-      border-radius: 26px;
-      box-shadow: 0 0 0 150vmax #ffffff;
-      will-change: width, height, border-radius;
+      z-index: 85;
+      display: block;
     }
 
     .intro-logo-flight {
@@ -150,48 +109,6 @@
 
     .intro-logo-flight .dot {
       color: var(--primary-orange);
-    }
-
-    .header-wing-left {
-      left: 14px;
-      width: clamp(190px, 21vw, 260px);
-      border-bottom-right-radius: 26px;
-    }
-
-    .header-wing-right {
-      right: 14px;
-      width: clamp(205px, 21vw, 256px);
-      border-bottom-left-radius: 26px;
-    }
-
-    .wing-fillet {
-      position: absolute;
-      width: 24px;
-      height: 24px;
-      pointer-events: none;
-      display: block;
-    }
-
-    .header-wing-left .wing-fillet-side {
-      top: 0;
-      right: -24px;
-    }
-
-    .header-wing-left .wing-fillet-bottom {
-      left: 0;
-      bottom: -24px;
-    }
-
-    .header-wing-right .wing-fillet-side {
-      top: 0;
-      left: -24px;
-      transform: rotate(90deg);
-    }
-
-    .header-wing-right .wing-fillet-bottom {
-      right: 0;
-      bottom: -24px;
-      transform: rotate(90deg);
     }
 
     /* Top Header Navigation Layer */
@@ -235,6 +152,7 @@
       user-select: none;
       white-space: nowrap;
       flex-shrink: 0;
+      opacity: 0;
       transition: transform 0.2s ease;
     }
 
@@ -252,6 +170,7 @@
       justify-content: center;
       height: 100%;
       padding: 0 20px;
+      opacity: 0;
     }
 
     .nav-links {
@@ -313,6 +232,7 @@
       justify-content: flex-end;
       padding: 0 18px;
       gap: 6px;
+      opacity: 0;
     }
 
     .header-cta-group {
@@ -1180,14 +1100,6 @@
 
             /* Responsive Breakpoints */
             @media (max-width: 1024px) {
-              .header-wing-left {
-                width: 180px;
-              }
-
-              .header-wing-right {
-                width: 196px;
-              }
-
               .navbar {
                 grid-template-columns: 180px 1fr 196px;
               }
@@ -1211,50 +1123,6 @@
             }
 
             @media (max-width: 860px) {
-              .canvas-frame-mask {
-                inset: 8px;
-                border-radius: 18px;
-                box-shadow: 0 0 0 32px #ffffff;
-              }
-
-              .header-wing {
-                top: 8px;
-                height: 48px;
-              }
-
-              .header-wing-left {
-                left: 8px;
-                width: 162px;
-                border-bottom-right-radius: 18px;
-              }
-
-              .header-wing-right {
-                right: 8px;
-                width: 112px;
-                border-bottom-left-radius: 18px;
-              }
-
-              .wing-fillet {
-                width: 18px;
-                height: 18px;
-              }
-
-              .header-wing-left .wing-fillet-side {
-                right: -18px;
-              }
-
-              .header-wing-left .wing-fillet-bottom {
-                bottom: -18px;
-              }
-
-              .header-wing-right .wing-fillet-side {
-                left: -18px;
-              }
-
-              .header-wing-right .wing-fillet-bottom {
-                bottom: -18px;
-              }
-
               .navbar-container {
                 top: 8px;
                 left: 8px;
@@ -1263,7 +1131,7 @@
               }
 
               .navbar {
-                grid-template-columns: 162px 1fr 112px;
+                grid-template-columns: 158px 1fr 124px;
               }
 
               .nav-brand-zone {
@@ -1276,6 +1144,7 @@
 
               .intro-logo-flight {
                 font-size: 18px;
+                transform: translate3d(50vw, 50vh, 0) translate(-50%, -50%) scale(1.65);
               }
 
               .nav-center-zone {
@@ -1393,24 +1262,11 @@
   <!-- Ambient Vignette Contrast -->
   <div class="viewport-overlay"></div>
 
-  <!-- Architectural White Frame & Notched Header Wings -->
-  <div class="canvas-frame-mask" aria-hidden="true"></div>
-  <div class="header-wing header-wing-left" aria-hidden="true">
-    <svg class="wing-fillet wing-fillet-side" viewBox="0 0 24 24" fill="none">
-      <path d="M0 0 H24 A24 24 0 0 0 0 24 Z" fill="#ffffff" />
-    </svg>
-    <svg class="wing-fillet wing-fillet-bottom" viewBox="0 0 24 24" fill="none">
-      <path d="M0 0 H24 A24 24 0 0 0 0 24 Z" fill="#ffffff" />
-    </svg>
-  </div>
-  <div class="header-wing header-wing-right" aria-hidden="true">
-    <svg class="wing-fillet wing-fillet-side" viewBox="0 0 24 24" fill="none">
-      <path d="M0 0 H24 A24 24 0 0 0 0 24 Z" fill="#ffffff" />
-    </svg>
-    <svg class="wing-fillet wing-fillet-bottom" viewBox="0 0 24 24" fill="none">
-      <path d="M0 0 H24 A24 24 0 0 0 0 24 Z" fill="#ffffff" />
-    </svg>
-  </div>
+  <!-- Single Unified Architectural White Frame & Animated Notched Header -->
+  <svg class="architectural-frame-svg" id="architectural-frame-svg" aria-hidden="true">
+    <path id="architectural-frame-path" d="M0 0 H10000 V10000 H0 Z" fill="#ffffff" fill-rule="evenodd" />
+  </svg>
+  <div class="intro-logo-flight" id="intro-logo" aria-hidden="true">tanogaido<span class="dot">.</span></div>
 
   <!-- Top Header Navigation -->
   <div class="navbar-container">
@@ -1447,13 +1303,6 @@
       </div>
     </nav>
   </div>
-
-  <!-- Full-White Intro Window Curtain & Centered Flying Logo -->
-  <div class="intro-curtain" id="intro-curtain" aria-hidden="true">
-    <div class="intro-solid-bg" id="intro-solid-bg"></div>
-    <div class="intro-window-aperture" id="intro-window-aperture"></div>
-  </div>
-  <div class="intro-logo-flight" id="intro-logo" aria-hidden="true">tanogaido<span class="dot">.</span></div>
 
   <!-- Mobile Drawer Menu Modal -->
   <div class="mobile-menu-overlay" id="mobile-menu-modal">
@@ -1899,9 +1748,8 @@
       const headerBrandLogo = document.getElementById('header-brand-logo');
       const navCenterZone = document.getElementById('nav-center-zone');
       const navActionsZone = document.getElementById('nav-actions-zone');
-      const introCurtain = document.getElementById('intro-curtain');
-      const introSolidBg = document.getElementById('intro-solid-bg');
-      const introWindowAperture = document.getElementById('intro-window-aperture');
+      const architecturalFrameSvg = document.getElementById('architectural-frame-svg');
+      const architecturalFramePath = document.getElementById('architectural-frame-path');
       const introLogo = document.getElementById('intro-logo');
 
       const heroView = document.getElementById('hero-view');
@@ -2133,17 +1981,106 @@
         return Math.max(0, Math.min(1, scrollTop / maxScroll));
       }
 
+      let lastFramePathState = '';
+
+      function buildUnifiedFramePath(w, h, tIntro) {
+        const isMobile = w <= 860;
+        const isTablet = w <= 1024;
+        const pad = isMobile ? 8 : 14;
+        const targetR = isMobile ? 18 : 24;
+        const targetWingH = isMobile ? 48 : 58;
+        const targetWingL = isMobile ? 158 : (isTablet ? 180 : clamp(0.21 * w, 190, 260));
+        const targetWingR = isMobile ? 124 : (isTablet ? 196 : clamp(0.21 * w, 205, 256));
+
+        const targetW = Math.max(0, w - pad * 2);
+        const targetH = Math.max(0, h - pad * 2);
+
+        const tWindow = clamp((tIntro - 0.04) / 0.96, 0, 1);
+        const tWindowEase = easeInOutQuart(tWindow);
+
+        const curW = targetW * tWindowEase;
+        const curH = targetH * tWindowEase;
+        const outer = `M 0 0 H ${w} V ${h} H 0 Z`;
+
+        if (curW <= 4 || curH <= 4) {
+          return outer;
+        }
+
+        const L = (w - curW) / 2;
+        const R = L + curW;
+        const T = (h - curH) / 2;
+        const B = T + curH;
+
+        const wRatio = targetW > 0 ? curW / targetW : 1;
+        const wingEase = easeOutCubic(clamp((tWindow - 0.16) / 0.74, 0, 1));
+        const wL = targetWingL * wRatio;
+        const wR = targetWingR * wRatio;
+        const wH = Math.min(targetWingH * wingEase, curH * 0.42);
+        const notchSpan = curW - wL - wR;
+
+        if (wH <= 2.5 || notchSpan <= 8) {
+          const rSimple = Math.max(0, Math.min(targetR, curW / 2, curH / 2));
+          if (rSimple <= 0.5) {
+            return `${outer} M ${L.toFixed(1)} ${T.toFixed(1)} H ${R.toFixed(1)} V ${B.toFixed(1)} H ${L.toFixed(1)} Z`;
+          }
+          return `${outer} ` +
+            `M ${(L + rSimple).toFixed(1)} ${T.toFixed(1)} ` +
+            `H ${(R - rSimple).toFixed(1)} ` +
+            `A ${rSimple.toFixed(1)} ${rSimple.toFixed(1)} 0 0 1 ${R.toFixed(1)} ${(T + rSimple).toFixed(1)} ` +
+            `V ${(B - rSimple).toFixed(1)} ` +
+            `A ${rSimple.toFixed(1)} ${rSimple.toFixed(1)} 0 0 1 ${(R - rSimple).toFixed(1)} ${B.toFixed(1)} ` +
+            `H ${(L + rSimple).toFixed(1)} ` +
+            `A ${rSimple.toFixed(1)} ${rSimple.toFixed(1)} 0 0 1 ${L.toFixed(1)} ${(B - rSimple).toFixed(1)} ` +
+            `V ${(T + rSimple).toFixed(1)} ` +
+            `A ${rSimple.toFixed(1)} ${rSimple.toFixed(1)} 0 0 1 ${(L + rSimple).toFixed(1)} ${T.toFixed(1)} Z`;
+        }
+
+        const rMaxW = Math.min(wL / 2.05, wR / 2.05, notchSpan / 2.05, curW / 6);
+        const rMaxH = Math.min(wH / 2.05, (curH - wH) / 2.05);
+        const r = Math.max(0, Math.min(targetR, rMaxW, rMaxH));
+
+        const x1 = L + wL;
+        const x2 = R - wR;
+        const yW = T + wH;
+
+        return `${outer} ` +
+          `M ${(x1 + r).toFixed(1)} ${T.toFixed(1)} ` +
+          `L ${(x2 - r).toFixed(1)} ${T.toFixed(1)} ` +
+          `A ${r.toFixed(1)} ${r.toFixed(1)} 0 0 1 ${x2.toFixed(1)} ${(T + r).toFixed(1)} ` +
+          `L ${x2.toFixed(1)} ${(yW - r).toFixed(1)} ` +
+          `A ${r.toFixed(1)} ${r.toFixed(1)} 0 0 0 ${(x2 + r).toFixed(1)} ${yW.toFixed(1)} ` +
+          `L ${(R - r).toFixed(1)} ${yW.toFixed(1)} ` +
+          `A ${r.toFixed(1)} ${r.toFixed(1)} 0 0 1 ${R.toFixed(1)} ${(yW + r).toFixed(1)} ` +
+          `L ${R.toFixed(1)} ${(B - r).toFixed(1)} ` +
+          `A ${r.toFixed(1)} ${r.toFixed(1)} 0 0 1 ${(R - r).toFixed(1)} ${B.toFixed(1)} ` +
+          `L ${(L + r).toFixed(1)} ${B.toFixed(1)} ` +
+          `A ${r.toFixed(1)} ${r.toFixed(1)} 0 0 1 ${L.toFixed(1)} ${(B - r).toFixed(1)} ` +
+          `L ${L.toFixed(1)} ${(yW + r).toFixed(1)} ` +
+          `A ${r.toFixed(1)} ${r.toFixed(1)} 0 0 1 ${(L + r).toFixed(1)} ${yW.toFixed(1)} ` +
+          `L ${(x1 - r).toFixed(1)} ${yW.toFixed(1)} ` +
+          `A ${r.toFixed(1)} ${r.toFixed(1)} 0 0 0 ${x1.toFixed(1)} ${(yW - r).toFixed(1)} ` +
+          `L ${x1.toFixed(1)} ${(T + r).toFixed(1)} ` +
+          `A ${r.toFixed(1)} ${r.toFixed(1)} 0 0 1 ${(x1 + r).toFixed(1)} ${T.toFixed(1)} Z`;
+      }
+
       function updateUIProgress(progress) {
         const w = window.innerWidth;
         const h = window.innerHeight;
         const isMobile = w <= 860;
         const INTRO_END = 0.095;
 
-        // 1. Intro Full-White Window Opening & Centered Logo Flight (0.000 -> 0.095)
+        // 1. Unified White Architectural Frame + Notched Header Morph & Logo Flight (0.000 -> 0.095)
         const tIntro = clamp(progress / INTRO_END, 0, 1);
         const tLogoEase = easeInOutCubic(tIntro);
-        const tWindow = clamp((tIntro - 0.06) / 0.94, 0, 1);
-        const tWindowEase = easeInOutQuart(tWindow);
+
+        if (architecturalFrameSvg && architecturalFramePath) {
+          const stateKey = `${w}x${h}:${tIntro >= 1 ? 1 : tIntro.toFixed(4)}`;
+          if (stateKey !== lastFramePathState) {
+            architecturalFrameSvg.setAttribute('viewBox', `0 0 ${w} ${h}`);
+            architecturalFramePath.setAttribute('d', buildUnifiedFramePath(w, h, tIntro));
+            lastFramePathState = stateKey;
+          }
+        }
 
         if (introLogo && headerBrandLogo) {
           if (tIntro < 0.995) {
@@ -2166,38 +2103,16 @@
           }
         }
 
-        if (introCurtain && introWindowAperture) {
-          if (tIntro < 0.995) {
-            const pad = isMobile ? 8 : 14;
-            const targetRadius = isMobile ? 18 : 26;
-            const targetW = Math.max(0, w - pad * 2);
-            const targetH = Math.max(0, h - pad * 2);
-
-            const curW = targetW * tWindowEase;
-            const curH = targetH * tWindowEase;
-            const curR = Math.min(targetRadius, curW / 2, curH / 2);
-
-            introCurtain.style.display = 'block';
-            introCurtain.style.opacity = String(1 - clamp((tIntro - 0.92) / 0.075, 0, 1));
-            if (introSolidBg) {
-              introSolidBg.style.opacity = String(1 - clamp(tWindow / 0.12, 0, 1));
-            }
-            introWindowAperture.style.width = `${curW.toFixed(2)}px`;
-            introWindowAperture.style.height = `${curH.toFixed(2)}px`;
-            introWindowAperture.style.borderRadius = `${curR.toFixed(2)}px`;
-          } else {
-            introCurtain.style.display = 'none';
-          }
-        }
-
-        // Reveal header nav links & CTA smoothly as window opens
-        const navReveal = easeOutCubic(clamp((tIntro - 0.42) / 0.58, 0, 1));
+        // Reveal header nav links & CTA smoothly inside the sculpting header notch & right wing
+        const navReveal = easeOutCubic(clamp((tIntro - 0.50) / 0.50, 0, 1));
         if (navCenterZone) {
           navCenterZone.style.opacity = String(navReveal);
+          navCenterZone.style.transform = `translateY(${((1 - navReveal) * -10).toFixed(2)}px)`;
           navCenterZone.style.pointerEvents = navReveal > 0.7 ? 'auto' : 'none';
         }
         if (navActionsZone) {
           navActionsZone.style.opacity = String(navReveal);
+          navActionsZone.style.transform = `translateY(${((1 - navReveal) * -10).toFixed(2)}px)`;
           navActionsZone.style.pointerEvents = navReveal > 0.7 ? 'auto' : 'none';
         }
 
