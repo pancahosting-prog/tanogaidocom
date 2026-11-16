@@ -46,19 +46,15 @@
       overscroll-behavior-y: none;
     }
 
-    /* Fixed Scroll-Scrubbed Hero Video Background */
-    #hero-bg-video {
+    /* Fixed Scroll Animation Canvas */
+    #canvas {
       position: fixed;
       inset: 0;
       width: 100%;
       height: 100%;
-      object-fit: cover;
-      object-position: center center;
       display: block;
       pointer-events: none;
       z-index: 1;
-      background-color: #ffffff;
-      will-change: transform;
     }
 
     /* Soft ambient vignette & left/top contrast scrim to keep typography crystal clear */
@@ -1279,18 +1275,8 @@
 </head>
 
 <body>
-  <!-- Fixed Scroll-Scrubbed Hero Video Background -->
-  <video
-    id="hero-bg-video"
-    src="https://res.cloudinary.com/jd7zbpnp/video/upload/v1794820641/vidbg.webm"
-    muted
-    playsinline
-    webkit-playsinline
-    preload="auto"
-    crossorigin="anonymous"
-    disablepictureinpicture
-    aria-hidden="true"
-  ></video>
+  <!-- Fixed Scroll Animation Canvas -->
+  <canvas id="canvas"></canvas>
 
   <!-- Ambient Vignette Contrast -->
   <div class="viewport-overlay"></div>
@@ -1776,7 +1762,12 @@
         history.scrollRestoration = 'manual';
       }
 
-      const heroBgVideo = document.getElementById('hero-bg-video');
+      const TOTAL_FRAMES = 300;
+      const FRAME_PREFIX = 'frames/ezgif-frame-';
+      const FRAME_EXT = '.jpg';
+
+      const canvas = document.getElementById('canvas');
+      const ctx = canvas.getContext('2d', { alpha: false });
 
       const navbarContainer = document.getElementById('navbar-container');
       const navbar = document.getElementById('main-navbar');
@@ -1856,7 +1847,6 @@
 
       function openSplash(options = {}) {
         const settleAtTop = options.settleAtTop !== false;
-        unlockHeroVideo();
         if (splashState !== 'closed') return;
         const now = performance.now();
         splashTarget = 1;
@@ -1981,13 +1971,16 @@
         });
       }
 
+      const images = new Array(TOTAL_FRAMES);
+      const loaded = new Uint8Array(TOTAL_FRAMES);
+
       let targetProgress = 0;
       let smoothedProgress = 0;
-      let videoDuration = 0;
-      let desiredVideoTime = 0;
-      let smoothedVideoTime = 0;
-      let videoUnlocked = false;
+      let targetFrame = 0;
+      let currentFrame = 0;
+      let lastRenderedFrame = -1;
       let lastTime = performance.now();
+      let isCanvasReady = false;
       let logoTargetMetrics = { x: 100, y: 43 };
       let headerDotMetrics = { x: 145, y: 43 };
 
@@ -2011,53 +2004,62 @@
         }
       }
 
-      function unlockHeroVideo() {
-        if (!heroBgVideo || videoUnlocked) return;
-        videoUnlocked = true;
-        const playPromise = heroBgVideo.play();
-        if (playPromise && typeof playPromise.then === 'function') {
-          playPromise.then(() => {
-            heroBgVideo.pause();
-            syncVideoToDesired(true);
-          }).catch(() => {});
-        }
+      function getFramePath(index) {
+        const frameNum = String(index + 1).padStart(3, '0');
+        return `${FRAME_PREFIX}${frameNum}${FRAME_EXT}`;
       }
 
-      function syncVideoToDesired(force) {
-        if (!heroBgVideo || !videoDuration || heroBgVideo.readyState < 1) return;
-        const clampedTime = clamp(smoothedVideoTime, 0, Math.max(0, videoDuration - 0.03));
-        if (!force && heroBgVideo.seeking) return;
-        if (force || Math.abs(clampedTime - heroBgVideo.currentTime) >= 0.016) {
-          try {
-            heroBgVideo.currentTime = clampedTime;
-          } catch (err) {
-            // Ignore seek errors while metadata buffers
-          }
-        }
+      function resizeCanvas() {
+        const dpr = Math.min(window.devicePixelRatio || 1, 2);
+        const { w, h } = getViewportSize();
+
+        canvas.width = Math.round(w * dpr);
+        canvas.height = Math.round(h * dpr);
+
+        ctx.imageSmoothingEnabled = true;
+        ctx.imageSmoothingQuality = 'high';
+
+        isCanvasReady = true;
+        measureLogoTarget();
+        renderBestFrame();
       }
 
-      if (heroBgVideo) {
-        const updateDuration = () => {
-          if (Number.isFinite(heroBgVideo.duration) && heroBgVideo.duration > 0) {
-            videoDuration = heroBgVideo.duration;
-          }
-        };
-        heroBgVideo.addEventListener('loadedmetadata', () => {
-          updateDuration();
-          heroBgVideo.pause();
-          syncVideoToDesired(true);
-        });
-        heroBgVideo.addEventListener('durationchange', updateDuration);
-        heroBgVideo.addEventListener('loadeddata', () => {
-          updateDuration();
-          heroBgVideo.pause();
-          syncVideoToDesired(true);
-        });
-        heroBgVideo.addEventListener('seeked', () => {
-          if (videoDuration && Math.abs(smoothedVideoTime - heroBgVideo.currentTime) >= 0.02) {
-            syncVideoToDesired(false);
-          }
-        });
+      function getBestAvailableFrame(index) {
+        if (loaded[index]) return images[index];
+        for (let offset = 1; offset < TOTAL_FRAMES; offset++) {
+          const prev = index - offset;
+          if (prev >= 0 && loaded[prev]) return images[prev];
+          const next = index + offset;
+          if (next < TOTAL_FRAMES && loaded[next]) return images[next];
+        }
+        return null;
+      }
+
+      function drawFrame(img) {
+        if (!img || !img.complete || img.naturalWidth === 0) return;
+
+        const cw = canvas.width;
+        const ch = canvas.height;
+        const iw = img.naturalWidth;
+        const ih = img.naturalHeight;
+
+        const scale = Math.max(cw / iw, ch / ih);
+        const nw = Math.round(iw * scale);
+        const nh = Math.round(ih * scale);
+        const nx = Math.round((cw - nw) / 2);
+        const ny = Math.round((ch - nh) / 2);
+
+        ctx.drawImage(img, nx, ny, nw, nh);
+      }
+
+      function renderBestFrame() {
+        if (!isCanvasReady) return;
+        const frameIdx = Math.max(0, Math.min(TOTAL_FRAMES - 1, Math.round(currentFrame)));
+        const img = getBestAvailableFrame(frameIdx);
+        if (img) {
+          drawFrame(img);
+          lastRenderedFrame = frameIdx;
+        }
       }
 
       function getScrollProgress() {
@@ -2239,11 +2241,11 @@
 
         const risePx = Math.max(0, (h - pad) - currentBottomY);
 
-        // Toggle animated video visibility strictly for top cover section only
+        // Toggle animated background visibility strictly for top cover section only
         const coverActive = tCurtainRise < 0.995;
-        if (heroBgVideo) {
-          heroBgVideo.style.display = coverActive ? 'block' : 'none';
-          heroBgVideo.style.transform = coverActive ? `translate3d(0, ${(-risePx * 0.08).toFixed(1)}px, 0) scale(1.06)` : 'none';
+        if (canvas) {
+          canvas.style.display = coverActive ? 'block' : 'none';
+          canvas.style.transform = coverActive ? `translate3d(0, ${(-risePx * 0.08).toFixed(1)}px, 0) scale(1.06)` : 'none';
         }
         if (viewportOverlay) {
           viewportOverlay.style.display = coverActive ? 'block' : 'none';
@@ -2472,11 +2474,10 @@
         }
       }
 
-      function computeTargetVideoTime(progress) {
-        if (!videoDuration) return 0;
-        // Scrub video strictly across top Hero cover section (0 -> 0.25)
+      function computeTargetFrame(progress) {
+        // Animate background Japan frames exclusively during the top Hero cover section (0 -> 0.25)
         const pCover = clamp(progress / 0.25, 0, 1);
-        return pCover * Math.max(0, videoDuration - 0.04);
+        return pCover * (TOTAL_FRAMES - 1);
       }
 
       function handleScrollTrigger() {
@@ -2503,7 +2504,6 @@
 
       // Detect gentle initial wheel / touch nudge to open the initial splashscreen once
       window.addEventListener('wheel', (e) => {
-        unlockHeroVideo();
         if (splashState === 'closed' && e.deltaY > 4) {
           openSplash({ settleAtTop: true });
         }
@@ -2511,7 +2511,6 @@
 
       let touchStartY = null;
       window.addEventListener('touchstart', (e) => {
-        unlockHeroVideo();
         if (splashState === 'closed' && e.touches && e.touches.length === 1) {
           touchStartY = e.touches[0].clientY;
         }
@@ -2530,11 +2529,36 @@
         touchStartY = null;
       }, { passive: true });
 
+      function preloadImages() {
+        const firstImg = new Image();
+        firstImg.src = getFramePath(0);
+        firstImg.onload = () => {
+          images[0] = firstImg;
+          loaded[0] = 1;
+          renderBestFrame();
+        };
+
+        for (let i = 1; i < TOTAL_FRAMES; i++) {
+          const img = new Image();
+          img.src = getFramePath(i);
+          const index = i;
+          img.onload = () => {
+            images[index] = img;
+            loaded[index] = 1;
+            const currentInt = Math.round(currentFrame);
+            if (currentInt === index && isCanvasReady) {
+              drawFrame(img);
+              lastRenderedFrame = index;
+            }
+          };
+        }
+      }
+
       function animate(now) {
         const dt = Math.min((now - lastTime) / 1000, 0.1);
         lastTime = now;
 
-        // Advance programmatic scroll tween when opening splash
+        // Advance programmatic scroll tween when opening/closing splash
         if (scrollTween) {
           const elapsed = now - scrollTween.startTime;
           const u = clamp(elapsed / scrollTween.duration, 0, 1);
@@ -2580,23 +2604,29 @@
           }
         }
 
-        desiredVideoTime = computeTargetVideoTime(smoothedProgress);
+        targetFrame = computeTargetFrame(smoothedProgress);
 
         if (isReducedMotion) {
-          smoothedVideoTime = desiredVideoTime;
+          currentFrame = targetFrame;
         } else {
-          const videoDecay = 12;
-          const videoFactor = 1 - Math.exp(-videoDecay * dt);
-          smoothedVideoTime += (desiredVideoTime - smoothedVideoTime) * videoFactor;
-          if (Math.abs(desiredVideoTime - smoothedVideoTime) < 0.002) {
-            smoothedVideoTime = desiredVideoTime;
+          const frameDecay = 12;
+          const frameFactor = 1 - Math.exp(-frameDecay * dt);
+          currentFrame += (targetFrame - currentFrame) * frameFactor;
+          if (Math.abs(targetFrame - currentFrame) < 0.005) {
+            currentFrame = targetFrame;
           }
         }
 
         updateUIProgress(smoothedProgress, splashRaw);
 
-        if (smoothedProgress < 0.255) {
-          syncVideoToDesired(false);
+        const frameToRender = Math.max(0, Math.min(TOTAL_FRAMES - 1, Math.round(currentFrame)));
+
+        if (frameToRender !== lastRenderedFrame && isCanvasReady) {
+          const img = getBestAvailableFrame(frameToRender);
+          if (img) {
+            drawFrame(img);
+            lastRenderedFrame = frameToRender;
+          }
         }
 
         requestAnimationFrame(animate);
@@ -2606,7 +2636,7 @@
       document.addEventListener('scroll', handleScrollTrigger, { passive: true });
 
       function handleResize() {
-        measureLogoTarget();
+        resizeCanvas();
         lastFramePathState = '';
         targetProgress = getScrollProgress();
         updateUIProgress(smoothedProgress, splashRaw);
@@ -2618,7 +2648,6 @@
       }
 
       window.addEventListener('keydown', (e) => {
-        unlockHeroVideo();
         if (splashState === 'closed' && (e.key === 'ArrowDown' || e.key === 'PageDown' || e.key === ' ')) {
           e.preventDefault();
           openSplash({ settleAtTop: true });
@@ -2636,10 +2665,10 @@
       window.scrollTo(0, 0);
       targetProgress = 0;
       smoothedProgress = 0;
-      desiredVideoTime = 0;
-      smoothedVideoTime = 0;
+      targetFrame = 0;
+      currentFrame = 0;
 
-      measureLogoTarget();
+      resizeCanvas();
       if (document.fonts && document.fonts.ready) {
         document.fonts.ready.then(() => {
           measureLogoTarget();
@@ -2647,6 +2676,7 @@
           updateUIProgress(smoothedProgress, splashRaw);
         });
       }
+      preloadImages();
       updateUIProgress(smoothedProgress, splashRaw);
       requestAnimationFrame(animate);
     })();
