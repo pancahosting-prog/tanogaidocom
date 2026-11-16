@@ -578,7 +578,7 @@
     .white-scroll-track {
       position: relative;
       width: 100%;
-      padding: 96px clamp(24px, 4.5vw, 64px) 72px clamp(24px, 4.5vw, 64px);
+      padding: 28px clamp(24px, 4.5vw, 64px) 72px clamp(24px, 4.5vw, 64px);
       will-change: transform;
     }
 
@@ -1064,7 +1064,7 @@
 
             @media (max-width: 860px) {
               .white-scroll-track {
-                padding: 72px 16px 56px 16px;
+                padding: 20px 16px 56px 16px;
               }
 
               .milestone-card {
@@ -2023,12 +2023,12 @@
         const enterDesc = getHeroEnterProgress(tWindow, 0.50, 0.92);
         const enterCta = getHeroEnterProgress(tWindow, 0.58, 0.98);
 
-        const coverFadeOut = clamp(1 - Math.max(0, tCurtainRise - 0.52) / 0.38, 0, 1);
+        const coverFadeOut = clamp(1 - Math.max(0, tCurtainRise - 0.14) / 0.44, 0, 1);
 
         if (heroView) {
-          const showCover = coverActive && tWindow >= 0.25;
+          const showCover = coverActive && tWindow >= 0.25 && coverFadeOut > 0.005;
           heroView.style.display = showCover ? 'flex' : 'none';
-          heroView.style.transform = `translate3d(0, ${(-risePx * 0.78).toFixed(1)}px, 0)`;
+          heroView.style.transform = `translate3d(0, ${(-risePx * 0.24).toFixed(1)}px, 0)`;
           heroView.style.pointerEvents = (enterCta * coverFadeOut) > 0.25 ? 'auto' : 'none';
         }
 
@@ -2071,33 +2071,34 @@
           }
         }
 
-        // Editorial Services Grid + CTA Track Motion & Smooth Row-by-Row Entrance
+        // Editorial Services Grid + CTA Track: anchored right below rising Hero edge, then scrolls smoothly
         if (whiteScrollTrack) {
+          const headerSafeTop = isMobile ? 60 : 76;
           const trackHeight = whiteScrollTrack.offsetHeight || h;
-          const maxTrackTravel = Math.max(0, trackHeight - h);
+          const maxTrackTravel = Math.max(0, (headerSafeTop + trackHeight) - h);
 
-          let trackY = 0;
+          let trackY = headerSafeTop;
           if (progress < HERO_RISE_END) {
-            const tEnterTrack = easeOutCubic(clamp((progress - 0.08) / (HERO_RISE_END - 0.08), 0, 1));
-            trackY = lerp(Math.round(h * 0.24), 0, tEnterTrack);
+            trackY = Math.max(headerSafeTop, currentBottomY);
           } else {
             const tTrackScroll = clamp((progress - HERO_RISE_END) / (1.0 - HERO_RISE_END), 0, 1);
-            trackY = -tTrackScroll * maxTrackTravel;
+            trackY = headerSafeTop - tTrackScroll * maxTrackTravel;
           }
 
           whiteScrollTrack.style.transform = `translate3d(0, ${trackY.toFixed(1)}px, 0)`;
 
-          const enterGlobal = easeOutCubic(clamp((progress - 0.09) / 0.14, 0, 1));
+          const enterGlobal = easeOutCubic(clamp(tCurtainRise / 0.22, 0, 1));
+          const revealSpan = Math.max(110, Math.min(200, h * 0.24));
           for (let i = 0; i < revealItems.length; i++) {
             const item = revealItems[i];
             const stagger = parseFloat(item.getAttribute('data-stagger') || '0');
             const screenTop = item.offsetTop + trackY;
-            const rawReveal = clamp((h * 0.96 - screenTop) / Math.min(240, h * 0.34), 0, 1);
-            const staggeredReveal = clamp((rawReveal - stagger * 0.09) / (1 - stagger * 0.09), 0, 1);
+            const rawReveal = clamp((h * 0.98 - screenTop) / revealSpan, 0, 1);
+            const staggeredReveal = clamp((rawReveal - stagger * 0.10) / (1 - stagger * 0.10), 0, 1);
             const easedReveal = easeOutCubic(staggeredReveal) * enterGlobal;
 
             item.style.opacity = String(easedReveal);
-            item.style.transform = `translate3d(0, ${((1 - easedReveal) * 26).toFixed(1)}px, 0)`;
+            item.style.transform = `translate3d(0, ${((1 - easedReveal) * 20).toFixed(1)}px, 0)`;
           }
         }
 
