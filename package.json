@@ -1,0 +1,23 @@
+{
+  "name": "tanogaido",
+  "version": "1.0.0",
+  "description": "Tanogaido — Explore Authentic Japan Interactive Website",
+  "main": "serve.mjs",
+  "type": "module",
+  "scripts": {
+    "start": "node serve.mjs",
+    "dev": "node serve.mjs",
+    "serve": "node serve.mjs",
+    "build": "echo 'Static build ready'"
+  },
+  "dependencies": {},
+  "devDependencies": {},
+  "keywords": [
+    "tanogaido",
+    "japan",
+    "travel",
+    "canvas-animation"
+  ],
+  "author": "Tanogaido",
+  "license": "MIT"
+}
