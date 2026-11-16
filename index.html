@@ -381,6 +381,10 @@
       padding-bottom: 14px;
     }
 
+    .mobile-menu-header .brand-logo {
+      opacity: 1;
+    }
+
     .btn-close-menu {
       background: rgba(0, 0, 0, 0.05);
       border: none;
@@ -568,456 +572,245 @@
       height: 100%;
       z-index: 90;
       pointer-events: none;
+      overflow: hidden;
     }
 
-    /* Services Stage - Pinned cleanly below the unified white header */
-    .services-stage {
-      position: fixed;
-      top: 90px;
-      left: 0;
+    .white-scroll-track {
+      position: relative;
       width: 100%;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: flex-start;
-      padding: 0 16px;
-      opacity: 0;
-      pointer-events: none;
-      will-change: transform, opacity;
-      z-index: 25;
+      padding: 96px clamp(24px, 4.5vw, 64px) 72px clamp(24px, 4.5vw, 64px);
+      will-change: transform;
     }
 
-    .services-header {
-      text-align: center;
-      margin-top: 0;
-      margin-bottom: 8px;
+    .reveal-item {
+      opacity: 0;
+      will-change: transform, opacity;
+    }
+
+    .editorial-services {
+      width: 100%;
+      max-width: 1320px;
+      margin: 0 auto;
       pointer-events: auto;
     }
 
-    .services-eyebrow {
-      font-size: 10px;
-      font-weight: 800;
-      letter-spacing: 2px;
-      text-transform: uppercase;
-      color: var(--primary-orange);
-      margin-bottom: 2px;
-      display: block;
+    /* Top Header Split Row (Matches Attachment) */
+    .services-top-header {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 32px;
+      align-items: center;
+      padding: 8px 0 34px 0;
+      border-bottom: 1px solid rgba(15, 23, 42, 0.11);
+      will-change: transform, opacity;
     }
 
-    .services-title {
-      font-size: clamp(20px, 2.3vw, 25px);
+    .services-heading {
+      font-size: clamp(32px, 3.8vw, 48px);
       font-weight: 800;
-      letter-spacing: -0.6px;
+      letter-spacing: -1.6px;
+      line-height: 1.05;
       color: var(--text-dark);
       margin: 0;
     }
 
-    /* Container holding active card & all-services showcase */
-    .services-body-area {
-      position: relative;
-      width: 100%;
-      max-width: 1040px;
-      display: flex;
-      justify-content: center;
-      align-items: flex-start;
-      pointer-events: auto;
+    .services-lead-wrap {
+      padding-left: 30px;
     }
 
-    /* Single Featured Card Stage (Lempar Kartu) */
-    .toss-deck {
-      position: relative;
-      width: 100%;
+    .services-lead {
+      font-size: 13.5px;
+      line-height: 1.6;
+      color: var(--text-muted);
       max-width: 440px;
-      min-height: 250px;
-      perspective: 1200px;
-      display: flex;
-      justify-content: center;
+      font-weight: 500;
+      margin: 0;
     }
 
-    .toss-card {
-      position: absolute;
-      top: 0;
-      left: 0;
+    /* Architectural 2-Column Hairline Grid */
+    .services-grid {
       width: 100%;
-      background: #ffffff;
-      border-radius: 28px;
-      overflow: hidden;
-      box-shadow: 0 1px 0 rgba(255, 255, 255, 0.9) inset, 
-                  0 20px 48px -10px rgba(10, 15, 30, 0.22), 
-                  0 0 0 1px rgba(0, 0, 0, 0.05);
-      cursor: pointer;
-      user-select: none;
-      transition: box-shadow 0.3s ease;
-      will-change: transform, opacity;
-      transform-origin: 50% 50%;
     }
 
-    .toss-card:hover {
-      box-shadow: 0 1px 0 rgba(255, 255, 255, 0.9) inset, 
-                  0 25px 60px -8px rgba(242, 91, 32, 0.28), 
-                  0 0 0 1px rgba(242, 91, 32, 0.2);
+    .services-grid-row {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      border-bottom: 1px solid rgba(15, 23, 42, 0.11);
     }
 
-    /* All 5 Services Lined Up (Matches Lampiran 1 Exactly) */
-    .all-services-view {
-      display: none;
-      width: 100%;
-      max-width: 1040px;
-      animation: fadeInServices 0.35s ease;
-    }
-
-    @keyframes fadeInServices {
-      from { opacity: 0; transform: translateY(14px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    .all-services-grid {
-      display: flex;
-      gap: 12px;
-      width: 100%;
-      max-width: 1040px;
-      justify-content: center;
+    .service-cell {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) clamp(175px, 16.5vw, 240px);
+      gap: 24px;
       align-items: stretch;
-      padding: 4px 6px 14px 6px;
+      padding: 32px 32px;
+      will-change: transform, opacity;
     }
 
-    .all-service-card {
-      flex: 1 1 0;
-      max-width: 200px;
-      min-width: 175px;
-      background: #ffffff;
-      border: 1px solid rgba(15, 23, 42, 0.08);
-      border-radius: 20px;
-      overflow: hidden;
-      box-shadow: 0 14px 35px -6px rgba(15, 23, 42, 0.10);
+    .service-cell:first-child {
+      padding-left: 0;
+      border-right: 1px solid rgba(15, 23, 42, 0.11);
+    }
+
+    .service-cell:last-child {
+      padding-right: 0;
+    }
+
+    .service-info {
       display: flex;
       flex-direction: column;
-      transition: transform 0.25s ease, box-shadow 0.25s ease;
-      user-select: none;
-    }
-
-    .all-service-card:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 18px 40px -6px rgba(242, 91, 32, 0.28);
-    }
-
-    .all-card-thumb {
-      position: relative;
-      height: 110px;
-      width: 100%;
-      overflow: hidden;
-    }
-
-    .all-card-thumb img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      display: block;
-      transition: transform 0.4s ease;
-    }
-
-    .all-service-card:hover .all-card-thumb img {
-      transform: scale(1.08);
-    }
-
-    .all-card-pill {
-      position: absolute;
-      top: 8px;
-      left: 8px;
-      background: rgba(15, 23, 42, 0.85);
-      backdrop-filter: blur(8px);
-      color: #ffffff;
-      font-size: 9px;
-      font-weight: 750;
-      padding: 3px 8px;
-      border-radius: 9999px;
-      letter-spacing: 0.3px;
-    }
-
-    .all-card-content {
-      padding: 12px 14px 14px 14px;
-      display: flex;
-      flex-direction: column;
-      flex: 1;
       justify-content: space-between;
+      min-width: 0;
     }
 
-    .all-card-name {
-      font-size: 14px;
-      font-weight: 800;
-      color: #0f172a;
-      line-height: 1.25;
-      margin-bottom: 4px;
-    }
-
-    .all-card-desc {
-      font-size: 11px;
-      color: #64748b;
-      line-height: 1.4;
-      margin-bottom: 12px;
-      flex: 1;
-    }
-
-    .btn-all-card {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      background: #11141b;
-      color: #ffffff;
-      font-size: 11px;
+    .service-card-title {
+      font-size: clamp(19px, 1.6vw, 22.5px);
       font-weight: 700;
-      padding: 7px 12px;
-      border-radius: 9999px;
-      text-decoration: none;
-      transition: background 0.2s ease, transform 0.2s ease;
+      letter-spacing: -0.6px;
+      line-height: 1.18;
+      color: var(--text-dark);
+      margin: 0;
     }
 
-    .btn-all-card:hover {
-      background: var(--primary-orange);
-      transform: translateY(-1px);
-    }
-
-    /* Card Top Visual Section (Image + Title + Subtitle + Action) */
-    .card-visual {
-      position: relative;
-      width: 100%;
-      height: 220px;
-      overflow: hidden;
-    }
-
-    .card-visual img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      display: block;
-      transform: scale(1.05);
-      transition: transform 0.5s ease;
-    }
-
-    .toss-card:hover .card-visual img {
-      transform: scale(1.1);
-    }
-
-    .card-visual-gradient {
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(
-        to top, 
-        rgba(10, 13, 20, 0.92) 0%, 
-        rgba(10, 13, 20, 0.45) 45%, 
-        rgba(10, 13, 20, 0.05) 100%
-      );
-      z-index: 1;
-    }
-
-    .card-visual-content {
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      width: 100%;
-      padding: 16px 18px;
+    .service-price-line {
+      margin-top: 8px;
+      font-size: 13px;
+      color: var(--text-muted);
+      font-weight: 500;
       display: flex;
-      align-items: flex-end;
-      justify-content: space-between;
-      gap: 12px;
-      z-index: 2;
+      align-items: baseline;
+      gap: 5px;
     }
 
-    .card-title-group {
-      max-width: 250px;
-    }
-
-    .card-main-title {
-      font-size: 16px;
+    .service-price-line strong {
+      font-size: 14.5px;
       font-weight: 800;
-      color: #ffffff;
-      line-height: 1.2;
-      margin-bottom: 3px;
+      color: var(--text-dark);
       letter-spacing: -0.2px;
     }
 
-    .card-sub-title {
-      font-size: 11.5px;
-      font-weight: 550;
-      color: rgba(255, 255, 255, 0.75);
-      line-height: 1.25;
-    }
-
-    .btn-card-action {
-      background: rgba(255, 255, 255, 0.22);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-      border: 1px solid rgba(255, 255, 255, 0.35);
-      color: #ffffff;
-      font-size: 12px;
-      font-weight: 700;
-      padding: 8px 16px;
-      border-radius: 9999px;
-      text-decoration: none;
-      white-space: nowrap;
-      transition: background 0.2s ease, transform 0.2s ease;
-      flex-shrink: 0;
-    }
-
-    .btn-card-action:hover {
-      background: var(--primary-orange);
-      border-color: var(--primary-orange);
-      transform: scale(1.04);
-    }
-
-    /* Expand Toggle Bar */
-    .card-toggle-bar {
-      height: 38px;
-      background: #ffffff;
+    .service-specs {
+      margin: 22px 0 18px 0;
       display: flex;
-      align-items: center;
-      justify-content: center;
-      border-top: 1px solid rgba(0, 0, 0, 0.04);
+      flex-direction: column;
+      gap: 7px;
     }
 
-    .chevron-icon {
-      width: 16px;
-      height: 16px;
-      stroke: #64748b;
-      transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), stroke 0.2s ease;
-    }
-
-    .toss-card.expanded .chevron-icon {
-      transform: rotate(180deg);
-      stroke: var(--primary-orange);
-    }
-
-    /* Expanded Content Drawer */
-    .card-details-drawer {
-      max-height: 0;
-      opacity: 0;
-      overflow: hidden;
-      background: #ffffff;
-      padding: 0 22px;
-      transition: max-height 0.45s cubic-bezier(0.16, 1, 0.3, 1), 
-                  opacity 0.35s ease, 
-                  padding 0.45s ease;
-    }
-
-    .toss-card.expanded .card-details-drawer {
-      max-height: 480px;
-      opacity: 1;
-      padding: 16px 22px 20px 22px;
-      border-top: 1px solid #f1f5f9;
-      overflow-y: auto;
-    }
-
-    .detail-heading-row {
-      margin-bottom: 14px;
-    }
-
-    .detail-tour-name {
-      font-size: 15.5px;
-      font-weight: 800;
-      color: #0f172a;
-      letter-spacing: -0.3px;
-      line-height: 1.25;
-    }
-
-    .detail-author-tag {
-      font-size: 11px;
-      color: #64748b;
-      font-weight: 550;
-      margin-top: 2px;
-    }
-
-    /* 3-Column Metrics Grid (Directly from Attachment Image) */
-    .detail-metrics-grid {
+    .spec-row {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      background: #f8fafc;
-      border: 1px solid #e2e8f0;
-      border-radius: 16px;
-      padding: 10px 14px;
-      margin-bottom: 16px;
+      gap: 10px;
+      font-size: 12px;
+      line-height: 1.35;
+      color: #475569;
+      font-weight: 500;
     }
 
-    .metric-col {
-      display: flex;
-      flex-direction: column;
+    .spec-row strong {
+      color: var(--text-dark);
+      font-weight: 700;
     }
 
-    .metric-val {
-      font-size: 13.5px;
-      font-weight: 800;
-      color: #0f172a;
-      line-height: 1.1;
+    .spec-label {
+      min-width: 0;
     }
 
-    .metric-lbl {
-      font-size: 9.5px;
-      font-weight: 650;
-      text-transform: uppercase;
-      color: #94a3b8;
-      letter-spacing: 0.5px;
-      margin-top: 2px;
-    }
-
-    .metric-route-icon {
-      width: 44px;
-      height: 28px;
-      opacity: 0.8;
+    .spec-icon {
+      width: 14px;
+      height: 14px;
+      stroke: var(--text-eyebrow);
       flex-shrink: 0;
     }
 
-    /* Description Paragraphs */
-    .detail-body-text {
-      font-size: 12.5px;
-      line-height: 1.6;
-      color: #475569;
-      margin-bottom: 14px;
+    .spec-stars {
+      display: inline-flex;
+      align-items: center;
+      gap: 2px;
+      color: var(--primary-orange);
+      flex-shrink: 0;
     }
 
-    .detail-wa-btn {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
+    .spec-stars svg {
+      width: 11px;
+      height: 11px;
+      fill: currentColor;
+    }
+
+    .service-pill-cta {
+      width: 100%;
+      height: 42px;
+      border-radius: 9999px;
       background: #11141b;
       color: #ffffff;
-      padding: 10px 18px;
-      border-radius: 9999px;
-      font-size: 12.5px;
-      font-weight: 700;
+      padding: 0 18px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: space-between;
       text-decoration: none;
-      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.15);
-      transition: background 0.2s ease, transform 0.2s ease;
+      font-size: 12.5px;
+      font-weight: 600;
+      letter-spacing: -0.1px;
+      transition: background 0.25s ease, transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
     }
 
-    .detail-wa-btn:hover {
+    .service-pill-cta:hover {
       background: var(--primary-orange);
       transform: translateY(-1px);
     }
 
-    /* Final CTA Card */
-    .final-cta-stage {
-      position: absolute;
-      inset: 0;
+    .service-pill-sparkle {
+      width: 12px;
+      height: 12px;
+      flex-shrink: 0;
+      color: #ffffff;
+      transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .service-pill-cta:hover .service-pill-sparkle {
+      transform: rotate(45deg) scale(1.1);
+    }
+
+    .service-media {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      min-height: 210px;
+      overflow: hidden;
+      border-radius: 4px;
+      background: #f1f5f9;
+    }
+
+    .service-media img {
       width: 100%;
       height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.65s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .service-cell:hover .service-media img {
+      transform: scale(1.045);
+    }
+
+    /* Final CTA Block (Clean flow directly beneath Services Grid) */
+    .final-cta-stage {
+      width: 100%;
+      padding: 56px 0 12px 0;
       display: flex;
       align-items: center;
       justify-content: center;
-      opacity: 0;
-      pointer-events: none;
       will-change: transform, opacity;
-      z-index: 15;
     }
 
     .milestone-card {
       background: #ffffff;
-      border: 1px solid rgba(15, 23, 42, 0.08);
+      border: 1px solid rgba(15, 23, 42, 0.10);
       border-radius: 28px;
-      padding: 34px 40px;
-      max-width: 580px;
-      width: 90%;
-      box-shadow: 0 24px 60px -12px rgba(15, 23, 42, 0.14);
+      padding: 36px 40px;
+      max-width: 620px;
+      width: 100%;
+      box-shadow: 0 24px 60px -14px rgba(15, 23, 42, 0.10);
       text-align: center;
       pointer-events: auto;
     }
@@ -1032,7 +825,7 @@
     }
 
     .milestone-title {
-      font-size: 26px;
+      font-size: clamp(22px, 2.5vw, 28px);
       font-weight: 800;
       color: var(--text-dark);
       letter-spacing: -0.8px;
@@ -1043,13 +836,17 @@
     .milestone-desc {
       font-size: 14px;
       line-height: 1.55;
-      color: #475569;
-      margin-bottom: 22px;
+      color: var(--text-muted);
+      margin-bottom: 24px;
     }
 
     .milestone-actions {
       display: flex;
       justify-content: center;
+    }
+
+    .milestone-actions .btn-explore {
+      gap: 8px;
     }
 
             /* Discrete Scroll Indicator */
@@ -1219,56 +1016,72 @@
                 width: 34px;
                 height: 34px;
               }
+            }
 
-              .services-stage {
-                top: 68px;
-                padding: 0 14px;
+            @media (max-width: 1024px) {
+              .service-cell {
+                grid-template-columns: minmax(0, 1fr) 170px;
+                gap: 18px;
+                padding: 26px 22px;
+              }
+              .services-lead-wrap {
+                padding-left: 22px;
+              }
+            }
+
+            @media (max-width: 960px) {
+              .services-top-header {
+                grid-template-columns: 1fr;
+                gap: 12px;
+                padding: 4px 0 24px 0;
               }
 
-              .services-header {
-                margin-bottom: 6px;
+              .services-lead-wrap {
+                padding-left: 0;
               }
 
-              .services-title {
-                font-size: 19px;
+              .services-grid-row {
+                grid-template-columns: 1fr;
               }
 
-              .toss-deck {
-                max-width: 350px;
-                min-height: 220px;
+              .service-cell:first-child {
+                border-right: none;
+                border-bottom: 1px solid rgba(15, 23, 42, 0.11);
+                padding-left: 0;
+                padding-right: 0;
               }
 
-              .card-visual {
-                height: 180px;
+              .service-cell:last-child {
+                padding-left: 0;
+                padding-right: 0;
               }
 
-              .card-main-title {
-                font-size: 14.5px;
+              .service-cell {
+                grid-template-columns: minmax(0, 1fr) 210px;
+                padding: 24px 0;
+              }
+            }
+
+            @media (max-width: 860px) {
+              .white-scroll-track {
+                padding: 72px 16px 56px 16px;
               }
 
-              .card-sub-title {
-                font-size: 10.5px;
+              .milestone-card {
+                padding: 26px 22px;
+              }
+            }
+
+            @media (max-width: 560px) {
+              .service-cell {
+                grid-template-columns: 1fr;
+                gap: 16px;
               }
 
-              .btn-card-action {
-                font-size: 11px;
-                padding: 6px 12px;
-              }
-
-              .toss-card.expanded .card-details-drawer {
-                max-height: 380px;
-                padding: 12px 16px 16px 16px;
-              }
-
-              .all-services-grid {
-                justify-content: flex-start;
-                scroll-snap-type: x mandatory;
-                padding: 4px 8px 12px 8px;
-              }
-
-              .all-service-card {
-                scroll-snap-align: center;
-                flex: 0 0 175px;
+              .service-media {
+                order: -1;
+                aspect-ratio: 16 / 10;
+                min-height: 170px;
               }
             }
   </style>
@@ -1296,9 +1109,9 @@
       <div class="nav-center-zone" id="nav-center-zone">
         <ul class="nav-links">
           <li><a href="#destinations" data-scroll-progress="0.26">Destinations</a></li>
-          <li><a href="#tours" data-scroll-progress="0.36">Private Tours</a></li>
-          <li><a href="#passes" data-scroll-progress="0.56">JR Pass</a></li>
-          <li><a href="#pricing" data-scroll-progress="0.76">Pricing</a></li>
+          <li><a href="#tours" data-scroll-progress="0.26">Private Tours</a></li>
+          <li><a href="#passes" data-scroll-progress="0.50">JR Pass</a></li>
+          <li><a href="#pricing" data-scroll-progress="0.72">Pricing</a></li>
           <li><a href="#guides" data-scroll-progress="0.26">Guides</a></li>
         </ul>
       </div>
@@ -1332,9 +1145,9 @@
       </div>
       <ul class="mobile-nav-list">
         <li><a href="#destinations" class="mobile-nav-item" data-scroll-progress="0.26">Destinations</a></li>
-        <li><a href="#tours" class="mobile-nav-item" data-scroll-progress="0.36">Private Tours</a></li>
-        <li><a href="#passes" class="mobile-nav-item" data-scroll-progress="0.56">JR Pass</a></li>
-        <li><a href="#pricing" class="mobile-nav-item" data-scroll-progress="0.76">Pricing</a></li>
+        <li><a href="#tours" class="mobile-nav-item" data-scroll-progress="0.26">Private Tours</a></li>
+        <li><a href="#passes" class="mobile-nav-item" data-scroll-progress="0.50">JR Pass</a></li>
+        <li><a href="#pricing" class="mobile-nav-item" data-scroll-progress="0.72">Pricing</a></li>
         <li><a href="#guides" class="mobile-nav-item" data-scroll-progress="0.26">Guides</a></li>
       </ul>
       <a href="#explore" class="btn-explore mobile-nav-item" data-scroll-progress="0.26"
@@ -1375,377 +1188,310 @@
 
   <!-- White Content Stage (Appears strictly on the rising white curtain & united white page) -->
   <div class="white-content-stage" id="white-content-stage">
-    <!-- Company Services Stage with Glass Dock, Single Active Card (Lempar Kartu), and Final All-Services Showcase -->
-    <div class="services-stage" id="services-stage">
-      <div class="services-header">
-        <span class="services-eyebrow">LAYANAN EKSKLUSIF TANOGAIDO</span>
-        <h2 class="services-title">Solusi Lengkap Liburan ke Jepang</h2>
-      </div>
+    <div class="white-scroll-track" id="white-scroll-track">
+      <section class="editorial-services" id="services-stage">
+        <header class="services-top-header reveal-item" id="services-top-header">
+          <h2 class="services-heading">Layanan Eksklusif</h2>
+          <div class="services-lead-wrap">
+            <p class="services-lead">
+              Temukan layanan wisata privat, panduan virtual real-time 24/7, transportasi resmi, serta pengalaman budaya Jepang yang dirancang khusus untuk kenyamanan perjalanan Anda.
+            </p>
+          </div>
+        </header>
 
-        <!-- Container for Services (Snug under header) -->
-        <div class="services-body-area">
-          <!-- Featured Single Card (Lempar Kartu) -->
-          <div class="toss-deck" id="toss-deck">
-            <!-- Card 0: Virtual Tour Guide Online -->
-            <div class="toss-card active" id="featured-card" data-index="0">
-              <div class="card-visual">
-                <img src="frames/ezgif-frame-035.jpg" alt="Virtual Tour Guide Online Jepang">
-                <div class="card-visual-gradient"></div>
-                <div class="card-visual-content">
-                  <div class="card-title-group">
-                    <h3 class="card-main-title">Virtual Tour Guide Online</h3>
-                    <p class="card-sub-title">Panduan Wisata 24/7 Real-Time via WhatsApp</p>
+        <div class="services-grid">
+          <!-- Row 1 -->
+          <div class="services-grid-row">
+            <!-- Card 1: Virtual Tour Guide Online -->
+            <article class="service-cell reveal-item" data-stagger="0">
+              <div class="service-info">
+                <div class="service-head">
+                  <h3 class="service-card-title">Virtual Tour Guide Online 24/7</h3>
+                  <div class="service-price-line">
+                    <span class="price-prefix">mulai</span>
+                    <strong>Hemat 70% Biaya Tour</strong>
                   </div>
-                  <button class="btn-card-action">Lihat Detail</button>
                 </div>
-              </div>
-              <div class="card-toggle-bar">
-                <svg class="chevron-icon" viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                  <polyline points="6 9 12 15 18 9"></polyline>
-                </svg>
-              </div>
-              <div class="card-details-drawer">
-                <div class="detail-heading-row">
-                  <h4 class="detail-tour-name">Virtual Guide Online 24 Jam Seluruh Jepang</h4>
-                  <p class="detail-author-tag">Layanan Panduan Wisata #1 Tanogaido &bull; Sejak 2017</p>
+                <div class="service-specs">
+                  <div class="spec-row">
+                    <span class="spec-label">Tokyo, Kyoto, Osaka &amp; Seluruh Jepang</span>
+                    <svg class="spec-icon" viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                  </div>
+                  <div class="spec-row">
+                    <span class="spec-label">24 Jam Live WhatsApp (Bebas Rute)</span>
+                    <svg class="spec-icon" viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                  </div>
+                  <div class="spec-row">
+                    <span class="spec-label">Solo Traveler, Pasangan &amp; Keluarga</span>
+                    <svg class="spec-icon" viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                  </div>
+                  <div class="spec-row">
+                    <span class="spec-label">Dipercaya <strong>1.200+</strong> traveler Indonesia</span>
+                    <span class="spec-stars" aria-label="5 stars">
+                      <svg viewBox="0 0 20 20"><path d="M10 1.5l2.6 5.3 5.8.8-4.2 4.1 1 5.8L10 14.8l-5.2 2.7 1-5.8-4.2-4.1 5.8-.8z"/></svg>
+                      <svg viewBox="0 0 20 20"><path d="M10 1.5l2.6 5.3 5.8.8-4.2 4.1 1 5.8L10 14.8l-5.2 2.7 1-5.8-4.2-4.1 5.8-.8z"/></svg>
+                      <svg viewBox="0 0 20 20"><path d="M10 1.5l2.6 5.3 5.8.8-4.2 4.1 1 5.8L10 14.8l-5.2 2.7 1-5.8-4.2-4.1 5.8-.8z"/></svg>
+                      <svg viewBox="0 0 20 20"><path d="M10 1.5l2.6 5.3 5.8.8-4.2 4.1 1 5.8L10 14.8l-5.2 2.7 1-5.8-4.2-4.1 5.8-.8z"/></svg>
+                      <svg viewBox="0 0 20 20"><path d="M10 1.5l2.6 5.3 5.8.8-4.2 4.1 1 5.8L10 14.8l-5.2 2.7 1-5.8-4.2-4.1 5.8-.8z"/></svg>
+                    </span>
+                  </div>
                 </div>
-                <div class="detail-metrics-grid">
-                  <div class="metric-col">
-                    <span class="metric-val">24/7</span>
-                    <span class="metric-lbl">Akses WA</span>
-                  </div>
-                  <div class="metric-col">
-                    <span class="metric-val">100%</span>
-                    <span class="metric-lbl">Bebas Rute</span>
-                  </div>
-                  <div class="metric-col">
-                    <span class="metric-val">Hemat 70%</span>
-                    <span class="metric-lbl">Biaya Tour</span>
-                  </div>
-                  <svg class="metric-route-icon" viewBox="0 0 60 36" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M6 28 C 18 8, 32 30, 42 14 C 48 4, 54 10, 54 18" stroke="#f25b20" stroke-dasharray="2 4"/>
-                    <circle cx="6" cy="28" r="3" fill="#f25b20"/>
-                    <circle cx="54" cy="18" r="4" fill="#0f172a"/>
-                  </svg>
-                </div>
-                <p class="detail-body-text">
-                  Layanan pendampingan wisata virtual interaktif pertama dan terpercaya di Indonesia. Dipandu langsung oleh tim lokal Tanogaido yang tinggal di Jepang secara real-time melalui WhatsApp.
-                </p>
-                <p class="detail-body-text">
-                  Membantu navigasi rute kereta shinkansen, rekomendasi restoran kuliner lokal/halal, hingga bantuan darurat penerjemah bahasa Jepang saat berbelanja atau memesan tiket atraksi.
-                </p>
-                <a href="https://wa.me/6281318939319?text=Halo%20Tanogaido,%20saya%20tertarik%20dengan%20layanan%20Virtual%20Tour%20Guide%20Online%20Jepang.%20Mohon%20info%20dan%20biayanya." target="_blank" class="detail-wa-btn">
-                  <span>Pesan Virtual Guide via WhatsApp</span>
-                  <span class="arrow">→</span>
+                <a href="https://wa.me/6281318939319?text=Halo%20Tanogaido,%20saya%20tertarik%20dengan%20layanan%20Virtual%20Tour%20Guide%20Online%2024/7." target="_blank" rel="noopener noreferrer" class="service-pill-cta">
+                  <span>Explore Layanan</span>
+                  <svg class="service-pill-sparkle" viewBox="0 0 16 16"><path d="M8 0L9.8 6.2L16 8L9.8 9.8L8 16L6.2 9.8L0 8L6.2 6.2Z" fill="currentColor"/></svg>
                 </a>
               </div>
-            </div>
+              <div class="service-media">
+                <img src="assets/tokyo-pulse.jpg" alt="Virtual Tour Guide Online Jepang" loading="lazy">
+              </div>
+            </article>
 
-            <!-- Card 1: Private Tour & Custom Itinerary -->
-            <div class="toss-card" data-index="1">
-              <div class="card-visual">
-                <img src="frames/ezgif-frame-120.jpg" alt="Private Tour Jepang">
-                <div class="card-visual-gradient"></div>
-                <div class="card-visual-content">
-                  <div class="card-title-group">
-                    <h3 class="card-main-title">Private Tour & Itinerary</h3>
-                    <p class="card-sub-title">Tokyo, Mount Fuji, Kyoto, Osaka & Shirakawa-go</p>
+            <!-- Card 2: Private Tour & Custom Itinerary -->
+            <article class="service-cell reveal-item" data-stagger="1">
+              <div class="service-info">
+                <div class="service-head">
+                  <h3 class="service-card-title">Private Tour &amp; Custom Itinerary</h3>
+                  <div class="service-price-line">
+                    <span class="price-prefix">grup privat</span>
+                    <strong>1–15 Pax Custom Jadwal</strong>
                   </div>
-                  <button class="btn-card-action">Lihat Detail</button>
                 </div>
-              </div>
-              <div class="card-toggle-bar">
-                <svg class="chevron-icon" viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                  <polyline points="6 9 12 15 18 9"></polyline>
-                </svg>
-              </div>
-              <div class="card-details-drawer">
-                <div class="detail-heading-row">
-                  <h4 class="detail-tour-name">Private Tour Eksklusif Bersama Guide Lokal</h4>
-                  <p class="detail-author-tag">Fleksibel & Khusus Rombongan Keluarga / Teman</p>
+                <div class="service-specs">
+                  <div class="spec-row">
+                    <span class="spec-label">Mount Fuji, Kyoto, Shirakawa-go</span>
+                    <svg class="spec-icon" viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                  </div>
+                  <div class="spec-row">
+                    <span class="spec-label">Jadwal Fleksibel (3 – 14 Hari)</span>
+                    <svg class="spec-icon" viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                  </div>
+                  <div class="spec-row">
+                    <span class="spec-label">Guide Lokal Bilingual Berlisensi</span>
+                    <svg class="spec-icon" viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                  </div>
+                  <div class="spec-row">
+                    <span class="spec-label">Dipercaya <strong>650+</strong> rombongan privat</span>
+                    <span class="spec-stars" aria-label="5 stars">
+                      <svg viewBox="0 0 20 20"><path d="M10 1.5l2.6 5.3 5.8.8-4.2 4.1 1 5.8L10 14.8l-5.2 2.7 1-5.8-4.2-4.1 5.8-.8z"/></svg>
+                      <svg viewBox="0 0 20 20"><path d="M10 1.5l2.6 5.3 5.8.8-4.2 4.1 1 5.8L10 14.8l-5.2 2.7 1-5.8-4.2-4.1 5.8-.8z"/></svg>
+                      <svg viewBox="0 0 20 20"><path d="M10 1.5l2.6 5.3 5.8.8-4.2 4.1 1 5.8L10 14.8l-5.2 2.7 1-5.8-4.2-4.1 5.8-.8z"/></svg>
+                      <svg viewBox="0 0 20 20"><path d="M10 1.5l2.6 5.3 5.8.8-4.2 4.1 1 5.8L10 14.8l-5.2 2.7 1-5.8-4.2-4.1 5.8-.8z"/></svg>
+                      <svg viewBox="0 0 20 20"><path d="M10 1.5l2.6 5.3 5.8.8-4.2 4.1 1 5.8L10 14.8l-5.2 2.7 1-5.8-4.2-4.1 5.8-.8z"/></svg>
+                    </span>
+                  </div>
                 </div>
-                <div class="detail-metrics-grid">
-                  <div class="metric-col">
-                    <span class="metric-val">1-15 Pax</span>
-                    <span class="metric-lbl">Private Group</span>
-                  </div>
-                  <div class="metric-col">
-                    <span class="metric-val">100%</span>
-                    <span class="metric-lbl">Custom Jadwal</span>
-                  </div>
-                  <div class="metric-col">
-                    <span class="metric-val">Bilingual</span>
-                    <span class="metric-lbl">Guide Lokal</span>
-                  </div>
-                  <svg class="metric-route-icon" viewBox="0 0 60 36" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M8 20 C 20 6, 36 32, 52 14" stroke="#f25b20" stroke-dasharray="2 4"/>
-                    <circle cx="8" cy="20" r="3" fill="#f25b20"/>
-                    <circle cx="52" cy="14" r="4" fill="#0f172a"/>
-                  </svg>
-                </div>
-                <p class="detail-body-text">
-                  Nikmati liburan ke Jepang tanpa terikat rombongan tour umum. Anda bebas menentukan jam berangkat, durasi kunjungan spot foto, serta memilih menu kuliner favorit sesuai selera keluarga.
-                </p>
-                <p class="detail-body-text">
-                  Didampingi guide berlisensi berbahasa Indonesia yang ramah, profesional, dan paham spot-spot tersembunyi yang instagramable di seluruh penjuru Jepang.
-                </p>
-                <a href="https://wa.me/6281318939319?text=Halo%20Tanogaido,%20saya%20ingin%20konsultasi%20paket%20Private%20Tour%20Jepang.%20Mohon%20bantuan%20rancang%20itinerary-nya." target="_blank" class="detail-wa-btn">
-                  <span>Rancang Private Tour via WhatsApp</span>
-                  <span class="arrow">→</span>
+                <a href="https://wa.me/6281318939319?text=Halo%20Tanogaido,%20saya%20ingin%20konsultasi%20paket%20Private%20Tour%20dan%20Custom%20Itinerary%20Jepang." target="_blank" rel="noopener noreferrer" class="service-pill-cta">
+                  <span>Explore Layanan</span>
+                  <svg class="service-pill-sparkle" viewBox="0 0 16 16"><path d="M8 0L9.8 6.2L16 8L9.8 9.8L8 16L6.2 9.8L0 8L6.2 6.2Z" fill="currentColor"/></svg>
                 </a>
               </div>
-            </div>
-
-            <!-- Card 2: Sewa Mobil & Private Driver di Jepang -->
-            <div class="toss-card" data-index="2">
-              <div class="card-visual">
-                <img src="frames/ezgif-frame-190.jpg" alt="Sewa Mobil di Jepang">
-                <div class="card-visual-gradient"></div>
-                <div class="card-visual-content">
-                  <div class="card-title-group">
-                    <h3 class="card-main-title">Sewa Mobil & Private Driver</h3>
-                    <p class="card-sub-title">Armada Alphard, HiAce & Coaster Nyaman</p>
-                  </div>
-                  <button class="btn-card-action">Lihat Detail</button>
-                </div>
+              <div class="service-media">
+                <img src="assets/fuji-climb.jpg" alt="Private Tour Gunung Fuji Jepang" loading="lazy">
               </div>
-              <div class="card-toggle-bar">
-                <svg class="chevron-icon" viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                  <polyline points="6 9 12 15 18 9"></polyline>
-                </svg>
-              </div>
-              <div class="card-details-drawer">
-                <div class="detail-heading-row">
-                  <h4 class="detail-tour-name">Layanan Rental Mobil Pribadi + Driver Jepang</h4>
-                  <p class="detail-author-tag">Antar Jemput Bandara & Tour Luar Kota</p>
-                </div>
-                <div class="detail-metrics-grid">
-                  <div class="metric-col">
-                    <span class="metric-val">Alphard</span>
-                    <span class="metric-lbl">HiAce / Bus</span>
-                  </div>
-                  <div class="metric-col">
-                    <span class="metric-val">10-12 Jam</span>
-                    <span class="metric-lbl">Durasi Harian</span>
-                  </div>
-                  <div class="metric-col">
-                    <span class="metric-val">Bebas Koper</span>
-                    <span class="metric-lbl">Door-to-door</span>
-                  </div>
-                  <svg class="metric-route-icon" viewBox="0 0 60 36" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M6 16 C 18 26, 38 6, 54 22" stroke="#f25b20" stroke-dasharray="2 4"/>
-                    <circle cx="6" cy="16" r="3" fill="#f25b20"/>
-                    <circle cx="54" cy="22" r="4" fill="#0f172a"/>
-                  </svg>
-                </div>
-                <p class="detail-body-text">
-                  Solusi terbaik bepergian bersama orang tua dan anak-anak. Bebas lelah membawa koper naik-turun tangga stasiun kereta saat berpindah kota dari Tokyo ke Gunung Fuji, Hakone, atau Kyoto.
-                </p>
-                <p class="detail-body-text">
-                  Driver ramah dan berpengalaman menjamin perjalanan aman, tepat waktu, dan mengantarkan Anda tepat di lobi hotel atau pintu masuk tempat wisata.
-                </p>
-                <a href="https://wa.me/6281318939319?text=Halo%20Tanogaido,%20saya%20ingin%20info%20sewa%20mobil%20dan%20private%20driver%20di%20Jepang.%20Mohon%20pilihan%20armada%20dan%20pricelist-nya." target="_blank" class="detail-wa-btn">
-                  <span>Pesan Sewa Mobil via WhatsApp</span>
-                  <span class="arrow">→</span>
-                </a>
-              </div>
-            </div>
-
-            <!-- Card 3: Tiket JR Pass & Shinkansen -->
-            <div class="toss-card" data-index="3">
-              <div class="card-visual">
-                <img src="frames/ezgif-frame-240.jpg" alt="JR Pass Shinkansen">
-                <div class="card-visual-gradient"></div>
-                <div class="card-visual-content">
-                  <div class="card-title-group">
-                    <h3 class="card-main-title">JR Pass & Tiket Shinkansen</h3>
-                    <p class="card-sub-title">Tiket Resmi Seluruh Jepang & Konsultasi Rute</p>
-                  </div>
-                  <button class="btn-card-action">Lihat Detail</button>
-                </div>
-              </div>
-              <div class="card-toggle-bar">
-                <svg class="chevron-icon" viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                  <polyline points="6 9 12 15 18 9"></polyline>
-                </svg>
-              </div>
-              <div class="card-details-drawer">
-                <div class="detail-heading-row">
-                  <h4 class="detail-tour-name">Pemesanan Resmi Japan Rail Pass & Kereta Cepat</h4>
-                  <p class="detail-author-tag">All Japan Pass & Regional (Kansai, East, Hokkaido)</p>
-                </div>
-                <div class="detail-metrics-grid">
-                  <div class="metric-col">
-                    <span class="metric-val">All Japan</span>
-                    <span class="metric-lbl">Resmi JR</span>
-                  </div>
-                  <div class="metric-col">
-                    <span class="metric-val">7/14/21</span>
-                    <span class="metric-lbl">Pilihan Hari</span>
-                  </div>
-                  <div class="metric-col">
-                    <span class="metric-val">Gratis</span>
-                    <span class="metric-lbl">Konsul Rute</span>
-                  </div>
-                  <svg class="metric-route-icon" viewBox="0 0 60 36" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M6 10 L 26 26 L 44 8 L 54 18" stroke="#f25b20" stroke-dasharray="2 4"/>
-                    <circle cx="6" cy="10" r="3" fill="#f25b20"/>
-                    <circle cx="54" cy="18" r="4" fill="#0f172a"/>
-                  </svg>
-                </div>
-                <p class="detail-body-text">
-                  Beli JR Pass resmi tanpa was-was dengan voucher fisik atau e-exchange order yang dikirim cepat ke alamat Anda sebelum keberangkatan, atau diambil di Jepang.
-                </p>
-                <p class="detail-body-text">
-                  Tim Tanogaido siap menghitung efisiensi rute Anda untuk memastikan apakah trip Anda lebih hemat menggunakan Whole Japan Pass atau tiket Shinkansen point-to-point.
-                </p>
-                <a href="https://wa.me/6281318939319?text=Halo%20Tanogaido,%20saya%20ingin%20beli%20JR%20Pass%20/%20tiket%20Shinkansen%20Jepang.%20Mohon%20bantuan%20info%20harganya." target="_blank" class="detail-wa-btn">
-                  <span>Beli JR Pass via WhatsApp</span>
-                  <span class="arrow">→</span>
-                </a>
-              </div>
-            </div>
-
-            <!-- Card 4: Visa Jepang & Sewa Pocket WiFi -->
-            <div class="toss-card" data-index="4">
-              <div class="card-visual">
-                <img src="frames/ezgif-frame-290.jpg" alt="Visa Jepang dan Pocket WiFi">
-                <div class="card-visual-gradient"></div>
-                <div class="card-visual-content">
-                  <div class="card-title-group">
-                    <h3 class="card-main-title">Visa Jepang & Pocket WiFi 4G</h3>
-                    <p class="card-sub-title">Pengurusan E-Visa Cepat & Internet Unlimited</p>
-                  </div>
-                  <button class="btn-card-action">Lihat Detail</button>
-                </div>
-              </div>
-              <div class="card-toggle-bar">
-                <svg class="chevron-icon" viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                  <polyline points="6 9 12 15 18 9"></polyline>
-                </svg>
-              </div>
-              <div class="card-details-drawer">
-                <div class="detail-heading-row">
-                  <h4 class="detail-tour-name">Layanan Visa Wisata & Internet Unlimited Jepang</h4>
-                  <p class="detail-author-tag">Bantuan Dokumen Kedutaan & Koneksi 4G Cepat</p>
-                </div>
-                <div class="detail-metrics-grid">
-                  <div class="metric-col">
-                    <span class="metric-val">E-Visa</span>
-                    <span class="metric-lbl">Waiver / Reguler</span>
-                  </div>
-                  <div class="metric-col">
-                    <span class="metric-val">4G LTE</span>
-                    <span class="metric-lbl">Unlimited Data</span>
-                  </div>
-                  <div class="metric-col">
-                    <span class="metric-val">Mudah</span>
-                    <span class="metric-lbl">Tanpa Ribet</span>
-                  </div>
-                  <svg class="metric-route-icon" viewBox="0 0 60 36" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M10 24 C 24 10, 36 28, 50 12" stroke="#f25b20" stroke-dasharray="2 4"/>
-                    <circle cx="10" cy="24" r="3" fill="#f25b20"/>
-                    <circle cx="50" cy="12" r="4" fill="#0f172a"/>
-                  </svg>
-                </div>
-                <p class="detail-body-text">
-                  Bantuan pengurusan visa wisata Jepang, e-visa, atau registrasi bebas visa (e-passport waiver) dengan bimbingan berkas yang teliti untuk memastikan persetujuan lancar.
-                </p>
-                <p class="detail-body-text">
-                  Sewa Pocket WiFi berkecepatan tinggi tanpa batas kuota (unlimited) yang bisa diambil di bandara Jepang atau dikirim langsung ke rumah Anda sebelum terbang.
-                </p>
-                <a href="https://wa.me/6281318939319?text=Halo%20Tanogaido,%20saya%20ingin%20info%20pengurusan%20Visa%20Jepang%20dan%20sewa%20Pocket%20WiFi.%20Mohon%20persyaratannya." target="_blank" class="detail-wa-btn">
-                  <span>Urus Visa & WiFi via WhatsApp</span>
-                  <span class="arrow">→</span>
-                </a>
-              </div>
-            </div>
+            </article>
           </div>
 
-          <!-- All 5 Services Lined Up (Matches Lampiran 1 Exactly) -->
-          <div class="all-services-view" id="all-services-view">
-            <div class="all-services-grid">
-              <!-- Item 1 -->
-              <div class="all-service-card">
-                <div class="all-card-thumb">
-                  <img src="frames/ezgif-frame-035.jpg" alt="Virtual Tour Guide">
-                  <span class="all-card-pill">24/7 Support</span>
+          <!-- Row 2 -->
+          <div class="services-grid-row">
+            <!-- Card 3: Sewa Mobil & Private Driver -->
+            <article class="service-cell reveal-item" data-stagger="0">
+              <div class="service-info">
+                <div class="service-head">
+                  <h3 class="service-card-title">Sewa Mobil &amp; Private Driver</h3>
+                  <div class="service-price-line">
+                    <span class="price-prefix">armada</span>
+                    <strong>Alphard, HiAce &amp; Bus</strong>
+                  </div>
                 </div>
-                <div class="all-card-content">
-                  <h4 class="all-card-name">Virtual Guide</h4>
-                  <p class="all-card-desc">Panduan live via WA selama di Jepang.</p>
-                  <a href="https://wa.me/6281318939319?text=Halo%20Tanogaido,%20saya%20ingin%20pesan%20Virtual%20Guide%20Online." target="_blank" class="btn-all-card">Pesan WA →</a>
+                <div class="service-specs">
+                  <div class="spec-row">
+                    <span class="spec-label">Antar Jemput Bandara &amp; Antar Kota</span>
+                    <svg class="spec-icon" viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                  </div>
+                  <div class="spec-row">
+                    <span class="spec-label">10 – 12 Jam Charter Harian</span>
+                    <svg class="spec-icon" viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                  </div>
+                  <div class="spec-row">
+                    <span class="spec-label">Kapasitas Nyaman + Bagasi Koper</span>
+                    <svg class="spec-icon" viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                  </div>
+                  <div class="spec-row">
+                    <span class="spec-label">Dipercaya <strong>480+</strong> trip keluarga</span>
+                    <span class="spec-stars" aria-label="5 stars">
+                      <svg viewBox="0 0 20 20"><path d="M10 1.5l2.6 5.3 5.8.8-4.2 4.1 1 5.8L10 14.8l-5.2 2.7 1-5.8-4.2-4.1 5.8-.8z"/></svg>
+                      <svg viewBox="0 0 20 20"><path d="M10 1.5l2.6 5.3 5.8.8-4.2 4.1 1 5.8L10 14.8l-5.2 2.7 1-5.8-4.2-4.1 5.8-.8z"/></svg>
+                      <svg viewBox="0 0 20 20"><path d="M10 1.5l2.6 5.3 5.8.8-4.2 4.1 1 5.8L10 14.8l-5.2 2.7 1-5.8-4.2-4.1 5.8-.8z"/></svg>
+                      <svg viewBox="0 0 20 20"><path d="M10 1.5l2.6 5.3 5.8.8-4.2 4.1 1 5.8L10 14.8l-5.2 2.7 1-5.8-4.2-4.1 5.8-.8z"/></svg>
+                      <svg viewBox="0 0 20 20"><path d="M10 1.5l2.6 5.3 5.8.8-4.2 4.1 1 5.8L10 14.8l-5.2 2.7 1-5.8-4.2-4.1 5.8-.8z"/></svg>
+                    </span>
+                  </div>
                 </div>
+                <a href="https://wa.me/6281318939319?text=Halo%20Tanogaido,%20saya%20ingin%20info%20sewa%20mobil%20dan%20private%20driver%20di%20Jepang." target="_blank" rel="noopener noreferrer" class="service-pill-cta">
+                  <span>Explore Layanan</span>
+                  <svg class="service-pill-sparkle" viewBox="0 0 16 16"><path d="M8 0L9.8 6.2L16 8L9.8 9.8L8 16L6.2 9.8L0 8L6.2 6.2Z" fill="currentColor"/></svg>
+                </a>
               </div>
-              <!-- Item 2 -->
-              <div class="all-service-card">
-                <div class="all-card-thumb">
-                  <img src="frames/ezgif-frame-120.jpg" alt="Private Tour">
-                  <span class="all-card-pill">Custom 100%</span>
-                </div>
-                <div class="all-card-content">
-                  <h4 class="all-card-name">Private Tour</h4>
-                  <p class="all-card-desc">Guide bilingual lokal khusus rombongan Anda.</p>
-                  <a href="https://wa.me/6281318939319?text=Halo%20Tanogaido,%20saya%20ingin%20pesan%20Private%20Tour%20Jepang." target="_blank" class="btn-all-card">Rancang →</a>
-                </div>
+              <div class="service-media">
+                <img src="assets/zen-retreat.jpg" alt="Sewa Mobil Private Driver Jepang" loading="lazy">
               </div>
-              <!-- Item 3 -->
-              <div class="all-service-card">
-                <div class="all-card-thumb">
-                  <img src="frames/ezgif-frame-190.jpg" alt="Sewa Mobil">
-                  <span class="all-card-pill">Alphard/HiAce</span>
+            </article>
+
+            <!-- Card 4: JR Pass & Tiket Shinkansen -->
+            <article class="service-cell reveal-item" data-stagger="1">
+              <div class="service-info">
+                <div class="service-head">
+                  <h3 class="service-card-title">JR Pass &amp; Tiket Shinkansen</h3>
+                  <div class="service-price-line">
+                    <span class="price-prefix">resmi</span>
+                    <strong>Whole Japan &amp; Regional Pass</strong>
+                  </div>
                 </div>
-                <div class="all-card-content">
-                  <h4 class="all-card-name">Sewa Mobil</h4>
-                  <p class="all-card-desc">Driver pribadi door-to-door, bebas koper.</p>
-                  <a href="https://wa.me/6281318939319?text=Halo%20Tanogaido,%20saya%20ingin%20sewa%20mobil%20dan%20driver%20di%20Jepang." target="_blank" class="btn-all-card">Pesan →</a>
+                <div class="service-specs">
+                  <div class="spec-row">
+                    <span class="spec-label">Tokyo – Kyoto – Osaka – Hokkaido</span>
+                    <svg class="spec-icon" viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                  </div>
+                  <div class="spec-row">
+                    <span class="spec-label">Pilihan 7, 14 &amp; 21 Hari Berturut</span>
+                    <svg class="spec-icon" viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                  </div>
+                  <div class="spec-row">
+                    <span class="spec-label">Gratis Konsultasi Efisiensi Rute</span>
+                    <svg class="spec-icon" viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                  </div>
+                  <div class="spec-row">
+                    <span class="spec-label">Dipercaya <strong>890+</strong> pemegang JR Pass</span>
+                    <span class="spec-stars" aria-label="5 stars">
+                      <svg viewBox="0 0 20 20"><path d="M10 1.5l2.6 5.3 5.8.8-4.2 4.1 1 5.8L10 14.8l-5.2 2.7 1-5.8-4.2-4.1 5.8-.8z"/></svg>
+                      <svg viewBox="0 0 20 20"><path d="M10 1.5l2.6 5.3 5.8.8-4.2 4.1 1 5.8L10 14.8l-5.2 2.7 1-5.8-4.2-4.1 5.8-.8z"/></svg>
+                      <svg viewBox="0 0 20 20"><path d="M10 1.5l2.6 5.3 5.8.8-4.2 4.1 1 5.8L10 14.8l-5.2 2.7 1-5.8-4.2-4.1 5.8-.8z"/></svg>
+                      <svg viewBox="0 0 20 20"><path d="M10 1.5l2.6 5.3 5.8.8-4.2 4.1 1 5.8L10 14.8l-5.2 2.7 1-5.8-4.2-4.1 5.8-.8z"/></svg>
+                      <svg viewBox="0 0 20 20"><path d="M10 1.5l2.6 5.3 5.8.8-4.2 4.1 1 5.8L10 14.8l-5.2 2.7 1-5.8-4.2-4.1 5.8-.8z"/></svg>
+                    </span>
+                  </div>
                 </div>
+                <a href="https://wa.me/6281318939319?text=Halo%20Tanogaido,%20saya%20ingin%20beli%20JR%20Pass%20dan%20tiket%20Shinkansen%20Jepang." target="_blank" rel="noopener noreferrer" class="service-pill-cta">
+                  <span>Explore Layanan</span>
+                  <svg class="service-pill-sparkle" viewBox="0 0 16 16"><path d="M8 0L9.8 6.2L16 8L9.8 9.8L8 16L6.2 9.8L0 8L6.2 6.2Z" fill="currentColor"/></svg>
+                </a>
               </div>
-              <!-- Item 4 -->
-              <div class="all-service-card">
-                <div class="all-card-thumb">
-                  <img src="frames/ezgif-frame-240.jpg" alt="JR Pass Shinkansen">
-                  <span class="all-card-pill">Resmi JR</span>
-                </div>
-                <div class="all-card-content">
-                  <h4 class="all-card-name">JR Pass Rail</h4>
-                  <p class="all-card-desc">Tiket Shinkansen resmi & konsultasi rute.</p>
-                  <a href="https://wa.me/6281318939319?text=Halo%20Tanogaido,%20saya%20ingin%20beli%20JR%20Pass%20Jepang." target="_blank" class="btn-all-card">Beli Tiket →</a>
-                </div>
+              <div class="service-media">
+                <img src="assets/shinkansen.jpg" alt="JR Pass dan Kereta Shinkansen Jepang" loading="lazy">
               </div>
-              <!-- Item 5 -->
-              <div class="all-service-card">
-                <div class="all-card-thumb">
-                  <img src="frames/ezgif-frame-290.jpg" alt="Visa & WiFi">
-                  <span class="all-card-pill">E-Visa & 4G</span>
+            </article>
+          </div>
+
+          <!-- Row 3 -->
+          <div class="services-grid-row">
+            <!-- Card 5: Visa Jepang & Pocket WiFi 4G -->
+            <article class="service-cell reveal-item" data-stagger="0">
+              <div class="service-info">
+                <div class="service-head">
+                  <h3 class="service-card-title">Visa Jepang &amp; Pocket WiFi 4G</h3>
+                  <div class="service-price-line">
+                    <span class="price-prefix">cepat</span>
+                    <strong>E-Visa &amp; Unlimited 4G LTE</strong>
+                  </div>
                 </div>
-                <div class="all-card-content">
-                  <h4 class="all-card-name">Visa & WiFi</h4>
-                  <p class="all-card-desc">E-Visa mudah & modem 4G unlimited.</p>
-                  <a href="https://wa.me/6281318939319?text=Halo%20Tanogaido,%20saya%20ingin%20bantuan%20Visa%20Jepang%20dan%20WiFi." target="_blank" class="btn-all-card">Konsul →</a>
+                <div class="service-specs">
+                  <div class="spec-row">
+                    <span class="spec-label">Ambil di Bandara / Kirim Rumah</span>
+                    <svg class="spec-icon" viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                  </div>
+                  <div class="spec-row">
+                    <span class="spec-label">Proses Dokumen Teliti &amp; Transparan</span>
+                    <svg class="spec-icon" viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                  </div>
+                  <div class="spec-row">
+                    <span class="spec-label">Koneksi hingga 5 Perangkat</span>
+                    <svg class="spec-icon" viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                  </div>
+                  <div class="spec-row">
+                    <span class="spec-label">Dipercaya <strong>940+</strong> pemohon visa</span>
+                    <span class="spec-stars" aria-label="5 stars">
+                      <svg viewBox="0 0 20 20"><path d="M10 1.5l2.6 5.3 5.8.8-4.2 4.1 1 5.8L10 14.8l-5.2 2.7 1-5.8-4.2-4.1 5.8-.8z"/></svg>
+                      <svg viewBox="0 0 20 20"><path d="M10 1.5l2.6 5.3 5.8.8-4.2 4.1 1 5.8L10 14.8l-5.2 2.7 1-5.8-4.2-4.1 5.8-.8z"/></svg>
+                      <svg viewBox="0 0 20 20"><path d="M10 1.5l2.6 5.3 5.8.8-4.2 4.1 1 5.8L10 14.8l-5.2 2.7 1-5.8-4.2-4.1 5.8-.8z"/></svg>
+                      <svg viewBox="0 0 20 20"><path d="M10 1.5l2.6 5.3 5.8.8-4.2 4.1 1 5.8L10 14.8l-5.2 2.7 1-5.8-4.2-4.1 5.8-.8z"/></svg>
+                      <svg viewBox="0 0 20 20"><path d="M10 1.5l2.6 5.3 5.8.8-4.2 4.1 1 5.8L10 14.8l-5.2 2.7 1-5.8-4.2-4.1 5.8-.8z"/></svg>
+                    </span>
+                  </div>
                 </div>
+                <a href="https://wa.me/6281318939319?text=Halo%20Tanogaido,%20saya%20ingin%20info%20pengurusan%20Visa%20Jepang%20dan%20sewa%20Pocket%20WiFi." target="_blank" rel="noopener noreferrer" class="service-pill-cta">
+                  <span>Explore Layanan</span>
+                  <svg class="service-pill-sparkle" viewBox="0 0 16 16"><path d="M8 0L9.8 6.2L16 8L9.8 9.8L8 16L6.2 9.8L0 8L6.2 6.2Z" fill="currentColor"/></svg>
+                </a>
               </div>
+              <div class="service-media">
+                <img src="assets/tea-ceremony.jpg" alt="Visa Jepang dan Pengalaman Budaya" loading="lazy">
+              </div>
+            </article>
+
+            <!-- Card 6: Wisata Pulau & Hidden Gems Jepang -->
+            <article class="service-cell reveal-item" data-stagger="1">
+              <div class="service-info">
+                <div class="service-head">
+                  <h3 class="service-card-title">Kurasi Budaya &amp; Pulau Jepang</h3>
+                  <div class="service-price-line">
+                    <span class="price-prefix">kurasi</span>
+                    <strong>Hidden Gems &amp; Onsen</strong>
+                  </div>
+                </div>
+                <div class="service-specs">
+                  <div class="spec-row">
+                    <span class="spec-label">Naoshima, Hokkaido, Okinawa &amp; Uji</span>
+                    <svg class="spec-icon" viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                  </div>
+                  <div class="spec-row">
+                    <span class="spec-label">Sakura, Autumn &amp; Winter Season</span>
+                    <svg class="spec-icon" viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                  </div>
+                  <div class="spec-row">
+                    <span class="spec-label">Reservasi Ryokan, Tea &amp; Kuliner Halal</span>
+                    <svg class="spec-icon" viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                  </div>
+                  <div class="spec-row">
+                    <span class="spec-label">Dipercaya <strong>340+</strong> tamu repeater</span>
+                    <span class="spec-stars" aria-label="5 stars">
+                      <svg viewBox="0 0 20 20"><path d="M10 1.5l2.6 5.3 5.8.8-4.2 4.1 1 5.8L10 14.8l-5.2 2.7 1-5.8-4.2-4.1 5.8-.8z"/></svg>
+                      <svg viewBox="0 0 20 20"><path d="M10 1.5l2.6 5.3 5.8.8-4.2 4.1 1 5.8L10 14.8l-5.2 2.7 1-5.8-4.2-4.1 5.8-.8z"/></svg>
+                      <svg viewBox="0 0 20 20"><path d="M10 1.5l2.6 5.3 5.8.8-4.2 4.1 1 5.8L10 14.8l-5.2 2.7 1-5.8-4.2-4.1 5.8-.8z"/></svg>
+                      <svg viewBox="0 0 20 20"><path d="M10 1.5l2.6 5.3 5.8.8-4.2 4.1 1 5.8L10 14.8l-5.2 2.7 1-5.8-4.2-4.1 5.8-.8z"/></svg>
+                      <svg viewBox="0 0 20 20"><path d="M10 1.5l2.6 5.3 5.8.8-4.2 4.1 1 5.8L10 14.8l-5.2 2.7 1-5.8-4.2-4.1 5.8-.8z"/></svg>
+                    </span>
+                  </div>
+                </div>
+                <a href="https://wa.me/6281318939319?text=Halo%20Tanogaido,%20saya%20tertarik%20dengan%20paket%20Kurasi%20Budaya%20dan%20Pulau%20Eksklusif%20Jepang." target="_blank" rel="noopener noreferrer" class="service-pill-cta">
+                  <span>Explore Layanan</span>
+                  <svg class="service-pill-sparkle" viewBox="0 0 16 16"><path d="M8 0L9.8 6.2L16 8L9.8 9.8L8 16L6.2 9.8L0 8L6.2 6.2Z" fill="currentColor"/></svg>
+                </a>
+              </div>
+              <div class="service-media">
+                <img src="assets/island-hop.jpg" alt="Wisata Pulau dan Budaya Jepang" loading="lazy">
+              </div>
+            </article>
+          </div>
+        </div>
+
+        <!-- Final Call To Action Milestone -->
+        <div class="final-cta-stage reveal-item" id="final-cta-stage">
+          <div class="milestone-card">
+            <div class="milestone-tag">Konsultasi Sekarang</div>
+            <h2 class="milestone-title">Wujudkan Liburan Impian ke Jepang Bersama Tanogaido</h2>
+            <p class="milestone-desc">
+              Dari tour virtual interaktif, private tour keluarga, sewa mobil, tiket JR Pass, hingga visa. Dapatkan penawaran terbaik dan konsultasi gratis sekarang!
+            </p>
+            <div class="milestone-actions">
+              <a href="https://wa.me/6281318939319?text=Halo%20Tanogaido,%20saya%20ingin%20merencanakan%20liburan%20ke%20Jepang.%20Mohon%20bantuannya!" target="_blank" rel="noopener noreferrer" class="btn-explore" style="display: inline-flex;">
+                <span>Hubungi Tanogaido via WhatsApp</span>
+                <span class="arrow">→</span>
+              </a>
             </div>
           </div>
         </div>
-      </div>
-
-      <!-- Final Call To Action Milestone -->
-      <div class="final-cta-stage" id="final-cta-stage">
-        <div class="milestone-card">
-          <div class="milestone-tag">Konsultasi Sekarang</div>
-          <h2 class="milestone-title">Wujudkan Liburan Impian ke Jepang Bersama Tanogaido</h2>
-          <p class="milestone-desc">
-            Dari tour virtual interaktif, private tour keluarga, sewa mobil, tiket JR Pass, hingga visa. Dapatkan penawaran terbaik dan konsultasi gratis sekarang!
-          </p>
-          <div class="milestone-actions">
-            <a href="https://wa.me/6281318939319?text=Halo%20Tanogaido,%20saya%20ingin%20merencanakan%20liburan%20ke%20Jepang.%20Mohon%20bantuannya!" target="_blank" class="btn-explore" style="display: inline-flex;">
-              <span>Hubungi Tanogaido via WhatsApp</span>
-              <span class="arrow">→</span>
-            </a>
-          </div>
-        </div>
-      </div>
+      </section>
+    </div>
   </div>
 
   <!-- Bottom Scroll Cue -->
@@ -1788,12 +1534,8 @@
       const heroCta = document.getElementById('hero-cta');
 
       const whiteContentStage = document.getElementById('white-content-stage');
-      const servicesStage = document.getElementById('services-stage');
-      const miniTabs = document.querySelectorAll('.mini-card-tab');
-      const tossDeck = document.getElementById('toss-deck');
-      const tossCards = document.querySelectorAll('.toss-card');
-      const allServicesView = document.getElementById('all-services-view');
-      const finalCtaStage = document.getElementById('final-cta-stage');
+      const whiteScrollTrack = document.getElementById('white-scroll-track');
+      const revealItems = document.querySelectorAll('.reveal-item');
       const scrollHint = document.getElementById('scroll-hint');
 
       const isReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -1901,34 +1643,6 @@
           openSplash({ settleAtTop: true });
         });
       }
-
-      // Card Expand / Collapse Detail Toggle
-      tossCards.forEach((card) => {
-        card.addEventListener('click', (e) => {
-          if (e.target.closest('.detail-wa-btn') || e.target.closest('a')) return;
-          const isExp = card.classList.contains('expanded');
-          tossCards.forEach(c => c.classList.remove('expanded'));
-          if (!isExp) {
-            card.classList.add('expanded');
-          }
-        });
-      });
-
-      // Mini Dock Tabs Click Navigation
-      miniTabs.forEach((tab) => {
-        tab.addEventListener('click', () => {
-          const tabIdx = parseInt(tab.getAttribute('data-index'), 10);
-          let targetProg = 0.26;
-          if (tabIdx === 0) targetProg = 0.26;
-          else if (tabIdx === 1) targetProg = 0.36;
-          else if (tabIdx === 2) targetProg = 0.46;
-          else if (tabIdx === 3) targetProg = 0.56;
-          else if (tabIdx === 4) targetProg = 0.66;
-          else if (tabIdx === 5) targetProg = 0.76;
-
-          scrollToProgress(targetProg);
-        });
-      });
 
       function clamp(val, min, max) {
         return Math.min(Math.max(val, min), max);
@@ -2345,126 +2059,46 @@
           if (tCurtainRise <= 0.002) {
             whiteContentStage.style.visibility = 'hidden';
             whiteContentStage.style.clipPath = 'inset(100% 0 0 0)';
+            whiteContentStage.style.pointerEvents = 'none';
           } else if (tCurtainRise < 0.995) {
             whiteContentStage.style.visibility = 'visible';
             whiteContentStage.style.clipPath = `inset(${Math.max(0, Math.round(currentBottomY))}px 0 0 0)`;
+            whiteContentStage.style.pointerEvents = tCurtainRise >= 0.75 ? 'auto' : 'none';
           } else {
             whiteContentStage.style.visibility = 'visible';
             whiteContentStage.style.clipPath = 'none';
+            whiteContentStage.style.pointerEvents = 'auto';
           }
         }
 
-        // 3. Services Stage: Rides up smoothly on the rising white curtain (0.09 -> 0.25) and runs until 0.80
-        if (progress >= 0.09 && progress < 0.80 && sRaw > 0.85) {
-          const enterServices = easeOutCubic(clamp((progress - 0.09) / (HERO_RISE_END - 0.09), 0, 1));
-          const servicesRiseOffset = lerp(Math.round(h * 0.34), 0, enterServices);
+        // Editorial Services Grid + CTA Track Motion & Smooth Row-by-Row Entrance
+        if (whiteScrollTrack) {
+          const trackHeight = whiteScrollTrack.offsetHeight || h;
+          const maxTrackTravel = Math.max(0, trackHeight - h);
 
-          let stageOpacity = clamp(enterServices * 1.35, 0, 1);
-          if (progress > 0.76) {
-            stageOpacity = clamp((0.80 - progress) / 0.04, 0, 1);
-          }
-
-          servicesStage.style.display = 'flex';
-          servicesStage.style.opacity = String(stageOpacity);
-          servicesStage.style.transform = `translate3d(0, ${servicesRiseOffset.toFixed(1)}px, 0)`;
-          servicesStage.style.pointerEvents = stageOpacity > 0.45 && tCurtainRise >= 0.72 ? 'auto' : 'none';
-
-          const pNorm = clamp((progress - 0.25) / (0.76 - 0.25), 0, 1);
-          const deckProgress = pNorm * 5.2;
-
-          const activeTabIdx = deckProgress >= 4.4 ? 5 : Math.min(4, Math.floor(deckProgress));
-          miniTabs.forEach((tab, idx) => {
-            tab.classList.toggle('active', idx === activeTabIdx);
-          });
-
-          if (deckProgress < 4.4) {
-            allServicesView.style.display = 'none';
-            allServicesView.style.opacity = '0';
-            allServicesView.style.pointerEvents = 'none';
-            tossDeck.style.display = 'flex';
-
-            const k = Math.min(4, Math.floor(deckProgress));
-            const t = deckProgress - k;
-
-            for (let i = 0; i < tossCards.length; i++) {
-              const card = tossCards[i];
-              if (i === k) {
-                if (t <= 0.40 || k === 4) {
-                  card.style.display = 'block';
-                  card.style.transform = 'translate3d(0, 0, 0) rotate(0deg) scale(1)';
-                  card.style.opacity = '1';
-                  card.style.zIndex = '10';
-                  card.style.pointerEvents = 'auto';
-                } else {
-                  const u = (t - 0.40) / 0.60;
-                  const e = u * u * (3 - 2 * u);
-                  card.style.display = 'block';
-                  card.style.transform = `translate3d(${-e * 130}px, ${-e * 80}px, 0) rotate(${-e * 11}deg) scale(${1 - e * 0.12})`;
-                  card.style.opacity = String(1 - e);
-                  card.style.zIndex = '11';
-                  card.style.pointerEvents = e > 0.4 ? 'none' : 'auto';
-                }
-              } else if (i === k + 1 && k < 4) {
-                if (t <= 0.40) {
-                  card.style.display = 'none';
-                  card.style.opacity = '0';
-                  card.style.pointerEvents = 'none';
-                } else {
-                  const u = (t - 0.40) / 0.60;
-                  const e = u * u * (3 - 2 * u);
-                  card.style.display = 'block';
-                  card.style.transform = `translate3d(${(1 - e) * 45}px, ${(1 - e) * 55}px, 0) rotate(${(1 - e) * 5}deg) scale(${0.94 + e * 0.06})`;
-                  card.style.opacity = String(e);
-                  card.style.zIndex = '10';
-                  card.style.pointerEvents = e > 0.6 ? 'auto' : 'none';
-                }
-              } else {
-                card.style.display = 'none';
-                card.style.opacity = '0';
-                card.style.pointerEvents = 'none';
-              }
-            }
+          let trackY = 0;
+          if (progress < HERO_RISE_END) {
+            const tEnterTrack = easeOutCubic(clamp((progress - 0.08) / (HERO_RISE_END - 0.08), 0, 1));
+            trackY = lerp(Math.round(h * 0.24), 0, tEnterTrack);
           } else {
-            const u = clamp((deckProgress - 4.4) / 0.35, 0, 1);
-            const e = u * u * (3 - 2 * u);
-
-            for (let i = 0; i < tossCards.length; i++) {
-              const card = tossCards[i];
-              if (i === 4 && u < 1) {
-                card.style.display = 'block';
-                card.style.transform = `translate3d(${-e * 130}px, ${-e * 80}px, 0) rotate(${-e * 11}deg) scale(${1 - e * 0.12})`;
-                card.style.opacity = String(1 - e);
-                card.style.zIndex = '11';
-                card.style.pointerEvents = 'none';
-              } else {
-                card.style.display = 'none';
-                card.style.opacity = '0';
-                card.style.pointerEvents = 'none';
-              }
-            }
-
-            allServicesView.style.display = 'block';
-            allServicesView.style.opacity = String(e);
-            allServicesView.style.transform = `translateY(${(1 - e) * 18}px)`;
-            allServicesView.style.pointerEvents = e > 0.3 ? 'auto' : 'none';
+            const tTrackScroll = clamp((progress - HERO_RISE_END) / (1.0 - HERO_RISE_END), 0, 1);
+            trackY = -tTrackScroll * maxTrackTravel;
           }
-        } else {
-          servicesStage.style.opacity = '0';
-          servicesStage.style.pointerEvents = 'none';
-          servicesStage.style.display = 'none';
-        }
 
-        // 4. Final CTA Stage: 0.800 to 1.000 (on clean white background)
-        if (progress >= 0.800 && sRaw > 0.85) {
-          const factor = Math.min(1, (progress - 0.800) / 0.09);
-          finalCtaStage.style.display = 'flex';
-          finalCtaStage.style.opacity = String(factor);
-          finalCtaStage.style.transform = `translateY(${(1 - factor) * 20}px)`;
-          finalCtaStage.style.pointerEvents = factor > 0.4 ? 'auto' : 'none';
-        } else {
-          finalCtaStage.style.opacity = '0';
-          finalCtaStage.style.pointerEvents = 'none';
-          finalCtaStage.style.display = 'none';
+          whiteScrollTrack.style.transform = `translate3d(0, ${trackY.toFixed(1)}px, 0)`;
+
+          const enterGlobal = easeOutCubic(clamp((progress - 0.09) / 0.14, 0, 1));
+          for (let i = 0; i < revealItems.length; i++) {
+            const item = revealItems[i];
+            const stagger = parseFloat(item.getAttribute('data-stagger') || '0');
+            const screenTop = item.offsetTop + trackY;
+            const rawReveal = clamp((h * 0.96 - screenTop) / Math.min(240, h * 0.34), 0, 1);
+            const staggeredReveal = clamp((rawReveal - stagger * 0.09) / (1 - stagger * 0.09), 0, 1);
+            const easedReveal = easeOutCubic(staggeredReveal) * enterGlobal;
+
+            item.style.opacity = String(easedReveal);
+            item.style.transform = `translate3d(0, ${((1 - easedReveal) * 26).toFixed(1)}px, 0)`;
+          }
         }
 
         if (scrollHint) {
