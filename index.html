@@ -3,7 +3,7 @@
 
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>Tanogaido — Explore Authentic Japan</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -30,27 +30,28 @@
     }
 
     html {
-      background-color: #0b0d12;
+      background-color: #ffffff;
       color: var(--text-dark);
       scroll-behavior: auto;
+      overscroll-behavior-y: none;
+      overflow-x: clip;
     }
 
     body {
       background-color: #ffffff;
       min-height: 600vh;
       height: 600vh;
-      overflow-y: scroll;
-      overflow-x: hidden;
+      overflow-x: clip;
       position: relative;
+      overscroll-behavior-y: none;
     }
 
     /* Fixed Scroll Animation Canvas */
     #canvas {
       position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
+      inset: 0;
+      width: 100%;
+      height: 100%;
       display: block;
       pointer-events: none;
       z-index: 1;
@@ -59,10 +60,9 @@
     /* Soft ambient vignette & left/top contrast scrim to keep typography crystal clear */
     .viewport-overlay {
       position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
+      inset: 0;
+      width: 100%;
+      height: 100%;
       pointer-events: none;
       z-index: 2;
       background:
@@ -81,8 +81,8 @@
     .architectural-frame-svg {
       position: fixed;
       inset: 0;
-      width: 100vw;
-      height: 100vh;
+      width: 100%;
+      height: 100%;
       pointer-events: none;
       z-index: 85;
       display: block;
@@ -410,10 +410,9 @@
     /* Fixed UI Stage (Proportioned to fit entirely within viewport on open) */
     .fixed-ui-stage {
       position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
+      inset: 0;
+      width: 100%;
+      height: 100%;
       z-index: 10;
       pointer-events: none;
       display: flex;
@@ -1263,16 +1262,16 @@
   <div class="viewport-overlay"></div>
 
   <!-- Single Unified Architectural White Frame & Animated Notched Header -->
-  <svg class="architectural-frame-svg" id="architectural-frame-svg" aria-hidden="true">
-    <path id="architectural-frame-path" d="M0 0 H10000 V10000 H0 Z" fill="#ffffff" fill-rule="evenodd" />
+  <svg class="architectural-frame-svg" id="architectural-frame-svg" preserveAspectRatio="none" aria-hidden="true">
+    <path id="architectural-frame-path" d="M-4 -4 H10004 V10004 H-4 Z" fill="#ffffff" fill-rule="evenodd" />
   </svg>
-  <div class="intro-logo-flight" id="intro-logo" aria-hidden="true">tanogaido<span class="dot">.</span></div>
+  <div class="intro-logo-flight" id="intro-logo" aria-hidden="true">tanogaido<span class="dot" id="intro-logo-dot">.</span></div>
 
   <!-- Top Header Navigation -->
   <div class="navbar-container">
     <nav class="navbar" id="main-navbar">
       <div class="nav-brand-zone">
-        <a href="#" class="brand-logo" id="header-brand-logo">tanogaido<span class="dot">.</span></a>
+        <a href="#" class="brand-logo" id="header-brand-logo">tanogaido<span class="dot" id="header-logo-dot">.</span></a>
       </div>
       <div class="nav-center-zone" id="nav-center-zone">
         <ul class="nav-links">
@@ -1738,14 +1737,22 @@
 
   <script>
     (function () {
+      if ('scrollRestoration' in history) {
+        history.scrollRestoration = 'manual';
+      }
+
       const TOTAL_FRAMES = 300;
       const FRAME_PREFIX = 'frames/ezgif-frame-';
       const FRAME_EXT = '.jpg';
+      const HERO_REST_PROGRESS = 0.045;
+      const SPLASH_CLOSE_PROGRESS = 0.022;
+
       const canvas = document.getElementById('canvas');
       const ctx = canvas.getContext('2d', { alpha: false });
 
       const navbar = document.getElementById('main-navbar');
       const headerBrandLogo = document.getElementById('header-brand-logo');
+      const headerLogoDot = document.getElementById('header-logo-dot');
       const navCenterZone = document.getElementById('nav-center-zone');
       const navActionsZone = document.getElementById('nav-actions-zone');
       const architecturalFrameSvg = document.getElementById('architectural-frame-svg');
@@ -1768,13 +1775,106 @@
 
       const isReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-      function scrollToProgress(targetProg) {
+      function getViewportSize() {
+        if (architecturalFrameSvg) {
+          const r = architecturalFrameSvg.getBoundingClientRect();
+          if (r.width > 0 && r.height > 0) {
+            return { w: Math.round(r.width), h: Math.round(r.height) };
+          }
+        }
+        return {
+          w: window.innerWidth || document.documentElement.clientWidth || 1280,
+          h: window.innerHeight || document.documentElement.clientHeight || 720
+        };
+      }
+
+      function getMaxScroll() {
         const doc = document.documentElement;
         const body = document.body;
-        const scrollHeight = Math.max(doc.scrollHeight, body.scrollHeight) - window.innerHeight;
-        if (scrollHeight <= 0) return;
+        const { h } = getViewportSize();
+        const scrollHeight = Math.max(doc.scrollHeight, body.scrollHeight, doc.offsetHeight, body.offsetHeight);
+        return Math.max(0, scrollHeight - h);
+      }
+
+      // Splashscreen Auto State ('closed' | 'opening' | 'open' | 'closing')
+      let splashState = 'closed';
+      let splashRaw = 0; // 0 = fullscreen white splash, 1 = fully opened header + window
+      let splashTarget = 0;
+      let autoLockUntil = 0;
+      let scrollTween = null;
+
+      function cancelScrollTween() {
+        scrollTween = null;
+      }
+
+      function startScrollTween(targetY, durationMs) {
+        const startY = window.pageYOffset || document.documentElement.scrollTop || 0;
+        if (Math.abs(targetY - startY) < 1 || isReducedMotion) {
+          window.scrollTo(0, targetY);
+          scrollTween = null;
+          return;
+        }
+        scrollTween = {
+          startY,
+          targetY,
+          startTime: performance.now(),
+          duration: durationMs
+        };
+      }
+
+      function openSplash(options = {}) {
+        const scrollToHero = options.scrollToHero !== false;
+        const now = performance.now();
+        splashTarget = 1;
+        if (splashState === 'open' && splashRaw >= 0.99) return;
+        splashState = 'opening';
+        autoLockUntil = now + (scrollToHero ? 820 : 250);
+
+        if (isReducedMotion) {
+          splashRaw = 1;
+          splashState = 'open';
+        }
+
+        if (scrollToHero) {
+          const maxScroll = getMaxScroll();
+          const curY = window.pageYOffset || document.documentElement.scrollTop || 0;
+          const heroY = HERO_REST_PROGRESS * maxScroll;
+          if (curY < heroY - 2) {
+            startScrollTween(heroY, 720);
+          }
+        }
+      }
+
+      function closeSplash() {
+        const now = performance.now();
+        splashTarget = 0;
+        if (splashState === 'closed' && splashRaw <= 0.01) return;
+        splashState = 'closing';
+        autoLockUntil = now + 760;
+
+        if (isReducedMotion) {
+          splashRaw = 0;
+          splashState = 'closed';
+        }
+
+        startScrollTween(0, 700);
+      }
+
+      function scrollToProgress(targetProg) {
+        const maxScroll = getMaxScroll();
+        if (maxScroll <= 0) return;
+
+        if (targetProg <= 0.005) {
+          closeSplash();
+          return;
+        }
+
+        if (splashState === 'closed' || splashState === 'closing') {
+          openSplash({ scrollToHero: false });
+        }
+        cancelScrollTween();
         window.scrollTo({
-          top: targetProg * scrollHeight,
+          top: targetProg * maxScroll,
           behavior: isReducedMotion ? 'auto' : 'smooth'
         });
       }
@@ -1794,13 +1894,13 @@
       brandLogos.forEach((logo) => {
         logo.addEventListener('click', (e) => {
           e.preventDefault();
-          scrollToProgress(0);
+          closeSplash();
         });
       });
 
       if (scrollHint) {
         scrollHint.addEventListener('click', () => {
-          scrollToProgress(0.115);
+          openSplash({ scrollToHero: true });
         });
       }
 
@@ -1848,10 +1948,6 @@
         return 1 - Math.pow(1 - t, 3);
       }
 
-      function easeInOutQuart(t) {
-        return t < 0.5 ? 8 * t * t * t * t : 1 - Math.pow(-2 * t + 2, 4) / 2;
-      }
-
       // Mobile Menu Logic
       const openMenuBtn = document.getElementById('open-menu-btn');
       const closeMenuBtn = document.getElementById('close-menu-btn');
@@ -1888,6 +1984,7 @@
       let lastTime = performance.now();
       let isCanvasReady = false;
       let logoTargetMetrics = { x: 100, y: 43 };
+      let headerDotMetrics = { x: 145, y: 43 };
 
       function measureLogoTarget() {
         if (!headerBrandLogo) return;
@@ -1898,6 +1995,15 @@
             y: rect.top + rect.height / 2
           };
         }
+        if (headerLogoDot) {
+          const dotRect = headerLogoDot.getBoundingClientRect();
+          if (dotRect.width > 0 && dotRect.height > 0) {
+            headerDotMetrics = {
+              x: dotRect.left + dotRect.width / 2,
+              y: dotRect.top + dotRect.height / 2
+            };
+          }
+        }
       }
 
       function getFramePath(index) {
@@ -1907,13 +2013,10 @@
 
       function resizeCanvas() {
         const dpr = Math.min(window.devicePixelRatio || 1, 2);
-        const w = window.innerWidth;
-        const h = window.innerHeight;
+        const { w, h } = getViewportSize();
 
         canvas.width = Math.round(w * dpr);
         canvas.height = Math.round(h * dpr);
-        canvas.style.width = w + 'px';
-        canvas.style.height = h + 'px';
 
         ctx.imageSmoothingEnabled = true;
         ctx.imageSmoothingQuality = 'high';
@@ -1967,23 +2070,15 @@
         const scrollTop = window.pageYOffset !== undefined
           ? window.pageYOffset
           : (doc.scrollTop || body.scrollTop || 0);
-
-        const scrollHeight = Math.max(
-          doc.scrollHeight,
-          body.scrollHeight,
-          doc.offsetHeight,
-          body.offsetHeight
-        );
-        const clientHeight = window.innerHeight || doc.clientHeight || 1;
-        const maxScroll = scrollHeight - clientHeight;
+        const maxScroll = getMaxScroll();
 
         if (maxScroll <= 0) return 0;
-        return Math.max(0, Math.min(1, scrollTop / maxScroll));
+        return clamp(scrollTop / maxScroll, 0, 1);
       }
 
       let lastFramePathState = '';
 
-      function buildUnifiedFramePath(w, h, tIntro) {
+      function buildUnifiedFramePath(w, h, tWindow, dotX, dotY) {
         const isMobile = w <= 860;
         const isTablet = w <= 1024;
         const pad = isMobile ? 8 : 14;
@@ -1992,34 +2087,50 @@
         const targetWingL = isMobile ? 158 : (isTablet ? 180 : clamp(0.21 * w, 190, 260));
         const targetWingR = isMobile ? 124 : (isTablet ? 196 : clamp(0.21 * w, 205, 256));
 
-        const targetW = Math.max(0, w - pad * 2);
-        const targetH = Math.max(0, h - pad * 2);
+        const L_target = pad;
+        const R_target = Math.max(pad, w - pad);
+        const T_target = pad;
+        const B_target = Math.max(pad, h - pad);
+        const targetW = Math.max(0, R_target - L_target);
+        const targetH = Math.max(0, B_target - T_target);
 
-        const tWindow = clamp((tIntro - 0.04) / 0.96, 0, 1);
-        const tWindowEase = easeInOutQuart(tWindow);
+        const outer = `M -4 -4 H ${w + 4} V ${h + 4} H -4 Z`;
 
-        const curW = targetW * tWindowEase;
-        const curH = targetH * tWindowEase;
-        const outer = `M 0 0 H ${w} V ${h} H 0 Z`;
-
-        if (curW <= 4 || curH <= 4) {
+        if (tWindow <= 0.002) {
           return outer;
         }
 
-        const L = (w - curW) / 2;
-        const R = L + curW;
-        const T = (h - curH) / 2;
-        const B = T + curH;
+        // Portal opens directly from the orange dot next to "tanogaido" in the header
+        const ox = clamp(dotX, L_target, R_target);
+        const oy = clamp(dotY, T_target, B_target);
+        const seedR = 115 * easeOutCubic(clamp(tWindow / 0.36, 0, 1));
+        const eBox = easeInOutCubic(tWindow);
+
+        const L = Math.max(L_target, lerp(ox - seedR, L_target, eBox));
+        const R = Math.min(R_target, lerp(ox + seedR, R_target, eBox));
+        const T = Math.max(T_target, lerp(oy - seedR, T_target, eBox));
+        const B = Math.min(B_target, lerp(oy + seedR, B_target, eBox));
+
+        const curW = R - L;
+        const curH = B - T;
+
+        if (curW <= 3 || curH <= 3) {
+          return outer;
+        }
+
+        const radiusBlend = easeInOutCubic(clamp(tWindow / 0.55, 0, 1));
+        const rCircle = Math.min(curW / 2, curH / 2);
+        const rOuterBase = lerp(rCircle, targetR, radiusBlend);
 
         const wRatio = targetW > 0 ? curW / targetW : 1;
-        const wingEase = easeOutCubic(clamp((tWindow - 0.16) / 0.74, 0, 1));
+        const wingEase = easeInOutCubic(clamp((tWindow - 0.30) / 0.65, 0, 1));
         const wL = targetWingL * wRatio;
         const wR = targetWingR * wRatio;
         const wH = Math.min(targetWingH * wingEase, curH * 0.42);
         const notchSpan = curW - wL - wR;
 
         if (wH <= 2.5 || notchSpan <= 8) {
-          const rSimple = Math.max(0, Math.min(targetR, curW / 2, curH / 2));
+          const rSimple = Math.max(0, Math.min(rOuterBase, curW / 2.02, curH / 2.02));
           if (rSimple <= 0.5) {
             return `${outer} M ${L.toFixed(1)} ${T.toFixed(1)} H ${R.toFixed(1)} V ${B.toFixed(1)} H ${L.toFixed(1)} Z`;
           }
@@ -2035,61 +2146,63 @@
             `A ${rSimple.toFixed(1)} ${rSimple.toFixed(1)} 0 0 1 ${(L + rSimple).toFixed(1)} ${T.toFixed(1)} Z`;
         }
 
-        const rMaxW = Math.min(wL / 2.05, wR / 2.05, notchSpan / 2.05, curW / 6);
-        const rMaxH = Math.min(wH / 2.05, (curH - wH) / 2.05);
-        const r = Math.max(0, Math.min(targetR, rMaxW, rMaxH));
+        const rOuter = Math.max(0, Math.min(rOuterBase, curW / 2.05, (curH - wH) / 2.05));
+        let rWing = Math.max(0, Math.min(targetR, wL / 2.05, wR / 2.05, notchSpan / 2.05, wH / 2.05, (curH - wH) / 2.05));
+        rWing = Math.max(0, Math.min(rWing, wL * 0.94 - rOuter, wR * 0.94 - rOuter));
 
         const x1 = L + wL;
         const x2 = R - wR;
         const yW = T + wH;
 
         return `${outer} ` +
-          `M ${(x1 + r).toFixed(1)} ${T.toFixed(1)} ` +
-          `L ${(x2 - r).toFixed(1)} ${T.toFixed(1)} ` +
-          `A ${r.toFixed(1)} ${r.toFixed(1)} 0 0 1 ${x2.toFixed(1)} ${(T + r).toFixed(1)} ` +
-          `L ${x2.toFixed(1)} ${(yW - r).toFixed(1)} ` +
-          `A ${r.toFixed(1)} ${r.toFixed(1)} 0 0 0 ${(x2 + r).toFixed(1)} ${yW.toFixed(1)} ` +
-          `L ${(R - r).toFixed(1)} ${yW.toFixed(1)} ` +
-          `A ${r.toFixed(1)} ${r.toFixed(1)} 0 0 1 ${R.toFixed(1)} ${(yW + r).toFixed(1)} ` +
-          `L ${R.toFixed(1)} ${(B - r).toFixed(1)} ` +
-          `A ${r.toFixed(1)} ${r.toFixed(1)} 0 0 1 ${(R - r).toFixed(1)} ${B.toFixed(1)} ` +
-          `L ${(L + r).toFixed(1)} ${B.toFixed(1)} ` +
-          `A ${r.toFixed(1)} ${r.toFixed(1)} 0 0 1 ${L.toFixed(1)} ${(B - r).toFixed(1)} ` +
-          `L ${L.toFixed(1)} ${(yW + r).toFixed(1)} ` +
-          `A ${r.toFixed(1)} ${r.toFixed(1)} 0 0 1 ${(L + r).toFixed(1)} ${yW.toFixed(1)} ` +
-          `L ${(x1 - r).toFixed(1)} ${yW.toFixed(1)} ` +
-          `A ${r.toFixed(1)} ${r.toFixed(1)} 0 0 0 ${x1.toFixed(1)} ${(yW - r).toFixed(1)} ` +
-          `L ${x1.toFixed(1)} ${(T + r).toFixed(1)} ` +
-          `A ${r.toFixed(1)} ${r.toFixed(1)} 0 0 1 ${(x1 + r).toFixed(1)} ${T.toFixed(1)} Z`;
+          `M ${(x1 + rWing).toFixed(1)} ${T.toFixed(1)} ` +
+          `L ${(x2 - rWing).toFixed(1)} ${T.toFixed(1)} ` +
+          `A ${rWing.toFixed(1)} ${rWing.toFixed(1)} 0 0 1 ${x2.toFixed(1)} ${(T + rWing).toFixed(1)} ` +
+          `L ${x2.toFixed(1)} ${(yW - rWing).toFixed(1)} ` +
+          `A ${rWing.toFixed(1)} ${rWing.toFixed(1)} 0 0 0 ${(x2 + rWing).toFixed(1)} ${yW.toFixed(1)} ` +
+          `L ${(R - rOuter).toFixed(1)} ${yW.toFixed(1)} ` +
+          `A ${rOuter.toFixed(1)} ${rOuter.toFixed(1)} 0 0 1 ${R.toFixed(1)} ${(yW + rOuter).toFixed(1)} ` +
+          `L ${R.toFixed(1)} ${(B - rOuter).toFixed(1)} ` +
+          `A ${rOuter.toFixed(1)} ${rOuter.toFixed(1)} 0 0 1 ${(R - rOuter).toFixed(1)} ${B.toFixed(1)} ` +
+          `L ${(L + rOuter).toFixed(1)} ${B.toFixed(1)} ` +
+          `A ${rOuter.toFixed(1)} ${rOuter.toFixed(1)} 0 0 1 ${L.toFixed(1)} ${(B - rOuter).toFixed(1)} ` +
+          `L ${L.toFixed(1)} ${(yW + rOuter).toFixed(1)} ` +
+          `A ${rOuter.toFixed(1)} ${rOuter.toFixed(1)} 0 0 1 ${(L + rOuter).toFixed(1)} ${yW.toFixed(1)} ` +
+          `L ${(x1 - rWing).toFixed(1)} ${yW.toFixed(1)} ` +
+          `A ${rWing.toFixed(1)} ${rWing.toFixed(1)} 0 0 0 ${x1.toFixed(1)} ${(yW - rWing).toFixed(1)} ` +
+          `L ${x1.toFixed(1)} ${(T + rWing).toFixed(1)} ` +
+          `A ${rWing.toFixed(1)} ${rWing.toFixed(1)} 0 0 1 ${(x1 + rWing).toFixed(1)} ${T.toFixed(1)} Z`;
       }
 
-      function updateUIProgress(progress) {
-        const w = window.innerWidth;
-        const h = window.innerHeight;
+      function updateUIProgress(progress, sRaw) {
+        const { w, h } = getViewportSize();
         const isMobile = w <= 860;
-        const INTRO_END = 0.095;
 
-        // 1. Unified White Architectural Frame + Notched Header Morph & Logo Flight (0.000 -> 0.095)
-        const tIntro = clamp(progress / INTRO_END, 0, 1);
-        const tLogoEase = easeInOutCubic(tIntro);
+        // Beat 1 (0.00 -> 0.36): Logo glides from splash center into header wing
+        // Beat 2 (0.20 -> 1.00): Window + header shape open outward from the orange dot beside tanogaido in header
+        const tLogo = easeInOutCubic(clamp(sRaw / 0.36, 0, 1));
+        const tWindow = clamp((sRaw - 0.20) / 0.80, 0, 1);
 
         if (architecturalFrameSvg && architecturalFramePath) {
-          const stateKey = `${w}x${h}:${tIntro >= 1 ? 1 : tIntro.toFixed(4)}`;
+          const stateKey = `${w}x${h}:${tWindow >= 1 ? 1 : tWindow.toFixed(4)}:${Math.round(headerDotMetrics.x)},${Math.round(headerDotMetrics.y)}`;
           if (stateKey !== lastFramePathState) {
             architecturalFrameSvg.setAttribute('viewBox', `0 0 ${w} ${h}`);
-            architecturalFramePath.setAttribute('d', buildUnifiedFramePath(w, h, tIntro));
+            architecturalFramePath.setAttribute(
+              'd',
+              buildUnifiedFramePath(w, h, tWindow, headerDotMetrics.x, headerDotMetrics.y)
+            );
             lastFramePathState = stateKey;
           }
         }
 
         if (introLogo && headerBrandLogo) {
-          if (tIntro < 0.995) {
+          if (sRaw < 0.37) {
             const startX = w / 2;
             const startY = h / 2;
             const startScale = isMobile ? 1.65 : 2.25;
-            const curX = lerp(startX, logoTargetMetrics.x, tLogoEase);
-            const curY = lerp(startY, logoTargetMetrics.y, tLogoEase);
-            const curScale = lerp(startScale, 1, tLogoEase);
+            const curX = lerp(startX, logoTargetMetrics.x, tLogo);
+            const curY = lerp(startY, logoTargetMetrics.y, tLogo);
+            const curScale = lerp(startScale, 1, tLogo);
 
             introLogo.style.display = 'inline-flex';
             introLogo.style.opacity = '1';
@@ -2104,7 +2217,7 @@
         }
 
         // Reveal header nav links & CTA smoothly inside the sculpting header notch & right wing
-        const navReveal = easeOutCubic(clamp((tIntro - 0.50) / 0.50, 0, 1));
+        const navReveal = easeOutCubic(clamp((tWindow - 0.52) / 0.48, 0, 1));
         if (navCenterZone) {
           navCenterZone.style.opacity = String(navReveal);
           navCenterZone.style.transform = `translateY(${((1 - navReveal) * -10).toFixed(2)}px)`;
@@ -2116,14 +2229,14 @@
           navActionsZone.style.pointerEvents = navReveal > 0.7 ? 'auto' : 'none';
         }
 
-        // Compact frosted backdrop behind center nav links after intro opens
-        if (progress > INTRO_END + 0.015) {
+        // Compact frosted backdrop behind center nav links once user scrolls past hero start
+        if (progress > HERO_REST_PROGRESS + 0.025 && sRaw > 0.9) {
           navbar.classList.add('scrolled');
         } else {
           navbar.classList.remove('scrolled');
         }
 
-        // 2. Hero Entrance (during window reveal) & Staggered Upward Exit (0.145 -> 0.210)
+        // 2. Hero Entrance (synchronized with window opening) & Staggered Upward Exit (0.145 -> 0.210)
         function getHeroExitProgress(val, start, end) {
           if (val <= start) return 1;
           if (val >= end) return 0;
@@ -2134,10 +2247,10 @@
           return easeOutCubic(clamp((val - start) / (end - start), 0, 1));
         }
 
-        const enterEyebrow = getHeroEnterProgress(tIntro, 0.32, 0.80);
-        const enterTitle = getHeroEnterProgress(tIntro, 0.38, 0.86);
-        const enterDesc = getHeroEnterProgress(tIntro, 0.45, 0.92);
-        const enterCta = getHeroEnterProgress(tIntro, 0.52, 0.98);
+        const enterEyebrow = getHeroEnterProgress(tWindow, 0.35, 0.80);
+        const enterTitle = getHeroEnterProgress(tWindow, 0.42, 0.86);
+        const enterDesc = getHeroEnterProgress(tWindow, 0.50, 0.92);
+        const enterCta = getHeroEnterProgress(tWindow, 0.58, 0.98);
 
         const exitEyebrow = getHeroExitProgress(progress, 0.145, 0.168);
         const exitTitle = getHeroExitProgress(progress, 0.155, 0.180);
@@ -2168,11 +2281,11 @@
 
         if (heroView) {
           heroView.style.pointerEvents = (enterCta * exitCta) > 0.15 ? 'auto' : 'none';
-          heroView.style.display = (progress > 0.212 || tIntro < 0.25) ? 'none' : 'flex';
+          heroView.style.display = (progress > 0.212 || tWindow < 0.25) ? 'none' : 'flex';
         }
 
         // 3. Services Stage: Active from 0.210 to 0.790
-        if (progress >= 0.210 && progress < 0.790) {
+        if (progress >= 0.210 && progress < 0.790 && sRaw > 0.85) {
           let stageOpacity = 1;
           if (progress < 0.230) {
             stageOpacity = (progress - 0.210) / 0.020;
@@ -2183,17 +2296,14 @@
           servicesStage.style.pointerEvents = stageOpacity > 0.3 ? 'auto' : 'none';
           servicesStage.style.display = 'flex';
 
-          // Normalized progress across services phase
           const pNorm = clamp((progress - 0.230) / (0.750 - 0.230), 0, 1);
-          const deckProgress = pNorm * 5.2; // 0.0 to 5.2
+          const deckProgress = pNorm * 5.2;
 
-          // Mini Dock tab highlighting
           const activeTabIdx = deckProgress >= 4.4 ? 5 : Math.min(4, Math.floor(deckProgress));
           miniTabs.forEach((tab, idx) => {
             tab.classList.toggle('active', idx === activeTabIdx);
           });
 
-          // Single Active Card (Lempar Kartu) vs All Services Showcase
           if (deckProgress < 4.4) {
             allServicesView.style.display = 'none';
             allServicesView.style.opacity = '0';
@@ -2213,7 +2323,6 @@
                   card.style.zIndex = '10';
                   card.style.pointerEvents = 'auto';
                 } else {
-                  // Toss away animation ("seperti lempar kartu")
                   const u = (t - 0.40) / 0.60;
                   const e = u * u * (3 - 2 * u);
                   card.style.display = 'block';
@@ -2228,7 +2337,6 @@
                   card.style.opacity = '0';
                   card.style.pointerEvents = 'none';
                 } else {
-                  // Next card deals into place smoothly
                   const u = (t - 0.40) / 0.60;
                   const e = u * u * (3 - 2 * u);
                   card.style.display = 'block';
@@ -2244,7 +2352,6 @@
               }
             }
           } else {
-            // Deck progress >= 4.4: Card 4 finishes toss and All-Services view appears
             const u = clamp((deckProgress - 4.4) / 0.35, 0, 1);
             const e = u * u * (3 - 2 * u);
 
@@ -2275,7 +2382,7 @@
         }
 
         // 4. Final CTA Stage: 0.790 to 1.000
-        if (progress >= 0.790) {
+        if (progress >= 0.790 && sRaw > 0.85) {
           const factor = Math.min(1, (progress - 0.790) / 0.09);
           finalCtaStage.style.opacity = String(factor);
           finalCtaStage.style.transform = `translateY(${(1 - factor) * 20}px)`;
@@ -2286,29 +2393,89 @@
         }
 
         if (scrollHint) {
-          const hintVisible = progress < 0.04;
-          scrollHint.style.opacity = hintVisible ? String(0.85 * (1 - progress / 0.04)) : '0';
-          scrollHint.style.pointerEvents = hintVisible ? 'auto' : 'none';
+          const hintAlpha = clamp(1 - sRaw * 3.2, 0, 1);
+          scrollHint.style.opacity = String(0.85 * hintAlpha);
+          scrollHint.style.pointerEvents = hintAlpha > 0.2 ? 'auto' : 'none';
         }
       }
 
       function computeTargetFrame(progress) {
         if (progress < 0.210) {
-          // Phase 0 & 1: Mist clears slowly as window opens & hero reveals (Frame 0 to 75)
           return (progress / 0.210) * 75;
         } else if (progress < 0.790) {
-          // Phase 2: Services phase - Background is FROZEN at frame 75
           return 75;
         } else {
-          // Phase 3: Resume background animation into final scene (Frame 75 to 299)
           const pFinal = (progress - 0.790) / (1.000 - 0.790);
           return 75 + pFinal * (TOTAL_FRAMES - 1 - 75);
         }
       }
 
-      function updateTargetProgress() {
-        targetProgress = getScrollProgress();
+      function handleScrollTrigger() {
+        const now = performance.now();
+        const maxScroll = getMaxScroll();
+        const scrollTop = window.pageYOffset || document.documentElement.scrollTop || 0;
+        const prog = maxScroll > 0 ? clamp(scrollTop / maxScroll, 0, 1) : 0;
+
+        if (scrollTween) {
+          targetProgress = prog;
+          return;
+        }
+
+        if (now < autoLockUntil) {
+          return;
+        }
+
+        if (splashState === 'closed') {
+          if (scrollTop > 6) {
+            openSplash({ scrollToHero: true });
+          }
+        } else if (splashState === 'open') {
+          if (prog <= SPLASH_CLOSE_PROGRESS) {
+            closeSplash();
+          }
+        }
+
+        targetProgress = prog;
       }
+
+      // Detect gentle wheel / touch nudges cleanly so splash opens & closes effortlessly
+      window.addEventListener('wheel', (e) => {
+        const now = performance.now();
+        if (now < autoLockUntil || splashState === 'opening' || splashState === 'closing') {
+          return;
+        }
+        if (splashState === 'closed' && e.deltaY > 4) {
+          openSplash({ scrollToHero: true });
+        } else if (splashState === 'open' && e.deltaY < -6 && getScrollProgress() <= HERO_REST_PROGRESS + 0.012) {
+          closeSplash();
+        }
+      }, { passive: true });
+
+      let touchStartY = null;
+      window.addEventListener('touchstart', (e) => {
+        if (e.touches && e.touches.length === 1) {
+          touchStartY = e.touches[0].clientY;
+        }
+      }, { passive: true });
+
+      window.addEventListener('touchmove', (e) => {
+        if (touchStartY === null || !e.touches || e.touches.length !== 1) return;
+        const dy = touchStartY - e.touches[0].clientY; // positive = swiping up (scroll down)
+        const now = performance.now();
+        if (now < autoLockUntil || splashState === 'opening' || splashState === 'closing') return;
+
+        if (splashState === 'closed' && dy > 10) {
+          touchStartY = null;
+          openSplash({ scrollToHero: true });
+        } else if (splashState === 'open' && dy < -14 && getScrollProgress() <= HERO_REST_PROGRESS + 0.015) {
+          touchStartY = null;
+          closeSplash();
+        }
+      }, { passive: true });
+
+      window.addEventListener('touchend', () => {
+        touchStartY = null;
+      }, { passive: true });
 
       function preloadImages() {
         const firstImg = new Image();
@@ -2339,6 +2506,41 @@
         const dt = Math.min((now - lastTime) / 1000, 0.1);
         lastTime = now;
 
+        // Advance programmatic scroll tween when opening/closing splash
+        if (scrollTween) {
+          const elapsed = now - scrollTween.startTime;
+          const u = clamp(elapsed / scrollTween.duration, 0, 1);
+          const eased = easeInOutCubic(u);
+          const nextY = lerp(scrollTween.startY, scrollTween.targetY, eased);
+          window.scrollTo(0, nextY);
+          targetProgress = getScrollProgress();
+          if (u >= 1) {
+            scrollTween = null;
+          }
+        } else {
+          targetProgress = getScrollProgress();
+        }
+
+        // Smoothly drive splashRaw toward splashTarget (0 = full white, 1 = open)
+        if (isReducedMotion) {
+          splashRaw = splashTarget;
+          splashState = splashTarget === 1 ? 'open' : 'closed';
+        } else {
+          if (splashRaw < splashTarget) {
+            splashRaw = Math.min(splashTarget, splashRaw + dt / 1.05);
+            if (splashRaw >= 1) {
+              splashRaw = 1;
+              splashState = 'open';
+            }
+          } else if (splashRaw > splashTarget) {
+            splashRaw = Math.max(splashTarget, splashRaw - dt / 0.85);
+            if (splashRaw <= 0) {
+              splashRaw = 0;
+              splashState = 'closed';
+            }
+          }
+        }
+
         if (isReducedMotion) {
           smoothedProgress = targetProgress;
         } else {
@@ -2363,7 +2565,7 @@
           }
         }
 
-        updateUIProgress(smoothedProgress);
+        updateUIProgress(smoothedProgress, splashRaw);
 
         const frameToRender = Math.max(0, Math.min(TOTAL_FRAMES - 1, Math.round(currentFrame)));
 
@@ -2378,16 +2580,33 @@
         requestAnimationFrame(animate);
       }
 
-      window.addEventListener('scroll', updateTargetProgress, { passive: true });
-      document.addEventListener('scroll', updateTargetProgress, { passive: true });
-      window.addEventListener('resize', () => {
+      window.addEventListener('scroll', handleScrollTrigger, { passive: true });
+      document.addEventListener('scroll', handleScrollTrigger, { passive: true });
+
+      function handleResize() {
         resizeCanvas();
-        updateTargetProgress();
-        updateUIProgress(smoothedProgress);
-      }, { passive: true });
+        lastFramePathState = '';
+        targetProgress = getScrollProgress();
+        updateUIProgress(smoothedProgress, splashRaw);
+      }
+
+      window.addEventListener('resize', handleResize, { passive: true });
+      if (window.visualViewport) {
+        window.visualViewport.addEventListener('resize', handleResize, { passive: true });
+      }
 
       window.addEventListener('keydown', (e) => {
-        const step = window.innerHeight * 0.4;
+        if (splashState === 'closed' && (e.key === 'ArrowDown' || e.key === 'PageDown' || e.key === ' ')) {
+          e.preventDefault();
+          openSplash({ scrollToHero: true });
+          return;
+        }
+        if (splashState === 'open' && (e.key === 'ArrowUp' || e.key === 'PageUp') && getScrollProgress() <= HERO_REST_PROGRESS + 0.02) {
+          e.preventDefault();
+          closeSplash();
+          return;
+        }
+        const step = getViewportSize().h * 0.4;
         if (e.key === 'ArrowDown' || e.key === 'PageDown' || e.key === ' ') {
           window.scrollBy({ top: step, behavior: 'smooth' });
         } else if (e.key === 'ArrowUp' || e.key === 'PageUp') {
@@ -2395,22 +2614,25 @@
         }
       });
 
-      targetProgress = getScrollProgress();
-      smoothedProgress = targetProgress;
-      targetFrame = computeTargetFrame(smoothedProgress);
-      currentFrame = targetFrame;
+      // Always start fresh at top full-white splashscreen on load
+      window.scrollTo(0, 0);
+      targetProgress = 0;
+      smoothedProgress = 0;
+      targetFrame = 0;
+      currentFrame = 0;
 
       resizeCanvas();
       if (document.fonts && document.fonts.ready) {
         document.fonts.ready.then(() => {
           measureLogoTarget();
-          updateUIProgress(smoothedProgress);
+          lastFramePathState = '';
+          updateUIProgress(smoothedProgress, splashRaw);
         });
       }
       preloadImages();
-      updateUIProgress(smoothedProgress);
+      updateUIProgress(smoothedProgress, splashRaw);
       requestAnimationFrame(animate);
-      }) ();
+    })();
   </script>
 </body>
 
