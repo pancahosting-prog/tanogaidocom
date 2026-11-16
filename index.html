@@ -106,13 +106,27 @@
       height: 100vh;
       z-index: 110;
       pointer-events: none;
+      overflow: hidden;
       will-change: opacity;
     }
 
-    .intro-curtain svg {
-      display: block;
-      width: 100%;
-      height: 100%;
+    .intro-solid-bg {
+      position: absolute;
+      inset: 0;
+      background: #ffffff;
+      pointer-events: none;
+    }
+
+    .intro-window-aperture {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 0px;
+      height: 0px;
+      border-radius: 26px;
+      box-shadow: 0 0 0 150vmax #ffffff;
+      will-change: width, height, border-radius;
     }
 
     .intro-logo-flight {
@@ -130,6 +144,7 @@
       white-space: nowrap;
       user-select: none;
       transform-origin: center center;
+      transform: translate3d(50vw, 50vh, 0) translate(-50%, -50%) scale(2.25);
       will-change: transform, opacity;
     }
 
@@ -1435,15 +1450,8 @@
 
   <!-- Full-White Intro Window Curtain & Centered Flying Logo -->
   <div class="intro-curtain" id="intro-curtain" aria-hidden="true">
-    <svg preserveAspectRatio="none">
-      <defs>
-        <mask id="intro-window-mask">
-          <rect width="100%" height="100%" fill="white" />
-          <rect id="intro-window-hole" x="50%" y="50%" width="0" height="0" rx="26" ry="26" fill="black" />
-        </mask>
-      </defs>
-      <rect width="100%" height="100%" fill="#ffffff" mask="url(#intro-window-mask)" />
-    </svg>
+    <div class="intro-solid-bg" id="intro-solid-bg"></div>
+    <div class="intro-window-aperture" id="intro-window-aperture"></div>
   </div>
   <div class="intro-logo-flight" id="intro-logo" aria-hidden="true">tanogaido<span class="dot">.</span></div>
 
@@ -1892,7 +1900,8 @@
       const navCenterZone = document.getElementById('nav-center-zone');
       const navActionsZone = document.getElementById('nav-actions-zone');
       const introCurtain = document.getElementById('intro-curtain');
-      const introWindowHole = document.getElementById('intro-window-hole');
+      const introSolidBg = document.getElementById('intro-solid-bg');
+      const introWindowAperture = document.getElementById('intro-window-aperture');
       const introLogo = document.getElementById('intro-logo');
 
       const heroView = document.getElementById('hero-view');
@@ -2157,7 +2166,7 @@
           }
         }
 
-        if (introCurtain && introWindowHole) {
+        if (introCurtain && introWindowAperture) {
           if (tIntro < 0.995) {
             const pad = isMobile ? 8 : 14;
             const targetRadius = isMobile ? 18 : 26;
@@ -2166,18 +2175,16 @@
 
             const curW = targetW * tWindowEase;
             const curH = targetH * tWindowEase;
-            const curX = (w - curW) / 2;
-            const curY = (h - curH) / 2;
             const curR = Math.min(targetRadius, curW / 2, curH / 2);
 
             introCurtain.style.display = 'block';
             introCurtain.style.opacity = String(1 - clamp((tIntro - 0.92) / 0.075, 0, 1));
-            introWindowHole.setAttribute('x', curX.toFixed(2));
-            introWindowHole.setAttribute('y', curY.toFixed(2));
-            introWindowHole.setAttribute('width', curW.toFixed(2));
-            introWindowHole.setAttribute('height', curH.toFixed(2));
-            introWindowHole.setAttribute('rx', curR.toFixed(2));
-            introWindowHole.setAttribute('ry', curR.toFixed(2));
+            if (introSolidBg) {
+              introSolidBg.style.opacity = String(1 - clamp(tWindow / 0.12, 0, 1));
+            }
+            introWindowAperture.style.width = `${curW.toFixed(2)}px`;
+            introWindowAperture.style.height = `${curH.toFixed(2)}px`;
+            introWindowAperture.style.borderRadius = `${curR.toFixed(2)}px`;
           } else {
             introCurtain.style.display = 'none';
           }

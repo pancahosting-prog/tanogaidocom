@@ -34,9 +34,11 @@ const server = http.createServer((req, res) => {
       return res.end('404 Not Found');
     }
     const ext = path.extname(filePath).toLowerCase();
+    const isHtml = ext === '.html';
     res.writeHead(200, {
       'Content-Type': MIME[ext] || 'application/octet-stream',
-      'Cache-Control': 'public, max-age=3600'
+      'Cache-Control': isHtml ? 'no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0, s-maxage=0' : 'public, max-age=3600',
+      ...(isHtml ? { 'Pragma': 'no-cache', 'Expires': '0', 'Surrogate-Control': 'no-store' } : {})
     });
     fs.createReadStream(filePath).pipe(res);
   });
