@@ -1744,8 +1744,6 @@
       const TOTAL_FRAMES = 300;
       const FRAME_PREFIX = 'frames/ezgif-frame-';
       const FRAME_EXT = '.jpg';
-      const HERO_REST_PROGRESS = 0.045;
-      const SPLASH_CLOSE_PROGRESS = 0.022;
 
       const canvas = document.getElementById('canvas');
       const ctx = canvas.getContext('2d', { alpha: false });
@@ -1796,9 +1794,9 @@
         return Math.max(0, scrollHeight - h);
       }
 
-      // Splashscreen Auto State ('closed' | 'opening' | 'open' | 'closing')
+      // Splashscreen Auto State (one-way initial load reveal: 'closed' | 'opening' | 'open')
       let splashState = 'closed';
-      let splashRaw = 0; // 0 = fullscreen white splash, 1 = fully opened header + window
+      let splashRaw = 0; // 0 = initial white splash, 1 = opened header + window
       let splashTarget = 0;
       let autoLockUntil = 0;
       let scrollTween = null;
@@ -1809,7 +1807,7 @@
 
       function startScrollTween(targetY, durationMs) {
         const startY = window.pageYOffset || document.documentElement.scrollTop || 0;
-        if (Math.abs(targetY - startY) < 1 || isReducedMotion) {
+        if (durationMs <= 0 || isReducedMotion) {
           window.scrollTo(0, targetY);
           scrollTween = null;
           return;
@@ -1823,54 +1821,29 @@
       }
 
       function openSplash(options = {}) {
-        const scrollToHero = options.scrollToHero !== false;
+        const settleAtTop = options.settleAtTop !== false;
+        if (splashState !== 'closed') return;
         const now = performance.now();
         splashTarget = 1;
-        if (splashState === 'open' && splashRaw >= 0.99) return;
         splashState = 'opening';
-        autoLockUntil = now + (scrollToHero ? 820 : 250);
+        autoLockUntil = now + (settleAtTop ? 750 : 250);
 
         if (isReducedMotion) {
           splashRaw = 1;
           splashState = 'open';
         }
 
-        if (scrollToHero) {
-          const maxScroll = getMaxScroll();
-          const curY = window.pageYOffset || document.documentElement.scrollTop || 0;
-          const heroY = HERO_REST_PROGRESS * maxScroll;
-          if (curY < heroY - 2) {
-            startScrollTween(heroY, 720);
-          }
+        if (settleAtTop) {
+          startScrollTween(0, 520);
         }
-      }
-
-      function closeSplash() {
-        const now = performance.now();
-        splashTarget = 0;
-        if (splashState === 'closed' && splashRaw <= 0.01) return;
-        splashState = 'closing';
-        autoLockUntil = now + 760;
-
-        if (isReducedMotion) {
-          splashRaw = 0;
-          splashState = 'closed';
-        }
-
-        startScrollTween(0, 700);
       }
 
       function scrollToProgress(targetProg) {
         const maxScroll = getMaxScroll();
         if (maxScroll <= 0) return;
 
-        if (targetProg <= 0.005) {
-          closeSplash();
-          return;
-        }
-
-        if (splashState === 'closed' || splashState === 'closing') {
-          openSplash({ scrollToHero: false });
+        if (splashState === 'closed') {
+          openSplash({ settleAtTop: false });
         }
         cancelScrollTween();
         window.scrollTo({
@@ -1894,13 +1867,13 @@
       brandLogos.forEach((logo) => {
         logo.addEventListener('click', (e) => {
           e.preventDefault();
-          closeSplash();
+          scrollToProgress(0);
         });
       });
 
       if (scrollHint) {
         scrollHint.addEventListener('click', () => {
-          openSplash({ scrollToHero: true });
+          openSplash({ settleAtTop: true });
         });
       }
 
@@ -2229,8 +2202,8 @@
           navActionsZone.style.pointerEvents = navReveal > 0.7 ? 'auto' : 'none';
         }
 
-        // Compact frosted backdrop behind center nav links once user scrolls past hero start
-        if (progress > HERO_REST_PROGRESS + 0.025 && sRaw > 0.9) {
+        // Compact frosted backdrop behind center nav links once user scrolls down
+        if (progress > 0.035 && sRaw > 0.9) {
           navbar.classList.add('scrolled');
         } else {
           navbar.classList.remove('scrolled');
@@ -2425,51 +2398,33 @@
           return;
         }
 
-        if (splashState === 'closed') {
-          if (scrollTop > 6) {
-            openSplash({ scrollToHero: true });
-          }
-        } else if (splashState === 'open') {
-          if (prog <= SPLASH_CLOSE_PROGRESS) {
-            closeSplash();
-          }
+        if (splashState === 'closed' && scrollTop > 4) {
+          openSplash({ settleAtTop: true });
         }
 
         targetProgress = prog;
       }
 
-      // Detect gentle wheel / touch nudges cleanly so splash opens & closes effortlessly
+      // Detect gentle initial wheel / touch nudge to open the initial splashscreen once
       window.addEventListener('wheel', (e) => {
-        const now = performance.now();
-        if (now < autoLockUntil || splashState === 'opening' || splashState === 'closing') {
-          return;
-        }
         if (splashState === 'closed' && e.deltaY > 4) {
-          openSplash({ scrollToHero: true });
-        } else if (splashState === 'open' && e.deltaY < -6 && getScrollProgress() <= HERO_REST_PROGRESS + 0.012) {
-          closeSplash();
+          openSplash({ settleAtTop: true });
         }
       }, { passive: true });
 
       let touchStartY = null;
       window.addEventListener('touchstart', (e) => {
-        if (e.touches && e.touches.length === 1) {
+        if (splashState === 'closed' && e.touches && e.touches.length === 1) {
           touchStartY = e.touches[0].clientY;
         }
       }, { passive: true });
 
       window.addEventListener('touchmove', (e) => {
-        if (touchStartY === null || !e.touches || e.touches.length !== 1) return;
+        if (splashState !== 'closed' || touchStartY === null || !e.touches || e.touches.length !== 1) return;
         const dy = touchStartY - e.touches[0].clientY; // positive = swiping up (scroll down)
-        const now = performance.now();
-        if (now < autoLockUntil || splashState === 'opening' || splashState === 'closing') return;
-
-        if (splashState === 'closed' && dy > 10) {
+        if (dy > 8) {
           touchStartY = null;
-          openSplash({ scrollToHero: true });
-        } else if (splashState === 'open' && dy < -14 && getScrollProgress() <= HERO_REST_PROGRESS + 0.015) {
-          touchStartY = null;
-          closeSplash();
+          openSplash({ settleAtTop: true });
         }
       }, { passive: true });
 
@@ -2598,12 +2553,7 @@
       window.addEventListener('keydown', (e) => {
         if (splashState === 'closed' && (e.key === 'ArrowDown' || e.key === 'PageDown' || e.key === ' ')) {
           e.preventDefault();
-          openSplash({ scrollToHero: true });
-          return;
-        }
-        if (splashState === 'open' && (e.key === 'ArrowUp' || e.key === 'PageUp') && getScrollProgress() <= HERO_REST_PROGRESS + 0.02) {
-          e.preventDefault();
-          closeSplash();
+          openSplash({ settleAtTop: true });
           return;
         }
         const step = getViewportSize().h * 0.4;
