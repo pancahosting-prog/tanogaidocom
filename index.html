@@ -122,6 +122,20 @@
       justify-content: center;
       z-index: 100;
       pointer-events: none;
+      transition: box-shadow 0.25s ease;
+    }
+
+    .navbar-container.unified::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 76px;
+      background: #ffffff;
+      border-bottom: 1px solid rgba(15, 23, 42, 0.07);
+      z-index: -1;
+      pointer-events: none;
     }
 
     .navbar {
@@ -181,15 +195,12 @@
       list-style: none;
       padding: 8px 20px;
       border-radius: 9999px;
-      transition: background 0.3s ease, backdrop-filter 0.3s ease, box-shadow 0.3s ease, gap 0.3s ease;
+      transition: background 0.25s ease, gap 0.25s ease;
     }
 
     .navbar.scrolled .nav-links {
-      background: rgba(255, 255, 255, 0.88);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-      box-shadow: 0 10px 28px -8px rgba(15, 23, 42, 0.14);
-      gap: 22px;
+      background: transparent;
+      gap: 24px;
     }
 
     .nav-links a {
@@ -441,7 +452,7 @@
       display: flex;
       flex-direction: column;
       align-items: flex-start;
-      transition: opacity 0.35s ease, transform 0.35s ease;
+      will-change: transform, opacity;
     }
 
     .eyebrow-row {
@@ -549,12 +560,22 @@
       height: 15px;
     }
 
-    /* Services Stage - Pinned cleanly below the notched header */
+    /* White Surface Stage (Rides above the unified SVG curtain, below fixed header) */
+    .white-content-stage {
+      position: fixed;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 90;
+      pointer-events: none;
+    }
+
+    /* Services Stage - Pinned cleanly below the unified white header */
     .services-stage {
       position: fixed;
-      top: 84px;
+      top: 90px;
       left: 0;
-      width: 100vw;
+      width: 100%;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -562,7 +583,7 @@
       padding: 0 16px;
       opacity: 0;
       pointer-events: none;
-      transition: opacity 0.35s ease;
+      will-change: transform, opacity;
       z-index: 25;
     }
 
@@ -664,13 +685,11 @@
       flex: 1 1 0;
       max-width: 200px;
       min-width: 175px;
-      background: rgba(255, 255, 255, 0.94);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-      border: 1px solid rgba(255, 255, 255, 0.9);
+      background: #ffffff;
+      border: 1px solid rgba(15, 23, 42, 0.08);
       border-radius: 20px;
       overflow: hidden;
-      box-shadow: 0 14px 35px -6px rgba(15, 23, 42, 0.14);
+      box-shadow: 0 14px 35px -6px rgba(15, 23, 42, 0.10);
       display: flex;
       flex-direction: column;
       transition: transform 0.25s ease, box-shadow 0.25s ease;
@@ -979,8 +998,7 @@
     /* Final CTA Card */
     .final-cta-stage {
       position: absolute;
-      top: 0;
-      left: 0;
+      inset: 0;
       width: 100%;
       height: 100%;
       display: flex;
@@ -988,20 +1006,18 @@
       justify-content: center;
       opacity: 0;
       pointer-events: none;
-      transition: opacity 0.4s ease;
+      will-change: transform, opacity;
       z-index: 15;
     }
 
     .milestone-card {
-      background: var(--surface-white);
-      backdrop-filter: blur(24px);
-      -webkit-backdrop-filter: blur(24px);
-      border: 1px solid var(--border-light);
+      background: #ffffff;
+      border: 1px solid rgba(15, 23, 42, 0.08);
       border-radius: 28px;
       padding: 34px 40px;
       max-width: 580px;
       width: 90%;
-      box-shadow: 0 20px 50px -10px rgba(0, 0, 0, 0.18);
+      box-shadow: 0 24px 60px -12px rgba(15, 23, 42, 0.14);
       text-align: center;
       pointer-events: auto;
     }
@@ -1127,6 +1143,10 @@
                 left: 8px;
                 right: 8px;
                 height: 48px;
+              }
+
+              .navbar-container.unified::before {
+                height: 60px;
               }
 
               .navbar {
@@ -1268,24 +1288,24 @@
   <div class="intro-logo-flight" id="intro-logo" aria-hidden="true">tanogaido<span class="dot" id="intro-logo-dot">.</span></div>
 
   <!-- Top Header Navigation -->
-  <div class="navbar-container">
+  <div class="navbar-container" id="navbar-container">
     <nav class="navbar" id="main-navbar">
       <div class="nav-brand-zone">
         <a href="#" class="brand-logo" id="header-brand-logo">tanogaido<span class="dot" id="header-logo-dot">.</span></a>
       </div>
       <div class="nav-center-zone" id="nav-center-zone">
         <ul class="nav-links">
-          <li><a href="#destinations" data-scroll-progress="0.24">Destinations</a></li>
-          <li><a href="#tours" data-scroll-progress="0.34">Private Tours</a></li>
+          <li><a href="#destinations" data-scroll-progress="0.26">Destinations</a></li>
+          <li><a href="#tours" data-scroll-progress="0.36">Private Tours</a></li>
           <li><a href="#passes" data-scroll-progress="0.56">JR Pass</a></li>
-          <li><a href="#pricing" data-scroll-progress="0.74">Pricing</a></li>
-          <li><a href="#guides" data-scroll-progress="0.24">Guides</a></li>
+          <li><a href="#pricing" data-scroll-progress="0.76">Pricing</a></li>
+          <li><a href="#guides" data-scroll-progress="0.26">Guides</a></li>
         </ul>
       </div>
       <div class="nav-actions" id="nav-actions-zone">
         <!-- Desktop Explore Pill + Circular Arrow -->
         <div class="header-cta-group">
-          <a href="#explore" class="btn-explore" data-scroll-progress="0.24">Explore Now</a>
+          <a href="#explore" class="btn-explore" data-scroll-progress="0.26">Explore Now</a>
           <a href="https://wa.me/6281318939319?text=Halo%20Tanogaido,%20saya%20ingin%20konsultasi%20liburan%20ke%20Jepang." target="_blank" class="btn-explore-circle" aria-label="Konsultasi WhatsApp">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <path d="M7 17L17 7M17 7H8M17 7V16" />
@@ -1311,13 +1331,13 @@
         <button class="btn-close-menu" id="close-menu-btn" aria-label="Close menu">&times;</button>
       </div>
       <ul class="mobile-nav-list">
-        <li><a href="#destinations" class="mobile-nav-item" data-scroll-progress="0.24">Destinations</a></li>
-        <li><a href="#tours" class="mobile-nav-item" data-scroll-progress="0.34">Private Tours</a></li>
+        <li><a href="#destinations" class="mobile-nav-item" data-scroll-progress="0.26">Destinations</a></li>
+        <li><a href="#tours" class="mobile-nav-item" data-scroll-progress="0.36">Private Tours</a></li>
         <li><a href="#passes" class="mobile-nav-item" data-scroll-progress="0.56">JR Pass</a></li>
-        <li><a href="#pricing" class="mobile-nav-item" data-scroll-progress="0.74">Pricing</a></li>
-        <li><a href="#guides" class="mobile-nav-item" data-scroll-progress="0.24">Guides</a></li>
+        <li><a href="#pricing" class="mobile-nav-item" data-scroll-progress="0.76">Pricing</a></li>
+        <li><a href="#guides" class="mobile-nav-item" data-scroll-progress="0.26">Guides</a></li>
       </ul>
-      <a href="#explore" class="btn-explore mobile-nav-item" data-scroll-progress="0.24"
+      <a href="#explore" class="btn-explore mobile-nav-item" data-scroll-progress="0.26"
         style="display: flex; justify-content: center; width: 100%; margin-top: 6px; gap: 6px;">
         <span>Explore Now</span>
         <span style="color: var(--primary-orange);">→</span>
@@ -1325,10 +1345,9 @@
     </div>
   </div>
 
-  <!-- Fixed Interactive UI Stage (Everything fits inside viewport on open) -->
-  <div class="fixed-ui-stage">
+  <!-- Fixed Hero Cover Stage (Sits behind white SVG curtain so rising white floor clips & guides it upward) -->
+  <div class="fixed-ui-stage" id="cover-stage">
     <div class="content-constraint">
-
       <section class="hero-content" id="hero-view">
         <div class="eyebrow-row" id="hero-eyebrow">
           <span class="eyebrow">DISCOVER THE LAND OF THE RISING SUN</span>
@@ -1342,7 +1361,7 @@
           Curated private tours, seamless rail transport, and licensed bilingual guides for travelers who seek
           authentic Japan. From Kyoto's quiet shrines to Mount Fuji.
         </p>
-        <a href="#explore" class="hero-cta-btn" id="hero-cta" data-scroll-progress="0.24">
+        <a href="#explore" class="hero-cta-btn" id="hero-cta" data-scroll-progress="0.26">
           <span>Explore Now</span>
           <span class="hero-cta-circle" aria-hidden="true">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
@@ -1351,13 +1370,17 @@
           </span>
         </a>
       </section>
+    </div>
+  </div>
 
-      <!-- Company Services Stage with Glass Dock, Single Active Card (Lempar Kartu), and Final All-Services Showcase -->
-      <div class="services-stage" id="services-stage">
-        <div class="services-header">
-          <span class="services-eyebrow">LAYANAN EKSKLUSIF TANOGAIDO</span>
-          <h2 class="services-title">Solusi Lengkap Liburan ke Jepang</h2>
-        </div>
+  <!-- White Content Stage (Appears strictly on the rising white curtain & united white page) -->
+  <div class="white-content-stage" id="white-content-stage">
+    <!-- Company Services Stage with Glass Dock, Single Active Card (Lempar Kartu), and Final All-Services Showcase -->
+    <div class="services-stage" id="services-stage">
+      <div class="services-header">
+        <span class="services-eyebrow">LAYANAN EKSKLUSIF TANOGAIDO</span>
+        <h2 class="services-title">Solusi Lengkap Liburan ke Jepang</h2>
+      </div>
 
         <!-- Container for Services (Snug under header) -->
         <div class="services-body-area">
@@ -1723,8 +1746,6 @@
           </div>
         </div>
       </div>
-
-    </div>
   </div>
 
   <!-- Bottom Scroll Cue -->
@@ -1748,6 +1769,7 @@
       const canvas = document.getElementById('canvas');
       const ctx = canvas.getContext('2d', { alpha: false });
 
+      const navbarContainer = document.getElementById('navbar-container');
       const navbar = document.getElementById('main-navbar');
       const headerBrandLogo = document.getElementById('header-brand-logo');
       const headerLogoDot = document.getElementById('header-logo-dot');
@@ -1756,13 +1778,16 @@
       const architecturalFrameSvg = document.getElementById('architectural-frame-svg');
       const architecturalFramePath = document.getElementById('architectural-frame-path');
       const introLogo = document.getElementById('intro-logo');
+      const viewportOverlay = document.querySelector('.viewport-overlay');
 
+      const coverStage = document.getElementById('cover-stage');
       const heroView = document.getElementById('hero-view');
       const heroEyebrow = document.getElementById('hero-eyebrow');
       const heroTitle = document.getElementById('hero-title');
       const heroDesc = document.getElementById('hero-desc');
       const heroCta = document.getElementById('hero-cta');
 
+      const whiteContentStage = document.getElementById('white-content-stage');
       const servicesStage = document.getElementById('services-stage');
       const miniTabs = document.querySelectorAll('.mini-card-tab');
       const tossDeck = document.getElementById('toss-deck');
@@ -1893,13 +1918,13 @@
       miniTabs.forEach((tab) => {
         tab.addEventListener('click', () => {
           const tabIdx = parseInt(tab.getAttribute('data-index'), 10);
-          let targetProg = 0.24;
-          if (tabIdx === 0) targetProg = 0.24;
-          else if (tabIdx === 1) targetProg = 0.34;
-          else if (tabIdx === 2) targetProg = 0.45;
+          let targetProg = 0.26;
+          if (tabIdx === 0) targetProg = 0.26;
+          else if (tabIdx === 1) targetProg = 0.36;
+          else if (tabIdx === 2) targetProg = 0.46;
           else if (tabIdx === 3) targetProg = 0.56;
-          else if (tabIdx === 4) targetProg = 0.67;
-          else if (tabIdx === 5) targetProg = 0.74;
+          else if (tabIdx === 4) targetProg = 0.66;
+          else if (tabIdx === 5) targetProg = 0.76;
 
           scrollToProgress(targetProg);
         });
@@ -2051,7 +2076,7 @@
 
       let lastFramePathState = '';
 
-      function buildUnifiedFramePath(w, h, tWindow, dotX, dotY) {
+      function buildUnifiedFramePath(w, h, tWindow, dotX, dotY, tCurtainRise) {
         const isMobile = w <= 860;
         const isTablet = w <= 1024;
         const pad = isMobile ? 8 : 14;
@@ -2065,15 +2090,15 @@
         const T_target = pad;
         const B_target = Math.max(pad, h - pad);
         const targetW = Math.max(0, R_target - L_target);
-        const targetH = Math.max(0, B_target - T_target);
 
         const outer = `M -4 -4 H ${w + 4} V ${h + 4} H -4 Z`;
 
-        if (tWindow <= 0.002) {
-          return outer;
+        if (tWindow <= 0.002 || tCurtainRise >= 0.999) {
+          return { path: outer, bottomY: tWindow <= 0.002 ? h : T_target };
         }
 
-        // Portal opens directly from the orange dot next to "tanogaido" in the header
+        // Phase A (Splash -> Hero): Portal opens directly from orange dot next to tanogaido
+        // Phase B (Hero -> Services): Bottom white bezel line rises smoothly up to unite with top menu
         const ox = clamp(dotX, L_target, R_target);
         const oy = clamp(dotY, T_target, B_target);
         const seedR = 115 * easeOutCubic(clamp(tWindow / 0.36, 0, 1));
@@ -2082,13 +2107,14 @@
         const L = Math.max(L_target, lerp(ox - seedR, L_target, eBox));
         const R = Math.min(R_target, lerp(ox + seedR, R_target, eBox));
         const T = Math.max(T_target, lerp(oy - seedR, T_target, eBox));
-        const B = Math.min(B_target, lerp(oy + seedR, B_target, eBox));
+        const B_open = Math.min(B_target, lerp(oy + seedR, B_target, eBox));
+        const B = lerp(B_open, T, tCurtainRise);
 
         const curW = R - L;
         const curH = B - T;
 
-        if (curW <= 3 || curH <= 3) {
-          return outer;
+        if (curW <= 3 || curH <= 2) {
+          return { path: outer, bottomY: B };
         }
 
         const radiusBlend = easeInOutCubic(clamp(tWindow / 0.55, 0, 1));
@@ -2099,73 +2125,130 @@
         const wingEase = easeInOutCubic(clamp((tWindow - 0.30) / 0.65, 0, 1));
         const wL = targetWingL * wRatio;
         const wR = targetWingR * wRatio;
-        const wH = Math.min(targetWingH * wingEase, curH * 0.42);
+        const wH = targetWingH * wingEase;
+        const yW = T + wH;
         const notchSpan = curW - wL - wR;
+        const x1 = L + wL;
+        const x2 = R - wR;
 
+        // Before wings appear, render simple rounded viewport portal
         if (wH <= 2.5 || notchSpan <= 8) {
           const rSimple = Math.max(0, Math.min(rOuterBase, curW / 2.02, curH / 2.02));
           if (rSimple <= 0.5) {
-            return `${outer} M ${L.toFixed(1)} ${T.toFixed(1)} H ${R.toFixed(1)} V ${B.toFixed(1)} H ${L.toFixed(1)} Z`;
+            return {
+              path: `${outer} M ${L.toFixed(1)} ${T.toFixed(1)} H ${R.toFixed(1)} V ${B.toFixed(1)} H ${L.toFixed(1)} Z`,
+              bottomY: B
+            };
           }
-          return `${outer} ` +
-            `M ${(L + rSimple).toFixed(1)} ${T.toFixed(1)} ` +
-            `H ${(R - rSimple).toFixed(1)} ` +
-            `A ${rSimple.toFixed(1)} ${rSimple.toFixed(1)} 0 0 1 ${R.toFixed(1)} ${(T + rSimple).toFixed(1)} ` +
-            `V ${(B - rSimple).toFixed(1)} ` +
-            `A ${rSimple.toFixed(1)} ${rSimple.toFixed(1)} 0 0 1 ${(R - rSimple).toFixed(1)} ${B.toFixed(1)} ` +
-            `H ${(L + rSimple).toFixed(1)} ` +
-            `A ${rSimple.toFixed(1)} ${rSimple.toFixed(1)} 0 0 1 ${L.toFixed(1)} ${(B - rSimple).toFixed(1)} ` +
-            `V ${(T + rSimple).toFixed(1)} ` +
-            `A ${rSimple.toFixed(1)} ${rSimple.toFixed(1)} 0 0 1 ${(L + rSimple).toFixed(1)} ${T.toFixed(1)} Z`;
+          return {
+            path: `${outer} ` +
+              `M ${(L + rSimple).toFixed(1)} ${T.toFixed(1)} ` +
+              `H ${(R - rSimple).toFixed(1)} ` +
+              `A ${rSimple.toFixed(1)} ${rSimple.toFixed(1)} 0 0 1 ${R.toFixed(1)} ${(T + rSimple).toFixed(1)} ` +
+              `V ${(B - rSimple).toFixed(1)} ` +
+              `A ${rSimple.toFixed(1)} ${rSimple.toFixed(1)} 0 0 1 ${(R - rSimple).toFixed(1)} ${B.toFixed(1)} ` +
+              `H ${(L + rSimple).toFixed(1)} ` +
+              `A ${rSimple.toFixed(1)} ${rSimple.toFixed(1)} 0 0 1 ${L.toFixed(1)} ${(B - rSimple).toFixed(1)} ` +
+              `V ${(T + rSimple).toFixed(1)} ` +
+              `A ${rSimple.toFixed(1)} ${rSimple.toFixed(1)} 0 0 1 ${(L + rSimple).toFixed(1)} ${T.toFixed(1)} Z`,
+            bottomY: B
+          };
         }
 
-        const rOuter = Math.max(0, Math.min(rOuterBase, curW / 2.05, (curH - wH) / 2.05));
-        let rWing = Math.max(0, Math.min(targetR, wL / 2.05, wR / 2.05, notchSpan / 2.05, wH / 2.05, (curH - wH) / 2.05));
-        rWing = Math.max(0, Math.min(rWing, wL * 0.94 - rOuter, wR * 0.94 - rOuter));
+        // When bottom white floor rises above wing bottom (B <= yW + 2), only center notch remains closing smoothly into top bezel
+        const bodyH = B - yW;
+        if (bodyH <= 2) {
+          const notchH = Math.max(0, B - T);
+          const rN = Math.max(0, Math.min(targetR, notchSpan / 2.05, notchH / 2.05));
+          if (rN <= 0.5) {
+            return {
+              path: `${outer} M ${x1.toFixed(1)} ${T.toFixed(1)} H ${x2.toFixed(1)} V ${B.toFixed(1)} H ${x1.toFixed(1)} Z`,
+              bottomY: B
+            };
+          }
+          return {
+            path: `${outer} ` +
+              `M ${(x1 + rN).toFixed(1)} ${T.toFixed(1)} ` +
+              `H ${(x2 - rN).toFixed(1)} ` +
+              `A ${rN.toFixed(1)} ${rN.toFixed(1)} 0 0 1 ${x2.toFixed(1)} ${(T + rN).toFixed(1)} ` +
+              `V ${(B - rN).toFixed(1)} ` +
+              `A ${rN.toFixed(1)} ${rN.toFixed(1)} 0 0 1 ${(x2 - rN).toFixed(1)} ${B.toFixed(1)} ` +
+              `H ${(x1 + rN).toFixed(1)} ` +
+              `A ${rN.toFixed(1)} ${rN.toFixed(1)} 0 0 1 ${x1.toFixed(1)} ${(B - rN).toFixed(1)} ` +
+              `V ${(T + rN).toFixed(1)} ` +
+              `A ${rN.toFixed(1)} ${rN.toFixed(1)} 0 0 1 ${(x1 + rN).toFixed(1)} ${T.toFixed(1)} Z`,
+            bottomY: B
+          };
+        }
 
-        const x1 = L + wL;
-        const x2 = R - wR;
-        const yW = T + wH;
+        // Standard notched header + body aperture
+        const rOuter = Math.max(0, Math.min(rOuterBase, curW / 2.05, bodyH / 2.05));
+        const rTopMax = Math.max(0, Math.min(targetR, wL / 2.05, wR / 2.05, notchSpan / 2.05, wH / 2.05));
+        const rConcaveMax = Math.max(0, Math.min(rTopMax, bodyH * 0.65, wL * 0.94 - rOuter, wR * 0.94 - rOuter));
+        const rTop = Math.min(rTopMax, Math.max(0, wH - rConcaveMax - 0.5));
 
-        return `${outer} ` +
-          `M ${(x1 + rWing).toFixed(1)} ${T.toFixed(1)} ` +
-          `L ${(x2 - rWing).toFixed(1)} ${T.toFixed(1)} ` +
-          `A ${rWing.toFixed(1)} ${rWing.toFixed(1)} 0 0 1 ${x2.toFixed(1)} ${(T + rWing).toFixed(1)} ` +
-          `L ${x2.toFixed(1)} ${(yW - rWing).toFixed(1)} ` +
-          `A ${rWing.toFixed(1)} ${rWing.toFixed(1)} 0 0 0 ${(x2 + rWing).toFixed(1)} ${yW.toFixed(1)} ` +
-          `L ${(R - rOuter).toFixed(1)} ${yW.toFixed(1)} ` +
-          `A ${rOuter.toFixed(1)} ${rOuter.toFixed(1)} 0 0 1 ${R.toFixed(1)} ${(yW + rOuter).toFixed(1)} ` +
-          `L ${R.toFixed(1)} ${(B - rOuter).toFixed(1)} ` +
-          `A ${rOuter.toFixed(1)} ${rOuter.toFixed(1)} 0 0 1 ${(R - rOuter).toFixed(1)} ${B.toFixed(1)} ` +
-          `L ${(L + rOuter).toFixed(1)} ${B.toFixed(1)} ` +
-          `A ${rOuter.toFixed(1)} ${rOuter.toFixed(1)} 0 0 1 ${L.toFixed(1)} ${(B - rOuter).toFixed(1)} ` +
-          `L ${L.toFixed(1)} ${(yW + rOuter).toFixed(1)} ` +
-          `A ${rOuter.toFixed(1)} ${rOuter.toFixed(1)} 0 0 1 ${(L + rOuter).toFixed(1)} ${yW.toFixed(1)} ` +
-          `L ${(x1 - rWing).toFixed(1)} ${yW.toFixed(1)} ` +
-          `A ${rWing.toFixed(1)} ${rWing.toFixed(1)} 0 0 0 ${x1.toFixed(1)} ${(yW - rWing).toFixed(1)} ` +
-          `L ${x1.toFixed(1)} ${(T + rWing).toFixed(1)} ` +
-          `A ${rWing.toFixed(1)} ${rWing.toFixed(1)} 0 0 1 ${(x1 + rWing).toFixed(1)} ${T.toFixed(1)} Z`;
+        return {
+          path: `${outer} ` +
+            `M ${(x1 + rTop).toFixed(1)} ${T.toFixed(1)} ` +
+            `L ${(x2 - rTop).toFixed(1)} ${T.toFixed(1)} ` +
+            `A ${rTop.toFixed(1)} ${rTop.toFixed(1)} 0 0 1 ${x2.toFixed(1)} ${(T + rTop).toFixed(1)} ` +
+            `L ${x2.toFixed(1)} ${(yW - rConcaveMax).toFixed(1)} ` +
+            `A ${rConcaveMax.toFixed(1)} ${rConcaveMax.toFixed(1)} 0 0 0 ${(x2 + rConcaveMax).toFixed(1)} ${yW.toFixed(1)} ` +
+            `L ${(R - rOuter).toFixed(1)} ${yW.toFixed(1)} ` +
+            `A ${rOuter.toFixed(1)} ${rOuter.toFixed(1)} 0 0 1 ${R.toFixed(1)} ${(yW + rOuter).toFixed(1)} ` +
+            `L ${R.toFixed(1)} ${(B - rOuter).toFixed(1)} ` +
+            `A ${rOuter.toFixed(1)} ${rOuter.toFixed(1)} 0 0 1 ${(R - rOuter).toFixed(1)} ${B.toFixed(1)} ` +
+            `L ${(L + rOuter).toFixed(1)} ${B.toFixed(1)} ` +
+            `A ${rOuter.toFixed(1)} ${rOuter.toFixed(1)} 0 0 1 ${L.toFixed(1)} ${(B - rOuter).toFixed(1)} ` +
+            `L ${L.toFixed(1)} ${(yW + rOuter).toFixed(1)} ` +
+            `A ${rOuter.toFixed(1)} ${rOuter.toFixed(1)} 0 0 1 ${(L + rOuter).toFixed(1)} ${yW.toFixed(1)} ` +
+            `L ${(x1 - rConcaveMax).toFixed(1)} ${yW.toFixed(1)} ` +
+            `A ${rConcaveMax.toFixed(1)} ${rConcaveMax.toFixed(1)} 0 0 0 ${x1.toFixed(1)} ${(yW - rConcaveMax).toFixed(1)} ` +
+            `L ${x1.toFixed(1)} ${(T + rTop).toFixed(1)} ` +
+            `A ${rTop.toFixed(1)} ${rTop.toFixed(1)} 0 0 1 ${(x1 + rTop).toFixed(1)} ${T.toFixed(1)} Z`,
+          bottomY: B
+        };
       }
 
       function updateUIProgress(progress, sRaw) {
         const { w, h } = getViewportSize();
         const isMobile = w <= 860;
+        const pad = isMobile ? 8 : 14;
 
         // Beat 1 (0.00 -> 0.36): Logo glides from splash center into header wing
         // Beat 2 (0.20 -> 1.00): Window + header shape open outward from the orange dot beside tanogaido in header
         const tLogo = easeInOutCubic(clamp(sRaw / 0.36, 0, 1));
         const tWindow = clamp((sRaw - 0.20) / 0.80, 0, 1);
 
+        // Cover-to-Services Curtain Rise (0.03 -> 0.25): Bottom white edge rises smoothly to unite with top menu
+        const HERO_RISE_START = 0.03;
+        const HERO_RISE_END = 0.25;
+        const tCurtainRise = sRaw >= 0.99 ? clamp((progress - HERO_RISE_START) / (HERO_RISE_END - HERO_RISE_START), 0, 1) : 0;
+
+        let currentBottomY = h - pad;
         if (architecturalFrameSvg && architecturalFramePath) {
-          const stateKey = `${w}x${h}:${tWindow >= 1 ? 1 : tWindow.toFixed(4)}:${Math.round(headerDotMetrics.x)},${Math.round(headerDotMetrics.y)}`;
+          const stateKey = `${w}x${h}:${tWindow >= 1 ? 1 : tWindow.toFixed(4)}:${tCurtainRise.toFixed(4)}:${Math.round(headerDotMetrics.x)},${Math.round(headerDotMetrics.y)}`;
           if (stateKey !== lastFramePathState) {
             architecturalFrameSvg.setAttribute('viewBox', `0 0 ${w} ${h}`);
-            architecturalFramePath.setAttribute(
-              'd',
-              buildUnifiedFramePath(w, h, tWindow, headerDotMetrics.x, headerDotMetrics.y)
-            );
+            const geo = buildUnifiedFramePath(w, h, tWindow, headerDotMetrics.x, headerDotMetrics.y, tCurtainRise);
+            architecturalFramePath.setAttribute('d', geo.path);
+            currentBottomY = geo.bottomY;
             lastFramePathState = stateKey;
+          } else {
+            currentBottomY = tWindow <= 0.002 ? h : lerp(h - pad, pad, tCurtainRise);
           }
+        }
+
+        const risePx = Math.max(0, (h - pad) - currentBottomY);
+
+        // Toggle animated background visibility strictly for top cover section only
+        const coverActive = tCurtainRise < 0.995;
+        if (canvas) {
+          canvas.style.display = coverActive ? 'block' : 'none';
+          canvas.style.transform = coverActive ? `translate3d(0, ${(-risePx * 0.08).toFixed(1)}px, 0) scale(1.06)` : 'none';
+        }
+        if (viewportOverlay) {
+          viewportOverlay.style.display = coverActive ? 'block' : 'none';
         }
 
         if (introLogo && headerBrandLogo) {
@@ -2202,20 +2285,21 @@
           navActionsZone.style.pointerEvents = navReveal > 0.7 ? 'auto' : 'none';
         }
 
-        // Compact frosted backdrop behind center nav links once user scrolls down
+        if (navbarContainer) {
+          if (tCurtainRise >= 0.96) {
+            navbarContainer.classList.add('unified');
+          } else {
+            navbarContainer.classList.remove('unified');
+          }
+        }
+
         if (progress > 0.035 && sRaw > 0.9) {
           navbar.classList.add('scrolled');
         } else {
           navbar.classList.remove('scrolled');
         }
 
-        // 2. Hero Entrance (synchronized with window opening) & Staggered Upward Exit (0.145 -> 0.210)
-        function getHeroExitProgress(val, start, end) {
-          if (val <= start) return 1;
-          if (val >= end) return 0;
-          return 1 - ((val - start) / (end - start));
-        }
-
+        // 2. Hero Cover Entrance & Lockstep Upward Motion ("beriringan" with rising bottom white line)
         function getHeroEnterProgress(val, start, end) {
           return easeOutCubic(clamp((val - start) / (end - start), 0, 1));
         }
@@ -2225,51 +2309,67 @@
         const enterDesc = getHeroEnterProgress(tWindow, 0.50, 0.92);
         const enterCta = getHeroEnterProgress(tWindow, 0.58, 0.98);
 
-        const exitEyebrow = getHeroExitProgress(progress, 0.145, 0.168);
-        const exitTitle = getHeroExitProgress(progress, 0.155, 0.180);
-        const exitDesc = getHeroExitProgress(progress, 0.168, 0.195);
-        const exitCta = getHeroExitProgress(progress, 0.180, 0.208);
+        const coverFadeOut = clamp(1 - Math.max(0, tCurtainRise - 0.52) / 0.38, 0, 1);
+
+        if (heroView) {
+          const showCover = coverActive && tWindow >= 0.25;
+          heroView.style.display = showCover ? 'flex' : 'none';
+          heroView.style.transform = `translate3d(0, ${(-risePx * 0.78).toFixed(1)}px, 0)`;
+          heroView.style.pointerEvents = (enterCta * coverFadeOut) > 0.25 ? 'auto' : 'none';
+        }
 
         if (heroEyebrow) {
-          heroEyebrow.style.opacity = String(enterEyebrow * exitEyebrow);
-          heroEyebrow.style.transform = `translateY(${(1 - enterEyebrow) * 16 - (1 - exitEyebrow) * 22}px)`;
+          heroEyebrow.style.opacity = String(enterEyebrow * coverFadeOut);
+          heroEyebrow.style.transform = `translateY(${((1 - enterEyebrow) * 16).toFixed(1)}px)`;
         }
 
         if (heroTitle) {
-          heroTitle.style.opacity = String(enterTitle * exitTitle);
-          heroTitle.style.transform = `translateY(${(1 - enterTitle) * 20 - (1 - exitTitle) * 28}px)`;
+          heroTitle.style.opacity = String(enterTitle * coverFadeOut);
+          heroTitle.style.transform = `translateY(${((1 - enterTitle) * 20).toFixed(1)}px)`;
         }
 
         if (heroDesc) {
-          heroDesc.style.opacity = String(enterDesc * exitDesc);
-          heroDesc.style.transform = `translateY(${(1 - enterDesc) * 20 - (1 - exitDesc) * 28}px)`;
+          heroDesc.style.opacity = String(enterDesc * coverFadeOut);
+          heroDesc.style.transform = `translateY(${((1 - enterDesc) * 20).toFixed(1)}px)`;
         }
 
         if (heroCta) {
-          const ctaOp = enterCta * exitCta;
+          const ctaOp = enterCta * coverFadeOut;
           heroCta.style.opacity = String(ctaOp);
-          heroCta.style.transform = `translateY(${(1 - enterCta) * 20 - (1 - exitCta) * 28}px)`;
+          heroCta.style.transform = `translateY(${((1 - enterCta) * 20).toFixed(1)}px)`;
           heroCta.style.pointerEvents = ctaOp > 0.35 ? 'auto' : 'none';
         }
 
-        if (heroView) {
-          heroView.style.pointerEvents = (enterCta * exitCta) > 0.15 ? 'auto' : 'none';
-          heroView.style.display = (progress > 0.212 || tWindow < 0.25) ? 'none' : 'flex';
+        // Clip white content stage strictly below rising white line while curtain rises
+        if (whiteContentStage) {
+          if (tCurtainRise <= 0.002) {
+            whiteContentStage.style.visibility = 'hidden';
+            whiteContentStage.style.clipPath = 'inset(100% 0 0 0)';
+          } else if (tCurtainRise < 0.995) {
+            whiteContentStage.style.visibility = 'visible';
+            whiteContentStage.style.clipPath = `inset(${Math.max(0, Math.round(currentBottomY))}px 0 0 0)`;
+          } else {
+            whiteContentStage.style.visibility = 'visible';
+            whiteContentStage.style.clipPath = 'none';
+          }
         }
 
-        // 3. Services Stage: Active from 0.210 to 0.790
-        if (progress >= 0.210 && progress < 0.790 && sRaw > 0.85) {
-          let stageOpacity = 1;
-          if (progress < 0.230) {
-            stageOpacity = (progress - 0.210) / 0.020;
-          } else if (progress > 0.750) {
-            stageOpacity = (0.790 - progress) / 0.040;
-          }
-          servicesStage.style.opacity = String(stageOpacity);
-          servicesStage.style.pointerEvents = stageOpacity > 0.3 ? 'auto' : 'none';
-          servicesStage.style.display = 'flex';
+        // 3. Services Stage: Rides up smoothly on the rising white curtain (0.09 -> 0.25) and runs until 0.80
+        if (progress >= 0.09 && progress < 0.80 && sRaw > 0.85) {
+          const enterServices = easeOutCubic(clamp((progress - 0.09) / (HERO_RISE_END - 0.09), 0, 1));
+          const servicesRiseOffset = lerp(Math.round(h * 0.34), 0, enterServices);
 
-          const pNorm = clamp((progress - 0.230) / (0.750 - 0.230), 0, 1);
+          let stageOpacity = clamp(enterServices * 1.35, 0, 1);
+          if (progress > 0.76) {
+            stageOpacity = clamp((0.80 - progress) / 0.04, 0, 1);
+          }
+
+          servicesStage.style.display = 'flex';
+          servicesStage.style.opacity = String(stageOpacity);
+          servicesStage.style.transform = `translate3d(0, ${servicesRiseOffset.toFixed(1)}px, 0)`;
+          servicesStage.style.pointerEvents = stageOpacity > 0.45 && tCurtainRise >= 0.72 ? 'auto' : 'none';
+
+          const pNorm = clamp((progress - 0.25) / (0.76 - 0.25), 0, 1);
           const deckProgress = pNorm * 5.2;
 
           const activeTabIdx = deckProgress >= 4.4 ? 5 : Math.min(4, Math.floor(deckProgress));
@@ -2354,15 +2454,17 @@
           servicesStage.style.display = 'none';
         }
 
-        // 4. Final CTA Stage: 0.790 to 1.000
-        if (progress >= 0.790 && sRaw > 0.85) {
-          const factor = Math.min(1, (progress - 0.790) / 0.09);
+        // 4. Final CTA Stage: 0.800 to 1.000 (on clean white background)
+        if (progress >= 0.800 && sRaw > 0.85) {
+          const factor = Math.min(1, (progress - 0.800) / 0.09);
+          finalCtaStage.style.display = 'flex';
           finalCtaStage.style.opacity = String(factor);
           finalCtaStage.style.transform = `translateY(${(1 - factor) * 20}px)`;
           finalCtaStage.style.pointerEvents = factor > 0.4 ? 'auto' : 'none';
         } else {
           finalCtaStage.style.opacity = '0';
           finalCtaStage.style.pointerEvents = 'none';
+          finalCtaStage.style.display = 'none';
         }
 
         if (scrollHint) {
@@ -2373,14 +2475,9 @@
       }
 
       function computeTargetFrame(progress) {
-        if (progress < 0.210) {
-          return (progress / 0.210) * 75;
-        } else if (progress < 0.790) {
-          return 75;
-        } else {
-          const pFinal = (progress - 0.790) / (1.000 - 0.790);
-          return 75 + pFinal * (TOTAL_FRAMES - 1 - 75);
-        }
+        // Animate background Japan frames exclusively during the top Hero cover section (0 -> 0.25)
+        const pCover = clamp(progress / 0.25, 0, 1);
+        return pCover * (TOTAL_FRAMES - 1);
       }
 
       function handleScrollTrigger() {
