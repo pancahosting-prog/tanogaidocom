@@ -1,0 +1,2175 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tanogaido — Explore Authentic Japan</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
+    rel="stylesheet">
+  <style>
+    *,
+    *::before,
+    *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    }
+
+    :root {
+      --primary-orange: #f25b20;
+      --primary-orange-hover: #d94b14;
+      --text-dark: #11141c;
+      --text-muted: #59677b;
+      --text-eyebrow: #7c8ba1;
+      --surface-white: rgba(255, 255, 255, 0.94);
+      --border-light: rgba(255, 255, 255, 0.75);
+    }
+
+    html {
+      background-color: #0b0d12;
+      color: var(--text-dark);
+      scroll-behavior: auto;
+    }
+
+    body {
+      background-color: #0b0d12;
+      min-height: 500vh;
+      height: 500vh;
+      overflow-y: scroll;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    /* Fixed Scroll Animation Canvas */
+    #canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      display: block;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    /* Soft ambient vignette to keep typography crystal clear */
+    .viewport-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      pointer-events: none;
+      z-index: 2;
+      background: radial-gradient(circle at 25% 45%,
+          rgba(255, 255, 255, 0.5) 0%,
+          rgba(255, 255, 255, 0.18) 50%,
+          rgba(0, 0, 0, 0.12) 100%);
+    }
+
+    /* Dynamic Shrinking Navbar */
+    .navbar-container {
+      position: fixed;
+      top: 18px;
+      left: 0;
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      padding: 0 20px;
+      z-index: 100;
+      pointer-events: none;
+    }
+
+    .navbar {
+      pointer-events: auto;
+      width: 100%;
+      max-width: 1080px;
+      height: 56px;
+      background: var(--surface-white);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid var(--border-light);
+      border-radius: 9999px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 8px 0 24px;
+      box-shadow: 0 12px 30px -8px rgba(15, 23, 42, 0.08);
+      transition: max-width 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+        height 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+        padding 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+        box-shadow 0.35s ease;
+    }
+
+    /* Scrolled state: Header shrinks and fits compact to center */
+    .navbar.scrolled {
+      max-width: 680px;
+      height: 48px;
+      padding: 0 6px 0 18px;
+      box-shadow: 0 16px 36px -6px rgba(15, 23, 42, 0.16);
+    }
+
+    .brand-logo {
+      display: flex;
+      align-items: center;
+      font-weight: 800;
+      font-size: 21px;
+      letter-spacing: -0.5px;
+      color: #0f172a;
+      text-decoration: none;
+      user-select: none;
+      transition: font-size 0.3s ease;
+    }
+
+    .navbar.scrolled .brand-logo {
+      font-size: 19px;
+    }
+
+    .brand-logo .dot {
+      color: var(--primary-orange);
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 26px;
+      list-style: none;
+      transition: gap 0.3s ease;
+    }
+
+    .navbar.scrolled .nav-links {
+      gap: 18px;
+    }
+
+    .nav-links a {
+      text-decoration: none;
+      font-size: 13.5px;
+      font-weight: 600;
+      color: #475569;
+      transition: color 0.2s ease, font-size 0.3s ease;
+    }
+
+    .navbar.scrolled .nav-links a {
+      font-size: 12.5px;
+    }
+
+    .nav-links a:hover {
+      color: var(--primary-orange);
+    }
+
+    .nav-actions {
+      display: flex;
+      align-items: center;
+    }
+
+    .btn-explore {
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 600;
+      background: #11141b;
+      color: #ffffff;
+      padding: 9px 18px;
+      border-radius: 9999px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      box-shadow: 0 6px 16px -3px rgba(0, 0, 0, 0.22);
+      transition: transform 0.2s ease, background 0.2s ease, padding 0.3s ease, font-size 0.3s ease;
+    }
+
+    .navbar.scrolled .btn-explore {
+      padding: 7px 15px;
+      font-size: 12px;
+    }
+
+    .btn-explore:hover {
+      transform: translateY(-1px);
+      background: #000000;
+    }
+
+    .btn-explore .arrow {
+      color: var(--primary-orange);
+      font-size: 14px;
+      transition: transform 0.2s ease;
+    }
+
+    .btn-explore:hover .arrow {
+      transform: translateX(3px);
+    }
+
+    /* Mobile Menu Toggle Button (Visible only on mobile) */
+    .btn-mobile-menu {
+      display: none;
+      background: #11141b;
+      color: #ffffff;
+      border: none;
+      border-radius: 9999px;
+      padding: 8px 14px;
+      font-size: 12.5px;
+      font-weight: 700;
+      cursor: pointer;
+      align-items: center;
+      gap: 7px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    }
+
+    .btn-mobile-menu svg {
+      width: 15px;
+      height: 15px;
+      stroke: #ffffff;
+    }
+
+    /* Mobile Menu Drawer / Modal */
+    .mobile-menu-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(11, 13, 18, 0.6);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      z-index: 200;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 24px;
+    }
+
+    .mobile-menu-overlay.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .mobile-menu-card {
+      background: var(--surface-white);
+      border: 1px solid var(--border-light);
+      border-radius: 28px;
+      width: 100%;
+      max-width: 360px;
+      padding: 24px;
+      box-shadow: 0 20px 45px rgba(0, 0, 0, 0.2);
+      transform: translateY(-20px);
+      transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    .mobile-menu-overlay.active .mobile-menu-card {
+      transform: translateY(0);
+    }
+
+    .mobile-menu-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid #e2e8f0;
+      padding-bottom: 14px;
+    }
+
+    .btn-close-menu {
+      background: rgba(0, 0, 0, 0.05);
+      border: none;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      color: #334155;
+    }
+
+    .mobile-nav-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .mobile-nav-list a {
+      text-decoration: none;
+      font-size: 16px;
+      font-weight: 700;
+      color: #1e293b;
+      padding: 8px 12px;
+      border-radius: 12px;
+      display: block;
+      transition: background 0.2s ease, color 0.2s ease;
+    }
+
+    .mobile-nav-list a:hover {
+      background: rgba(242, 91, 32, 0.08);
+      color: var(--primary-orange);
+    }
+
+    /* Fixed UI Stage (Proportioned to fit entirely within viewport on open) */
+    .fixed-ui-stage {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      z-index: 10;
+      pointer-events: none;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 72px 36px 36px 36px;
+    }
+
+    .content-constraint {
+      max-width: 1100px;
+      width: 100%;
+      margin: 0 auto;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* Hero Section (Centered, clean, elegant) */
+    .hero-content {
+      pointer-events: auto;
+      max-width: 600px;
+      width: 100%;
+      margin: 0 auto;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      transition: opacity 0.35s ease, transform 0.35s ease;
+    }
+
+    .eyebrow {
+      display: inline-block;
+      font-size: 10.5px;
+      font-weight: 750;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--text-eyebrow);
+      margin-bottom: 12px;
+      text-align: center;
+    }
+
+    .hero-title {
+      font-size: clamp(34px, 4vw, 46px);
+      font-weight: 800;
+      line-height: 1.1;
+      letter-spacing: -1.5px;
+      color: var(--text-dark);
+      margin-bottom: 14px;
+      text-align: center;
+    }
+
+    .hero-title .line-orange {
+      color: var(--primary-orange);
+      display: inline-block;
+    }
+
+    .hero-desc {
+      font-size: 15px;
+      line-height: 1.6;
+      color: var(--text-muted);
+      margin-bottom: 24px;
+      max-width: 480px;
+      font-weight: 500;
+      text-align: center;
+    }
+
+    /* Compact Search Capsule ("Kontainer Tokyo" - Narrow Width, Centered & Uneditable) */
+    .search-capsule {
+      background: var(--surface-white);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid var(--border-light);
+      border-radius: 9999px;
+      height: 48px;
+      padding: 4px 6px 4px 12px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      box-shadow: 0 12px 28px -6px rgba(15, 23, 42, 0.1);
+      max-width: 370px;
+      width: 100%;
+      margin: 0 auto;
+      cursor: pointer;
+      user-select: none;
+      transition: box-shadow 0.25s ease, transform 0.25s ease;
+    }
+
+      .search-capsule:hover {
+        box-shadow: 0 16px 36px -6px rgba(242, 91, 32, 0.22);
+        transform: translateY(-1px);
+      }
+
+      .search-icon-badge {
+        width: 32px;
+        height: 32px;
+        border-radius: 10px;
+        background: rgba(242, 91, 32, 0.1);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--primary-orange);
+        flex-shrink: 0;
+      }
+
+      .search-icon-badge svg {
+        width: 17px;
+        height: 17px;
+      }
+
+      .search-fields {
+        display: flex;
+        align-items: center;
+        flex: 1;
+        gap: 8px;
+        min-width: 0;
+        pointer-events: none;
+        /* User requirement: field input cannot be clicked or typed */
+      }
+
+        .route-field {
+          display: flex;
+          flex-direction: column;
+          min-width: 0;
+          text-align: left;
+        }
+
+          .route-field.route-from {
+            max-width: 75px;
+            flex-shrink: 0;
+          }
+
+          .route-field.route-to {
+            flex: 1;
+            overflow: hidden;
+          }
+
+          .route-tag {
+            font-size: 9px;
+            font-weight: 750;
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+            color: #94a3b8;
+            line-height: 1;
+            margin-bottom: 2px;
+          }
+
+            .route-value {
+              font-size: 13px;
+              font-weight: 700;
+              color: #0f172a;
+              white-space: nowrap;
+              overflow: hidden;
+              text-overflow: ellipsis;
+              display: inline-block;
+              transition: opacity 0.3s ease, transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+              line-height: 1.2;
+            }
+
+            .route-value.fade-out {
+              opacity: 0;
+              transform: translateY(-6px);
+            }
+
+            .route-value.fade-in-prep {
+              opacity: 0;
+              transform: translateY(6px);
+            }
+
+            .search-divider {
+              width: 1px;
+              height: 24px;
+              background: #cbd5e1;
+              flex-shrink: 0;
+            }
+
+            .btn-search-go {
+              width: 36px;
+              height: 36px;
+              border-radius: 50%;
+              background: var(--primary-orange);
+              color: #ffffff;
+              border: none;
+              cursor: pointer;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              flex-shrink: 0;
+              box-shadow: 0 6px 14px -2px rgba(242, 91, 32, 0.4);
+              transition: transform 0.2s ease, background 0.2s ease;
+            }
+
+            .btn-search-go:hover {
+              transform: scale(1.08);
+              background: var(--primary-orange-hover);
+            }
+
+    /* Services Stage - Pinned directly 2px under the navbar ("Berdempetan dengan Header") */
+    .services-stage {
+      position: fixed;
+      top: 68px;
+      left: 0;
+      width: 100vw;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      padding: 0 16px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.35s ease;
+      z-index: 25;
+    }
+
+    .services-header {
+      text-align: center;
+      margin-top: 0;
+      margin-bottom: 8px;
+      pointer-events: auto;
+    }
+
+    .services-eyebrow {
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--primary-orange);
+      margin-bottom: 2px;
+      display: block;
+    }
+
+    .services-title {
+      font-size: clamp(20px, 2.3vw, 25px);
+      font-weight: 800;
+      letter-spacing: -0.6px;
+      color: var(--text-dark);
+      margin: 0;
+    }
+
+    /* Container holding active card & all-services showcase */
+    .services-body-area {
+      position: relative;
+      width: 100%;
+      max-width: 1040px;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      pointer-events: auto;
+    }
+
+    /* Single Featured Card Stage (Lempar Kartu) */
+    .toss-deck {
+      position: relative;
+      width: 100%;
+      max-width: 440px;
+      min-height: 250px;
+      perspective: 1200px;
+      display: flex;
+      justify-content: center;
+    }
+
+    .toss-card {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      background: #ffffff;
+      border-radius: 28px;
+      overflow: hidden;
+      box-shadow: 0 1px 0 rgba(255, 255, 255, 0.9) inset, 
+                  0 20px 48px -10px rgba(10, 15, 30, 0.22), 
+                  0 0 0 1px rgba(0, 0, 0, 0.05);
+      cursor: pointer;
+      user-select: none;
+      transition: box-shadow 0.3s ease;
+      will-change: transform, opacity;
+      transform-origin: 50% 50%;
+    }
+
+    .toss-card:hover {
+      box-shadow: 0 1px 0 rgba(255, 255, 255, 0.9) inset, 
+                  0 25px 60px -8px rgba(242, 91, 32, 0.28), 
+                  0 0 0 1px rgba(242, 91, 32, 0.2);
+    }
+
+    /* All 5 Services Lined Up (Matches Lampiran 1 Exactly) */
+    .all-services-view {
+      display: none;
+      width: 100%;
+      max-width: 1040px;
+      animation: fadeInServices 0.35s ease;
+    }
+
+    @keyframes fadeInServices {
+      from { opacity: 0; transform: translateY(14px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .all-services-grid {
+      display: flex;
+      gap: 12px;
+      width: 100%;
+      max-width: 1040px;
+      justify-content: center;
+      align-items: stretch;
+      padding: 4px 6px 14px 6px;
+    }
+
+    .all-service-card {
+      flex: 1 1 0;
+      max-width: 200px;
+      min-width: 175px;
+      background: rgba(255, 255, 255, 0.94);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.9);
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 14px 35px -6px rgba(15, 23, 42, 0.14);
+      display: flex;
+      flex-direction: column;
+      transition: transform 0.25s ease, box-shadow 0.25s ease;
+      user-select: none;
+    }
+
+    .all-service-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 18px 40px -6px rgba(242, 91, 32, 0.28);
+    }
+
+    .all-card-thumb {
+      position: relative;
+      height: 110px;
+      width: 100%;
+      overflow: hidden;
+    }
+
+    .all-card-thumb img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.4s ease;
+    }
+
+    .all-service-card:hover .all-card-thumb img {
+      transform: scale(1.08);
+    }
+
+    .all-card-pill {
+      position: absolute;
+      top: 8px;
+      left: 8px;
+      background: rgba(15, 23, 42, 0.85);
+      backdrop-filter: blur(8px);
+      color: #ffffff;
+      font-size: 9px;
+      font-weight: 750;
+      padding: 3px 8px;
+      border-radius: 9999px;
+      letter-spacing: 0.3px;
+    }
+
+    .all-card-content {
+      padding: 12px 14px 14px 14px;
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+      justify-content: space-between;
+    }
+
+    .all-card-name {
+      font-size: 14px;
+      font-weight: 800;
+      color: #0f172a;
+      line-height: 1.25;
+      margin-bottom: 4px;
+    }
+
+    .all-card-desc {
+      font-size: 11px;
+      color: #64748b;
+      line-height: 1.4;
+      margin-bottom: 12px;
+      flex: 1;
+    }
+
+    .btn-all-card {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: #11141b;
+      color: #ffffff;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 7px 12px;
+      border-radius: 9999px;
+      text-decoration: none;
+      transition: background 0.2s ease, transform 0.2s ease;
+    }
+
+    .btn-all-card:hover {
+      background: var(--primary-orange);
+      transform: translateY(-1px);
+    }
+
+    /* Card Top Visual Section (Image + Title + Subtitle + Action) */
+    .card-visual {
+      position: relative;
+      width: 100%;
+      height: 220px;
+      overflow: hidden;
+    }
+
+    .card-visual img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transform: scale(1.05);
+      transition: transform 0.5s ease;
+    }
+
+    .toss-card:hover .card-visual img {
+      transform: scale(1.1);
+    }
+
+    .card-visual-gradient {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        to top, 
+        rgba(10, 13, 20, 0.92) 0%, 
+        rgba(10, 13, 20, 0.45) 45%, 
+        rgba(10, 13, 20, 0.05) 100%
+      );
+      z-index: 1;
+    }
+
+    .card-visual-content {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      padding: 16px 18px;
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 12px;
+      z-index: 2;
+    }
+
+    .card-title-group {
+      max-width: 250px;
+    }
+
+    .card-main-title {
+      font-size: 16px;
+      font-weight: 800;
+      color: #ffffff;
+      line-height: 1.2;
+      margin-bottom: 3px;
+      letter-spacing: -0.2px;
+    }
+
+    .card-sub-title {
+      font-size: 11.5px;
+      font-weight: 550;
+      color: rgba(255, 255, 255, 0.75);
+      line-height: 1.25;
+    }
+
+    .btn-card-action {
+      background: rgba(255, 255, 255, 0.22);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.35);
+      color: #ffffff;
+      font-size: 12px;
+      font-weight: 700;
+      padding: 8px 16px;
+      border-radius: 9999px;
+      text-decoration: none;
+      white-space: nowrap;
+      transition: background 0.2s ease, transform 0.2s ease;
+      flex-shrink: 0;
+    }
+
+    .btn-card-action:hover {
+      background: var(--primary-orange);
+      border-color: var(--primary-orange);
+      transform: scale(1.04);
+    }
+
+    /* Expand Toggle Bar */
+    .card-toggle-bar {
+      height: 38px;
+      background: #ffffff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-top: 1px solid rgba(0, 0, 0, 0.04);
+    }
+
+    .chevron-icon {
+      width: 16px;
+      height: 16px;
+      stroke: #64748b;
+      transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), stroke 0.2s ease;
+    }
+
+    .toss-card.expanded .chevron-icon {
+      transform: rotate(180deg);
+      stroke: var(--primary-orange);
+    }
+
+    /* Expanded Content Drawer */
+    .card-details-drawer {
+      max-height: 0;
+      opacity: 0;
+      overflow: hidden;
+      background: #ffffff;
+      padding: 0 22px;
+      transition: max-height 0.45s cubic-bezier(0.16, 1, 0.3, 1), 
+                  opacity 0.35s ease, 
+                  padding 0.45s ease;
+    }
+
+    .toss-card.expanded .card-details-drawer {
+      max-height: 480px;
+      opacity: 1;
+      padding: 16px 22px 20px 22px;
+      border-top: 1px solid #f1f5f9;
+      overflow-y: auto;
+    }
+
+    .detail-heading-row {
+      margin-bottom: 14px;
+    }
+
+    .detail-tour-name {
+      font-size: 15.5px;
+      font-weight: 800;
+      color: #0f172a;
+      letter-spacing: -0.3px;
+      line-height: 1.25;
+    }
+
+    .detail-author-tag {
+      font-size: 11px;
+      color: #64748b;
+      font-weight: 550;
+      margin-top: 2px;
+    }
+
+    /* 3-Column Metrics Grid (Directly from Attachment Image) */
+    .detail-metrics-grid {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 16px;
+      padding: 10px 14px;
+      margin-bottom: 16px;
+    }
+
+    .metric-col {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .metric-val {
+      font-size: 13.5px;
+      font-weight: 800;
+      color: #0f172a;
+      line-height: 1.1;
+    }
+
+    .metric-lbl {
+      font-size: 9.5px;
+      font-weight: 650;
+      text-transform: uppercase;
+      color: #94a3b8;
+      letter-spacing: 0.5px;
+      margin-top: 2px;
+    }
+
+    .metric-route-icon {
+      width: 44px;
+      height: 28px;
+      opacity: 0.8;
+      flex-shrink: 0;
+    }
+
+    /* Description Paragraphs */
+    .detail-body-text {
+      font-size: 12.5px;
+      line-height: 1.6;
+      color: #475569;
+      margin-bottom: 14px;
+    }
+
+    .detail-wa-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      background: #11141b;
+      color: #ffffff;
+      padding: 10px 18px;
+      border-radius: 9999px;
+      font-size: 12.5px;
+      font-weight: 700;
+      text-decoration: none;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.15);
+      transition: background 0.2s ease, transform 0.2s ease;
+    }
+
+    .detail-wa-btn:hover {
+      background: var(--primary-orange);
+      transform: translateY(-1px);
+    }
+
+    /* Final CTA Card */
+    .final-cta-stage {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.4s ease;
+      z-index: 15;
+    }
+
+    .milestone-card {
+      background: var(--surface-white);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border: 1px solid var(--border-light);
+      border-radius: 28px;
+      padding: 34px 40px;
+      max-width: 580px;
+      width: 90%;
+      box-shadow: 0 20px 50px -10px rgba(0, 0, 0, 0.18);
+      text-align: center;
+      pointer-events: auto;
+    }
+
+    .milestone-tag {
+      font-size: 10.5px;
+      font-weight: 800;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--primary-orange);
+      margin-bottom: 10px;
+    }
+
+    .milestone-title {
+      font-size: 26px;
+      font-weight: 800;
+      color: var(--text-dark);
+      letter-spacing: -0.8px;
+      margin-bottom: 12px;
+      line-height: 1.2;
+    }
+
+    .milestone-desc {
+      font-size: 14px;
+      line-height: 1.55;
+      color: #475569;
+      margin-bottom: 22px;
+    }
+
+    .milestone-actions {
+      display: flex;
+      justify-content: center;
+    }
+
+            /* Discrete Scroll Indicator */
+            .scroll-hint {
+              position: fixed;
+              bottom: 20px;
+              left: 50%;
+              transform: translateX(-50%);
+              z-index: 50;
+              pointer-events: none;
+              display: flex;
+              flex-direction: column;
+              align-items: center;
+              gap: 5px;
+              opacity: 0.8;
+              transition: opacity 0.3s ease;
+            }
+
+            .scroll-hint span {
+              font-size: 10px;
+              font-weight: 700;
+              letter-spacing: 1.5px;
+              text-transform: uppercase;
+              color: #475569;
+            }
+
+            .scroll-mouse {
+              width: 18px;
+              height: 28px;
+              border: 2px solid #475569;
+              border-radius: 10px;
+              position: relative;
+            }
+
+            .scroll-wheel {
+              width: 3px;
+              height: 5px;
+              background: var(--primary-orange);
+              border-radius: 2px;
+              position: absolute;
+              top: 5px;
+              left: 50%;
+              transform: translateX(-50%);
+              animation: wheelScroll 2s infinite;
+            }
+
+            @keyframes wheelScroll {
+              0% {
+                transform: translate(-50%, 0);
+                opacity: 1;
+              }
+
+              100% {
+                transform: translate(-50%, 10px);
+                opacity: 0;
+              }
+            }
+
+            /* Responsive Breakpoints */
+            @media (max-width: 820px) {
+              .nav-links {
+                display: none;
+              }
+
+              .btn-explore {
+                display: none;
+              }
+
+              .btn-mobile-menu {
+                display: inline-flex;
+              }
+
+              .navbar {
+                height: 50px;
+                padding: 0 6px 0 18px;
+              }
+
+              .navbar.scrolled {
+                max-width: 90%;
+                height: 46px;
+              }
+
+              .fixed-ui-stage {
+                padding: 70px 20px 20px 20px;
+              }
+
+              .hero-content {
+                max-width: 100%;
+              }
+
+              .hero-title {
+                font-size: 32px;
+              }
+
+              /* Compact single-row mobile Tokyo search capsule */
+              .search-capsule {
+                height: 44px;
+                padding: 4px 6px 4px 10px;
+                gap: 6px;
+                max-width: 330px;
+                margin: 0 auto;
+              }
+
+              .search-icon-badge {
+                width: 28px;
+                height: 28px;
+              }
+
+              .search-icon-badge svg {
+                width: 15px;
+                height: 15px;
+              }
+
+              .input-field {
+                font-size: 11.5px;
+              }
+
+              .input-field.input-dep {
+                max-width: 44px;
+              }
+
+              .btn-search-go {
+                width: 34px;
+                height: 34px;
+              }
+
+              .services-stage {
+                top: 60px;
+                padding: 0 10px;
+              }
+
+              .services-header {
+                margin-bottom: 6px;
+              }
+
+              .services-title {
+                font-size: 19px;
+              }
+
+              .toss-deck {
+                max-width: 350px;
+                min-height: 220px;
+              }
+
+              .card-visual {
+                height: 180px;
+              }
+
+              .card-main-title {
+                font-size: 14.5px;
+              }
+
+              .card-sub-title {
+                font-size: 10.5px;
+              }
+
+              .btn-card-action {
+                font-size: 11px;
+                padding: 6px 12px;
+              }
+
+              .toss-card.expanded .card-details-drawer {
+                max-height: 380px;
+                padding: 12px 16px 16px 16px;
+              }
+
+              .all-services-grid {
+                justify-content: flex-start;
+                scroll-snap-type: x mandatory;
+                padding: 4px 8px 12px 8px;
+              }
+
+              .all-service-card {
+                scroll-snap-align: center;
+                flex: 0 0 175px;
+              }
+            }
+  </style>
+</head>
+
+<body>
+  <!-- Fixed Scroll Animation Canvas -->
+  <canvas id="canvas"></canvas>
+
+  <!-- Ambient Vignette Contrast -->
+  <div class="viewport-overlay"></div>
+
+  <!-- Dynamic Centered Shrinking Navbar -->
+  <div class="navbar-container">
+    <nav class="navbar" id="main-navbar">
+      <a href="#" class="brand-logo">tanogaido<span class="dot">.</span></a>
+      <ul class="nav-links">
+        <li><a href="#destinations">Destinations</a></li>
+        <li><a href="#tours">Private Tours</a></li>
+        <li><a href="#passes">JR Pass</a></li>
+        <li><a href="#pricing">Pricing</a></li>
+        <li><a href="#guides">Guides</a></li>
+      </ul>
+      <div class="nav-actions">
+        <!-- Desktop Explore Button -->
+        <a href="#explore" class="btn-explore">
+          <span>Explore Now</span>
+          <span class="arrow">→</span>
+        </a>
+        <!-- Mobile Menu Toggle Button -->
+        <button class="btn-mobile-menu" id="open-menu-btn" aria-label="Open Navigation Menu">
+          <svg fill="none" viewBox="0 0 24 24" stroke-width="2.5">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+          </svg>
+          <span>Menu</span>
+        </button>
+      </div>
+    </nav>
+  </div>
+
+  <!-- Mobile Drawer Menu Modal -->
+  <div class="mobile-menu-overlay" id="mobile-menu-modal">
+    <div class="mobile-menu-card">
+      <div class="mobile-menu-header">
+        <a href="#" class="brand-logo">tanogaido<span class="dot">.</span></a>
+        <button class="btn-close-menu" id="close-menu-btn" aria-label="Close menu">&times;</button>
+      </div>
+      <ul class="mobile-nav-list">
+        <li><a href="#destinations" class="mobile-nav-item">Destinations</a></li>
+        <li><a href="#tours" class="mobile-nav-item">Private Tours</a></li>
+        <li><a href="#passes" class="mobile-nav-item">JR Pass</a></li>
+        <li><a href="#pricing" class="mobile-nav-item">Pricing</a></li>
+        <li><a href="#guides" class="mobile-nav-item">Guides</a></li>
+      </ul>
+      <a href="#explore" class="btn-explore"
+        style="display: flex; justify-content: center; width: 100%; margin-top: 6px;">
+        <span>Explore Now</span>
+        <span class="arrow">→</span>
+      </a>
+    </div>
+  </div>
+
+  <!-- Fixed Interactive UI Stage (Everything fits inside viewport on open) -->
+  <div class="fixed-ui-stage">
+    <div class="content-constraint">
+
+      <section class="hero-content" id="hero-view">
+          <span class="eyebrow" id="hero-eyebrow">DISCOVER THE LAND OF THE RISING SUN</span>
+          <h1 class="hero-title" id="hero-title">
+            Explore Every Wonder.<br>
+            <span class="line-orange">Across Japan.</span>
+          </h1>
+          <p class="hero-desc" id="hero-desc">
+            Curated private tours, seamless rail transport, and licensed bilingual guides for travelers who seek
+            authentic Japan. From Kyoto's quiet shrines to Mount Fuji.
+          </p>
+
+            <!-- Compact Search Capsule with Rotating Japanese Cities & WhatsApp Link -->
+            <div class="search-capsule" id="search-capsule" role="button" title="Chat WhatsApp untuk rute ini"
+              tabindex="0">
+              <div class="search-icon-badge">
+                <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round"
+                    d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                </svg>
+              </div>
+              <div class="search-fields">
+                <div class="route-field route-from">
+                  <span class="route-tag">From</span>
+                  <span class="route-value" id="city-text">Tokyo</span>
+                </div>
+                <div class="search-divider"></div>
+                <div class="route-field route-to">
+                  <span class="route-tag">Destination</span>
+                  <span class="route-value" id="dest-text">Mount Fuji & Kawaguchiko</span>
+                </div>
+              </div>
+                  <button class="btn-search-go" id="btn-search-go" aria-label="Konsultasi WhatsApp">
+                    <svg width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor"
+                      stroke-width="2.5">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                    </svg>
+                  </button>
+            </div>
+      </section>
+
+      <!-- Company Services Stage with Glass Dock, Single Active Card (Lempar Kartu), and Final All-Services Showcase -->
+      <div class="services-stage" id="services-stage">
+        <div class="services-header">
+          <span class="services-eyebrow">LAYANAN EKSKLUSIF TANOGAIDO</span>
+          <h2 class="services-title">Solusi Lengkap Liburan ke Jepang</h2>
+        </div>
+
+        <!-- Container for Services (Snug under header) -->
+        <div class="services-body-area">
+          <!-- Featured Single Card (Lempar Kartu) -->
+          <div class="toss-deck" id="toss-deck">
+            <!-- Card 0: Virtual Tour Guide Online -->
+            <div class="toss-card active" id="featured-card" data-index="0">
+              <div class="card-visual">
+                <img src="frames/ezgif-frame-035.jpg" alt="Virtual Tour Guide Online Jepang">
+                <div class="card-visual-gradient"></div>
+                <div class="card-visual-content">
+                  <div class="card-title-group">
+                    <h3 class="card-main-title">Virtual Tour Guide Online</h3>
+                    <p class="card-sub-title">Panduan Wisata 24/7 Real-Time via WhatsApp</p>
+                  </div>
+                  <button class="btn-card-action">Lihat Detail</button>
+                </div>
+              </div>
+              <div class="card-toggle-bar">
+                <svg class="chevron-icon" viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </div>
+              <div class="card-details-drawer">
+                <div class="detail-heading-row">
+                  <h4 class="detail-tour-name">Virtual Guide Online 24 Jam Seluruh Jepang</h4>
+                  <p class="detail-author-tag">Layanan Panduan Wisata #1 Tanogaido &bull; Sejak 2017</p>
+                </div>
+                <div class="detail-metrics-grid">
+                  <div class="metric-col">
+                    <span class="metric-val">24/7</span>
+                    <span class="metric-lbl">Akses WA</span>
+                  </div>
+                  <div class="metric-col">
+                    <span class="metric-val">100%</span>
+                    <span class="metric-lbl">Bebas Rute</span>
+                  </div>
+                  <div class="metric-col">
+                    <span class="metric-val">Hemat 70%</span>
+                    <span class="metric-lbl">Biaya Tour</span>
+                  </div>
+                  <svg class="metric-route-icon" viewBox="0 0 60 36" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M6 28 C 18 8, 32 30, 42 14 C 48 4, 54 10, 54 18" stroke="#f25b20" stroke-dasharray="2 4"/>
+                    <circle cx="6" cy="28" r="3" fill="#f25b20"/>
+                    <circle cx="54" cy="18" r="4" fill="#0f172a"/>
+                  </svg>
+                </div>
+                <p class="detail-body-text">
+                  Layanan pendampingan wisata virtual interaktif pertama dan terpercaya di Indonesia. Dipandu langsung oleh tim lokal Tanogaido yang tinggal di Jepang secara real-time melalui WhatsApp.
+                </p>
+                <p class="detail-body-text">
+                  Membantu navigasi rute kereta shinkansen, rekomendasi restoran kuliner lokal/halal, hingga bantuan darurat penerjemah bahasa Jepang saat berbelanja atau memesan tiket atraksi.
+                </p>
+                <a href="https://wa.me/6281318939319?text=Halo%20Tanogaido,%20saya%20tertarik%20dengan%20layanan%20Virtual%20Tour%20Guide%20Online%20Jepang.%20Mohon%20info%20dan%20biayanya." target="_blank" class="detail-wa-btn">
+                  <span>Pesan Virtual Guide via WhatsApp</span>
+                  <span class="arrow">→</span>
+                </a>
+              </div>
+            </div>
+
+            <!-- Card 1: Private Tour & Custom Itinerary -->
+            <div class="toss-card" data-index="1">
+              <div class="card-visual">
+                <img src="frames/ezgif-frame-120.jpg" alt="Private Tour Jepang">
+                <div class="card-visual-gradient"></div>
+                <div class="card-visual-content">
+                  <div class="card-title-group">
+                    <h3 class="card-main-title">Private Tour & Itinerary</h3>
+                    <p class="card-sub-title">Tokyo, Mount Fuji, Kyoto, Osaka & Shirakawa-go</p>
+                  </div>
+                  <button class="btn-card-action">Lihat Detail</button>
+                </div>
+              </div>
+              <div class="card-toggle-bar">
+                <svg class="chevron-icon" viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </div>
+              <div class="card-details-drawer">
+                <div class="detail-heading-row">
+                  <h4 class="detail-tour-name">Private Tour Eksklusif Bersama Guide Lokal</h4>
+                  <p class="detail-author-tag">Fleksibel & Khusus Rombongan Keluarga / Teman</p>
+                </div>
+                <div class="detail-metrics-grid">
+                  <div class="metric-col">
+                    <span class="metric-val">1-15 Pax</span>
+                    <span class="metric-lbl">Private Group</span>
+                  </div>
+                  <div class="metric-col">
+                    <span class="metric-val">100%</span>
+                    <span class="metric-lbl">Custom Jadwal</span>
+                  </div>
+                  <div class="metric-col">
+                    <span class="metric-val">Bilingual</span>
+                    <span class="metric-lbl">Guide Lokal</span>
+                  </div>
+                  <svg class="metric-route-icon" viewBox="0 0 60 36" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M8 20 C 20 6, 36 32, 52 14" stroke="#f25b20" stroke-dasharray="2 4"/>
+                    <circle cx="8" cy="20" r="3" fill="#f25b20"/>
+                    <circle cx="52" cy="14" r="4" fill="#0f172a"/>
+                  </svg>
+                </div>
+                <p class="detail-body-text">
+                  Nikmati liburan ke Jepang tanpa terikat rombongan tour umum. Anda bebas menentukan jam berangkat, durasi kunjungan spot foto, serta memilih menu kuliner favorit sesuai selera keluarga.
+                </p>
+                <p class="detail-body-text">
+                  Didampingi guide berlisensi berbahasa Indonesia yang ramah, profesional, dan paham spot-spot tersembunyi yang instagramable di seluruh penjuru Jepang.
+                </p>
+                <a href="https://wa.me/6281318939319?text=Halo%20Tanogaido,%20saya%20ingin%20konsultasi%20paket%20Private%20Tour%20Jepang.%20Mohon%20bantuan%20rancang%20itinerary-nya." target="_blank" class="detail-wa-btn">
+                  <span>Rancang Private Tour via WhatsApp</span>
+                  <span class="arrow">→</span>
+                </a>
+              </div>
+            </div>
+
+            <!-- Card 2: Sewa Mobil & Private Driver di Jepang -->
+            <div class="toss-card" data-index="2">
+              <div class="card-visual">
+                <img src="frames/ezgif-frame-190.jpg" alt="Sewa Mobil di Jepang">
+                <div class="card-visual-gradient"></div>
+                <div class="card-visual-content">
+                  <div class="card-title-group">
+                    <h3 class="card-main-title">Sewa Mobil & Private Driver</h3>
+                    <p class="card-sub-title">Armada Alphard, HiAce & Coaster Nyaman</p>
+                  </div>
+                  <button class="btn-card-action">Lihat Detail</button>
+                </div>
+              </div>
+              <div class="card-toggle-bar">
+                <svg class="chevron-icon" viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </div>
+              <div class="card-details-drawer">
+                <div class="detail-heading-row">
+                  <h4 class="detail-tour-name">Layanan Rental Mobil Pribadi + Driver Jepang</h4>
+                  <p class="detail-author-tag">Antar Jemput Bandara & Tour Luar Kota</p>
+                </div>
+                <div class="detail-metrics-grid">
+                  <div class="metric-col">
+                    <span class="metric-val">Alphard</span>
+                    <span class="metric-lbl">HiAce / Bus</span>
+                  </div>
+                  <div class="metric-col">
+                    <span class="metric-val">10-12 Jam</span>
+                    <span class="metric-lbl">Durasi Harian</span>
+                  </div>
+                  <div class="metric-col">
+                    <span class="metric-val">Bebas Koper</span>
+                    <span class="metric-lbl">Door-to-door</span>
+                  </div>
+                  <svg class="metric-route-icon" viewBox="0 0 60 36" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M6 16 C 18 26, 38 6, 54 22" stroke="#f25b20" stroke-dasharray="2 4"/>
+                    <circle cx="6" cy="16" r="3" fill="#f25b20"/>
+                    <circle cx="54" cy="22" r="4" fill="#0f172a"/>
+                  </svg>
+                </div>
+                <p class="detail-body-text">
+                  Solusi terbaik bepergian bersama orang tua dan anak-anak. Bebas lelah membawa koper naik-turun tangga stasiun kereta saat berpindah kota dari Tokyo ke Gunung Fuji, Hakone, atau Kyoto.
+                </p>
+                <p class="detail-body-text">
+                  Driver ramah dan berpengalaman menjamin perjalanan aman, tepat waktu, dan mengantarkan Anda tepat di lobi hotel atau pintu masuk tempat wisata.
+                </p>
+                <a href="https://wa.me/6281318939319?text=Halo%20Tanogaido,%20saya%20ingin%20info%20sewa%20mobil%20dan%20private%20driver%20di%20Jepang.%20Mohon%20pilihan%20armada%20dan%20pricelist-nya." target="_blank" class="detail-wa-btn">
+                  <span>Pesan Sewa Mobil via WhatsApp</span>
+                  <span class="arrow">→</span>
+                </a>
+              </div>
+            </div>
+
+            <!-- Card 3: Tiket JR Pass & Shinkansen -->
+            <div class="toss-card" data-index="3">
+              <div class="card-visual">
+                <img src="frames/ezgif-frame-240.jpg" alt="JR Pass Shinkansen">
+                <div class="card-visual-gradient"></div>
+                <div class="card-visual-content">
+                  <div class="card-title-group">
+                    <h3 class="card-main-title">JR Pass & Tiket Shinkansen</h3>
+                    <p class="card-sub-title">Tiket Resmi Seluruh Jepang & Konsultasi Rute</p>
+                  </div>
+                  <button class="btn-card-action">Lihat Detail</button>
+                </div>
+              </div>
+              <div class="card-toggle-bar">
+                <svg class="chevron-icon" viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </div>
+              <div class="card-details-drawer">
+                <div class="detail-heading-row">
+                  <h4 class="detail-tour-name">Pemesanan Resmi Japan Rail Pass & Kereta Cepat</h4>
+                  <p class="detail-author-tag">All Japan Pass & Regional (Kansai, East, Hokkaido)</p>
+                </div>
+                <div class="detail-metrics-grid">
+                  <div class="metric-col">
+                    <span class="metric-val">All Japan</span>
+                    <span class="metric-lbl">Resmi JR</span>
+                  </div>
+                  <div class="metric-col">
+                    <span class="metric-val">7/14/21</span>
+                    <span class="metric-lbl">Pilihan Hari</span>
+                  </div>
+                  <div class="metric-col">
+                    <span class="metric-val">Gratis</span>
+                    <span class="metric-lbl">Konsul Rute</span>
+                  </div>
+                  <svg class="metric-route-icon" viewBox="0 0 60 36" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M6 10 L 26 26 L 44 8 L 54 18" stroke="#f25b20" stroke-dasharray="2 4"/>
+                    <circle cx="6" cy="10" r="3" fill="#f25b20"/>
+                    <circle cx="54" cy="18" r="4" fill="#0f172a"/>
+                  </svg>
+                </div>
+                <p class="detail-body-text">
+                  Beli JR Pass resmi tanpa was-was dengan voucher fisik atau e-exchange order yang dikirim cepat ke alamat Anda sebelum keberangkatan, atau diambil di Jepang.
+                </p>
+                <p class="detail-body-text">
+                  Tim Tanogaido siap menghitung efisiensi rute Anda untuk memastikan apakah trip Anda lebih hemat menggunakan Whole Japan Pass atau tiket Shinkansen point-to-point.
+                </p>
+                <a href="https://wa.me/6281318939319?text=Halo%20Tanogaido,%20saya%20ingin%20beli%20JR%20Pass%20/%20tiket%20Shinkansen%20Jepang.%20Mohon%20bantuan%20info%20harganya." target="_blank" class="detail-wa-btn">
+                  <span>Beli JR Pass via WhatsApp</span>
+                  <span class="arrow">→</span>
+                </a>
+              </div>
+            </div>
+
+            <!-- Card 4: Visa Jepang & Sewa Pocket WiFi -->
+            <div class="toss-card" data-index="4">
+              <div class="card-visual">
+                <img src="frames/ezgif-frame-290.jpg" alt="Visa Jepang dan Pocket WiFi">
+                <div class="card-visual-gradient"></div>
+                <div class="card-visual-content">
+                  <div class="card-title-group">
+                    <h3 class="card-main-title">Visa Jepang & Pocket WiFi 4G</h3>
+                    <p class="card-sub-title">Pengurusan E-Visa Cepat & Internet Unlimited</p>
+                  </div>
+                  <button class="btn-card-action">Lihat Detail</button>
+                </div>
+              </div>
+              <div class="card-toggle-bar">
+                <svg class="chevron-icon" viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </div>
+              <div class="card-details-drawer">
+                <div class="detail-heading-row">
+                  <h4 class="detail-tour-name">Layanan Visa Wisata & Internet Unlimited Jepang</h4>
+                  <p class="detail-author-tag">Bantuan Dokumen Kedutaan & Koneksi 4G Cepat</p>
+                </div>
+                <div class="detail-metrics-grid">
+                  <div class="metric-col">
+                    <span class="metric-val">E-Visa</span>
+                    <span class="metric-lbl">Waiver / Reguler</span>
+                  </div>
+                  <div class="metric-col">
+                    <span class="metric-val">4G LTE</span>
+                    <span class="metric-lbl">Unlimited Data</span>
+                  </div>
+                  <div class="metric-col">
+                    <span class="metric-val">Mudah</span>
+                    <span class="metric-lbl">Tanpa Ribet</span>
+                  </div>
+                  <svg class="metric-route-icon" viewBox="0 0 60 36" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M10 24 C 24 10, 36 28, 50 12" stroke="#f25b20" stroke-dasharray="2 4"/>
+                    <circle cx="10" cy="24" r="3" fill="#f25b20"/>
+                    <circle cx="50" cy="12" r="4" fill="#0f172a"/>
+                  </svg>
+                </div>
+                <p class="detail-body-text">
+                  Bantuan pengurusan visa wisata Jepang, e-visa, atau registrasi bebas visa (e-passport waiver) dengan bimbingan berkas yang teliti untuk memastikan persetujuan lancar.
+                </p>
+                <p class="detail-body-text">
+                  Sewa Pocket WiFi berkecepatan tinggi tanpa batas kuota (unlimited) yang bisa diambil di bandara Jepang atau dikirim langsung ke rumah Anda sebelum terbang.
+                </p>
+                <a href="https://wa.me/6281318939319?text=Halo%20Tanogaido,%20saya%20ingin%20info%20pengurusan%20Visa%20Jepang%20dan%20sewa%20Pocket%20WiFi.%20Mohon%20persyaratannya." target="_blank" class="detail-wa-btn">
+                  <span>Urus Visa & WiFi via WhatsApp</span>
+                  <span class="arrow">→</span>
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <!-- All 5 Services Lined Up (Matches Lampiran 1 Exactly) -->
+          <div class="all-services-view" id="all-services-view">
+            <div class="all-services-grid">
+              <!-- Item 1 -->
+              <div class="all-service-card">
+                <div class="all-card-thumb">
+                  <img src="frames/ezgif-frame-035.jpg" alt="Virtual Tour Guide">
+                  <span class="all-card-pill">24/7 Support</span>
+                </div>
+                <div class="all-card-content">
+                  <h4 class="all-card-name">Virtual Guide</h4>
+                  <p class="all-card-desc">Panduan live via WA selama di Jepang.</p>
+                  <a href="https://wa.me/6281318939319?text=Halo%20Tanogaido,%20saya%20ingin%20pesan%20Virtual%20Guide%20Online." target="_blank" class="btn-all-card">Pesan WA →</a>
+                </div>
+              </div>
+              <!-- Item 2 -->
+              <div class="all-service-card">
+                <div class="all-card-thumb">
+                  <img src="frames/ezgif-frame-120.jpg" alt="Private Tour">
+                  <span class="all-card-pill">Custom 100%</span>
+                </div>
+                <div class="all-card-content">
+                  <h4 class="all-card-name">Private Tour</h4>
+                  <p class="all-card-desc">Guide bilingual lokal khusus rombongan Anda.</p>
+                  <a href="https://wa.me/6281318939319?text=Halo%20Tanogaido,%20saya%20ingin%20pesan%20Private%20Tour%20Jepang." target="_blank" class="btn-all-card">Rancang →</a>
+                </div>
+              </div>
+              <!-- Item 3 -->
+              <div class="all-service-card">
+                <div class="all-card-thumb">
+                  <img src="frames/ezgif-frame-190.jpg" alt="Sewa Mobil">
+                  <span class="all-card-pill">Alphard/HiAce</span>
+                </div>
+                <div class="all-card-content">
+                  <h4 class="all-card-name">Sewa Mobil</h4>
+                  <p class="all-card-desc">Driver pribadi door-to-door, bebas koper.</p>
+                  <a href="https://wa.me/6281318939319?text=Halo%20Tanogaido,%20saya%20ingin%20sewa%20mobil%20dan%20driver%20di%20Jepang." target="_blank" class="btn-all-card">Pesan →</a>
+                </div>
+              </div>
+              <!-- Item 4 -->
+              <div class="all-service-card">
+                <div class="all-card-thumb">
+                  <img src="frames/ezgif-frame-240.jpg" alt="JR Pass Shinkansen">
+                  <span class="all-card-pill">Resmi JR</span>
+                </div>
+                <div class="all-card-content">
+                  <h4 class="all-card-name">JR Pass Rail</h4>
+                  <p class="all-card-desc">Tiket Shinkansen resmi & konsultasi rute.</p>
+                  <a href="https://wa.me/6281318939319?text=Halo%20Tanogaido,%20saya%20ingin%20beli%20JR%20Pass%20Jepang." target="_blank" class="btn-all-card">Beli Tiket →</a>
+                </div>
+              </div>
+              <!-- Item 5 -->
+              <div class="all-service-card">
+                <div class="all-card-thumb">
+                  <img src="frames/ezgif-frame-290.jpg" alt="Visa & WiFi">
+                  <span class="all-card-pill">E-Visa & 4G</span>
+                </div>
+                <div class="all-card-content">
+                  <h4 class="all-card-name">Visa & WiFi</h4>
+                  <p class="all-card-desc">E-Visa mudah & modem 4G unlimited.</p>
+                  <a href="https://wa.me/6281318939319?text=Halo%20Tanogaido,%20saya%20ingin%20bantuan%20Visa%20Jepang%20dan%20WiFi." target="_blank" class="btn-all-card">Konsul →</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Final Call To Action Milestone -->
+      <div class="final-cta-stage" id="final-cta-stage">
+        <div class="milestone-card">
+          <div class="milestone-tag">Konsultasi Sekarang</div>
+          <h2 class="milestone-title">Wujudkan Liburan Impian ke Jepang Bersama Tanogaido</h2>
+          <p class="milestone-desc">
+            Dari tour virtual interaktif, private tour keluarga, sewa mobil, tiket JR Pass, hingga visa. Dapatkan penawaran terbaik dan konsultasi gratis sekarang!
+          </p>
+          <div class="milestone-actions">
+            <a href="https://wa.me/6281318939319?text=Halo%20Tanogaido,%20saya%20ingin%20merencanakan%20liburan%20ke%20Jepang.%20Mohon%20bantuannya!" target="_blank" class="btn-explore" style="display: inline-flex;">
+              <span>Hubungi Tanogaido via WhatsApp</span>
+              <span class="arrow">→</span>
+            </a>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Bottom Scroll Cue -->
+  <div class="scroll-hint" id="scroll-hint">
+    <span>Scroll to Explore</span>
+    <div class="scroll-mouse">
+      <div class="scroll-wheel"></div>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      const TOTAL_FRAMES = 300;
+      const FRAME_PREFIX = 'frames/ezgif-frame-';
+      const FRAME_EXT = '.jpg';
+      const canvas = document.getElementById('canvas');
+      const ctx = canvas.getContext('2d', { alpha: false });
+
+      const navbar = document.getElementById('main-navbar');
+      const heroView = document.getElementById('hero-view');
+      const heroEyebrow = document.getElementById('hero-eyebrow');
+      const heroTitle = document.getElementById('hero-title');
+      const heroDesc = document.getElementById('hero-desc');
+      const searchCapsule = document.getElementById('search-capsule');
+      const cityText = document.getElementById('city-text');
+      const destText = document.getElementById('dest-text');
+      const btnSearchGo = document.getElementById('btn-search-go');
+
+      const servicesStage = document.getElementById('services-stage');
+      const miniTabs = document.querySelectorAll('.mini-card-tab');
+      const tossDeck = document.getElementById('toss-deck');
+      const tossCards = document.querySelectorAll('.toss-card');
+      const allServicesView = document.getElementById('all-services-view');
+      const finalCtaStage = document.getElementById('final-cta-stage');
+      const scrollHint = document.getElementById('scroll-hint');
+
+      const isReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      // Card Expand / Collapse Detail Toggle
+      tossCards.forEach((card) => {
+        card.addEventListener('click', (e) => {
+          if (e.target.closest('.detail-wa-btn') || e.target.closest('a')) return;
+          const isExp = card.classList.contains('expanded');
+          tossCards.forEach(c => c.classList.remove('expanded'));
+          if (!isExp) {
+            card.classList.add('expanded');
+          }
+        });
+      });
+
+      // Mini Dock Tabs Click Navigation
+      miniTabs.forEach((tab) => {
+        tab.addEventListener('click', () => {
+          const tabIdx = parseInt(tab.getAttribute('data-index'), 10);
+          const doc = document.documentElement;
+          const body = document.body;
+          const scrollHeight = Math.max(doc.scrollHeight, body.scrollHeight) - window.innerHeight;
+          if (scrollHeight <= 0) return;
+
+          let targetProg = 0.11;
+          if (tabIdx === 0) targetProg = 0.12;
+          else if (tabIdx === 1) targetProg = 0.23;
+          else if (tabIdx === 2) targetProg = 0.35;
+          else if (tabIdx === 3) targetProg = 0.47;
+          else if (tabIdx === 4) targetProg = 0.59;
+          else if (tabIdx === 5) targetProg = 0.68;
+
+          window.scrollTo({
+            top: targetProg * scrollHeight,
+            behavior: 'smooth'
+          });
+        });
+      });
+
+      function clamp(val, min, max) {
+        return Math.min(Math.max(val, min), max);
+      }
+
+      // Rotating Japanese Cities & Curated Routes
+      const JAPAN_ROUTES = [
+        { from: 'Tokyo', to: 'Mount Fuji & Kawaguchiko' },
+        { from: 'Kyoto', to: 'Arashiyama & Fushimi Inari' },
+        { from: 'Osaka', to: 'Dotonbori & Universal Studios' },
+        { from: 'Sapporo', to: 'Otaru Canal & Niseko Snow' },
+        { from: 'Hiroshima', to: 'Miyajima Floating Torii' },
+        { from: 'Nagoya', to: 'Shirakawa-go Heritage' },
+        { from: 'Fukuoka', to: 'Yufuin Onsen & Beppu' },
+        { from: 'Hakone', to: 'Lake Ashi & Hot Springs' },
+        { from: 'Nara', to: 'Todaiji Temple & Deer Park' },
+        { from: 'Yokohama', to: 'Minato Mirai & Chinatown' },
+        { from: 'Kanazawa', to: 'Kenrokuen & Geisha District' },
+        { from: 'Okinawa', to: 'Churaumi & Emerald Coast' },
+        { from: 'Takayama', to: 'Hida Folk Village & Alps' },
+        { from: 'Kobe', to: 'Rokkosan & Harborland' }
+      ];
+
+      let currentRouteIndex = 0;
+
+      function cycleCityRoutes() {
+        if (!cityText || !destText) return;
+        cityText.classList.add('fade-out');
+        destText.classList.add('fade-out');
+
+        setTimeout(() => {
+          currentRouteIndex = (currentRouteIndex + 1) % JAPAN_ROUTES.length;
+          cityText.textContent = JAPAN_ROUTES[currentRouteIndex].from;
+          destText.textContent = JAPAN_ROUTES[currentRouteIndex].to;
+
+          cityText.classList.remove('fade-out');
+          destText.classList.remove('fade-out');
+
+          cityText.classList.add('fade-in-prep');
+          destText.classList.add('fade-in-prep');
+
+          requestAnimationFrame(() => {
+            cityText.classList.remove('fade-in-prep');
+            destText.classList.remove('fade-in-prep');
+          });
+        }, 320);
+      }
+
+      setInterval(cycleCityRoutes, 2800);
+
+      // WhatsApp Integration (Official Tanogaido WhatsApp)
+      const WHATSAPP_PHONE = '6281318939319';
+      function openWhatsApp(e) {
+        if (e) {
+          e.preventDefault();
+          e.stopPropagation();
+        }
+        const current = JAPAN_ROUTES[currentRouteIndex];
+        const text = `Halo Tanogaido, saya tertarik explore Jepang dengan rute:\n- Dari: ${current.from}\n- Destinasi: ${current.to}\n\nMohon info paket tour, private guide, dan rincian perjalanannya. Terima kasih!`;
+        const waUrl = `https://wa.me/${WHATSAPP_PHONE}?text=${encodeURIComponent(text)}`;
+        window.open(waUrl, '_blank');
+      }
+
+      if (searchCapsule) {
+        searchCapsule.addEventListener('click', openWhatsApp);
+      }
+      if (btnSearchGo) {
+        btnSearchGo.addEventListener('click', openWhatsApp);
+      }
+
+      // Mobile Menu Logic
+      const openMenuBtn = document.getElementById('open-menu-btn');
+      const closeMenuBtn = document.getElementById('close-menu-btn');
+      const mobileMenuModal = document.getElementById('mobile-menu-modal');
+      const mobileNavItems = document.querySelectorAll('.mobile-nav-item');
+
+      if (openMenuBtn && closeMenuBtn && mobileMenuModal) {
+        openMenuBtn.addEventListener('click', () => {
+          mobileMenuModal.classList.add('active');
+        });
+        closeMenuBtn.addEventListener('click', () => {
+          mobileMenuModal.classList.remove('active');
+        });
+        mobileMenuModal.addEventListener('click', (e) => {
+          if (e.target === mobileMenuModal) {
+            mobileMenuModal.classList.remove('active');
+          }
+        });
+        mobileNavItems.forEach(item => {
+          item.addEventListener('click', () => {
+            mobileMenuModal.classList.remove('active');
+          });
+        });
+      }
+
+      const images = new Array(TOTAL_FRAMES);
+      const loaded = new Uint8Array(TOTAL_FRAMES);
+
+      let targetFrame = 0;
+      let currentFrame = 0;
+      let lastRenderedFrame = -1;
+      let lastTime = performance.now();
+      let isCanvasReady = false;
+
+      function getFramePath(index) {
+        const frameNum = String(index + 1).padStart(3, '0');
+        return `${FRAME_PREFIX}${frameNum}${FRAME_EXT}`;
+      }
+
+      function resizeCanvas() {
+        const dpr = Math.min(window.devicePixelRatio || 1, 2);
+        const w = window.innerWidth;
+        const h = window.innerHeight;
+
+        canvas.width = Math.round(w * dpr);
+        canvas.height = Math.round(h * dpr);
+        canvas.style.width = w + 'px';
+        canvas.style.height = h + 'px';
+
+        ctx.imageSmoothingEnabled = true;
+        ctx.imageSmoothingQuality = 'high';
+
+        isCanvasReady = true;
+        renderBestFrame();
+      }
+
+      function getBestAvailableFrame(index) {
+        if (loaded[index]) return images[index];
+        for (let offset = 1; offset < TOTAL_FRAMES; offset++) {
+          const prev = index - offset;
+          if (prev >= 0 && loaded[prev]) return images[prev];
+          const next = index + offset;
+          if (next < TOTAL_FRAMES && loaded[next]) return images[next];
+        }
+        return null;
+      }
+
+      function drawFrame(img) {
+        if (!img || !img.complete || img.naturalWidth === 0) return;
+
+        const cw = canvas.width;
+        const ch = canvas.height;
+        const iw = img.naturalWidth;
+        const ih = img.naturalHeight;
+
+        const scale = Math.max(cw / iw, ch / ih);
+        const nw = Math.round(iw * scale);
+        const nh = Math.round(ih * scale);
+        const nx = Math.round((cw - nw) / 2);
+        const ny = Math.round((ch - nh) / 2);
+
+        ctx.drawImage(img, nx, ny, nw, nh);
+      }
+
+      function renderBestFrame() {
+        if (!isCanvasReady) return;
+        const frameIdx = Math.max(0, Math.min(TOTAL_FRAMES - 1, Math.round(currentFrame)));
+        const img = getBestAvailableFrame(frameIdx);
+        if (img) {
+          drawFrame(img);
+          lastRenderedFrame = frameIdx;
+        }
+      }
+
+      function getScrollProgress() {
+        const doc = document.documentElement;
+        const body = document.body;
+        const scrollTop = window.pageYOffset !== undefined
+          ? window.pageYOffset
+          : (doc.scrollTop || body.scrollTop || 0);
+
+        const scrollHeight = Math.max(
+          doc.scrollHeight,
+          body.scrollHeight,
+          doc.offsetHeight,
+          body.offsetHeight
+        );
+        const clientHeight = window.innerHeight || doc.clientHeight || 1;
+        const maxScroll = scrollHeight - clientHeight;
+
+        if (maxScroll <= 0) return 0;
+        return Math.max(0, Math.min(1, scrollTop / maxScroll));
+      }
+
+      function updateUIProgress(progress) {
+        const scrollTop = window.pageYOffset || document.documentElement.scrollTop || 0;
+
+        // Shrink header and fit compact to center on scroll
+        if (scrollTop > 25) {
+          navbar.classList.add('scrolled');
+        } else {
+          navbar.classList.remove('scrolled');
+        }
+
+        // Aggressive staggered per-line exit for hero section (translates directly upwards towards navbar)
+        function getLineProgress(val, start, end) {
+          if (val <= start) return 1;
+          if (val >= end) return 0;
+          return 1 - ((val - start) / (end - start));
+        }
+
+        const pEyebrow = getLineProgress(progress, 0.000, 0.020);
+        if (heroEyebrow) {
+          heroEyebrow.style.opacity = String(pEyebrow);
+          heroEyebrow.style.transform = `translateY(${-(1 - pEyebrow) * 22}px)`;
+        }
+
+        const pTitle = getLineProgress(progress, 0.010, 0.035);
+        if (heroTitle) {
+          heroTitle.style.opacity = String(pTitle);
+          heroTitle.style.transform = `translateY(${-(1 - pTitle) * 28}px)`;
+        }
+
+        const pDesc = getLineProgress(progress, 0.025, 0.050);
+        if (heroDesc) {
+          heroDesc.style.opacity = String(pDesc);
+          heroDesc.style.transform = `translateY(${-(1 - pDesc) * 28}px)`;
+        }
+
+        const pSearch = getLineProgress(progress, 0.040, 0.070);
+        if (searchCapsule) {
+          searchCapsule.style.opacity = String(pSearch);
+          searchCapsule.style.transform = `translateY(${-(1 - pSearch) * 28}px)`;
+          searchCapsule.style.pointerEvents = pSearch > 0.3 ? 'auto' : 'none';
+        }
+
+        if (heroView) {
+          heroView.style.pointerEvents = pSearch > 0.1 ? 'auto' : 'none';
+          heroView.style.display = progress > 0.075 ? 'none' : 'flex';
+        }
+
+        // Services Stage: Active from 0.075 to 0.760
+        if (progress >= 0.075 && progress < 0.760) {
+          let stageOpacity = 1;
+          if (progress < 0.095) {
+            stageOpacity = (progress - 0.075) / 0.020;
+          } else if (progress > 0.720) {
+            stageOpacity = (0.760 - progress) / 0.040;
+          }
+          servicesStage.style.opacity = String(stageOpacity);
+          servicesStage.style.pointerEvents = stageOpacity > 0.3 ? 'auto' : 'none';
+          servicesStage.style.display = 'flex';
+
+          // Normalized progress across services phase
+          const pNorm = clamp((progress - 0.095) / (0.720 - 0.095), 0, 1);
+          const deckProgress = pNorm * 5.2; // 0.0 to 5.2
+
+          // Mini Dock tab highlighting
+          const activeTabIdx = deckProgress >= 4.4 ? 5 : Math.min(4, Math.floor(deckProgress));
+          miniTabs.forEach((tab, idx) => {
+            tab.classList.toggle('active', idx === activeTabIdx);
+          });
+
+          // Single Active Card (Lempar Kartu) vs All Services Showcase
+          if (deckProgress < 4.4) {
+            allServicesView.style.display = 'none';
+            allServicesView.style.opacity = '0';
+            allServicesView.style.pointerEvents = 'none';
+            tossDeck.style.display = 'flex';
+
+            const k = Math.min(4, Math.floor(deckProgress));
+            const t = deckProgress - k;
+
+            for (let i = 0; i < tossCards.length; i++) {
+              const card = tossCards[i];
+              if (i === k) {
+                if (t <= 0.40 || k === 4) {
+                  card.style.display = 'block';
+                  card.style.transform = 'translate3d(0, 0, 0) rotate(0deg) scale(1)';
+                  card.style.opacity = '1';
+                  card.style.zIndex = '10';
+                  card.style.pointerEvents = 'auto';
+                } else {
+                  // Toss away animation ("seperti lempar kartu")
+                  const u = (t - 0.40) / 0.60;
+                  const e = u * u * (3 - 2 * u);
+                  card.style.display = 'block';
+                  card.style.transform = `translate3d(${-e * 130}px, ${-e * 80}px, 0) rotate(${-e * 11}deg) scale(${1 - e * 0.12})`;
+                  card.style.opacity = String(1 - e);
+                  card.style.zIndex = '11';
+                  card.style.pointerEvents = e > 0.4 ? 'none' : 'auto';
+                }
+              } else if (i === k + 1 && k < 4) {
+                if (t <= 0.40) {
+                  card.style.display = 'none';
+                  card.style.opacity = '0';
+                  card.style.pointerEvents = 'none';
+                } else {
+                  // Next card deals into place smoothly
+                  const u = (t - 0.40) / 0.60;
+                  const e = u * u * (3 - 2 * u);
+                  card.style.display = 'block';
+                  card.style.transform = `translate3d(${(1 - e) * 45}px, ${(1 - e) * 55}px, 0) rotate(${(1 - e) * 5}deg) scale(${0.94 + e * 0.06})`;
+                  card.style.opacity = String(e);
+                  card.style.zIndex = '10';
+                  card.style.pointerEvents = e > 0.6 ? 'auto' : 'none';
+                }
+              } else {
+                card.style.display = 'none';
+                card.style.opacity = '0';
+                card.style.pointerEvents = 'none';
+              }
+            }
+          } else {
+            // Deck progress >= 4.4: Card 4 finishes toss and All-Services view appears
+            const u = clamp((deckProgress - 4.4) / 0.35, 0, 1);
+            const e = u * u * (3 - 2 * u);
+
+            for (let i = 0; i < tossCards.length; i++) {
+              const card = tossCards[i];
+              if (i === 4 && u < 1) {
+                card.style.display = 'block';
+                card.style.transform = `translate3d(${-e * 130}px, ${-e * 80}px, 0) rotate(${-e * 11}deg) scale(${1 - e * 0.12})`;
+                card.style.opacity = String(1 - e);
+                card.style.zIndex = '11';
+                card.style.pointerEvents = 'none';
+              } else {
+                card.style.display = 'none';
+                card.style.opacity = '0';
+                card.style.pointerEvents = 'none';
+              }
+            }
+
+            allServicesView.style.display = 'block';
+            allServicesView.style.opacity = String(e);
+            allServicesView.style.transform = `translateY(${(1 - e) * 18}px)`;
+            allServicesView.style.pointerEvents = e > 0.3 ? 'auto' : 'none';
+          }
+        } else {
+          servicesStage.style.opacity = '0';
+          servicesStage.style.pointerEvents = 'none';
+          servicesStage.style.display = 'none';
+        }
+
+        // Final CTA Stage: 0.760 to 1.000
+        if (progress >= 0.760) {
+          const factor = Math.min(1, (progress - 0.760) / 0.10);
+          finalCtaStage.style.opacity = String(factor);
+          finalCtaStage.style.transform = `translateY(${(1 - factor) * 20}px)`;
+          finalCtaStage.style.pointerEvents = factor > 0.4 ? 'auto' : 'none';
+        } else {
+          finalCtaStage.style.opacity = '0';
+          finalCtaStage.style.pointerEvents = 'none';
+        }
+
+        if (scrollHint) {
+          scrollHint.style.opacity = progress > 0.05 ? '0' : '0.8';
+        }
+      }
+
+      function updateTargetFrame() {
+        const progress = getScrollProgress();
+
+        if (progress < 0.075) {
+          // Phase 1: Mist clears to reveal Mount Fuji (Frame 0 to 75)
+          targetFrame = (progress / 0.075) * 75;
+        } else if (progress < 0.760) {
+          // Phase 2: Services phase - Background is FROZEN at frame 75
+          // User: "saat efek card ini berjalan scrlling background berhenti dulu jadi hanya card layanan"
+          targetFrame = 75;
+        } else {
+          // Phase 3: Resume background animation into final scene (Frame 75 to 299)
+          const pFinal = (progress - 0.760) / (1.000 - 0.760);
+          targetFrame = 75 + pFinal * (TOTAL_FRAMES - 1 - 75);
+        }
+
+        updateUIProgress(progress);
+      }
+
+        function preloadImages() {
+          const firstImg = new Image();
+          firstImg.src = getFramePath(0);
+          firstImg.onload = () => {
+            images[0] = firstImg;
+            loaded[0] = 1;
+            renderBestFrame();
+          };
+
+          for (let i = 1; i < TOTAL_FRAMES; i++) {
+            const img = new Image();
+            img.src = getFramePath(i);
+            const index = i;
+            img.onload = () => {
+              images[index] = img;
+              loaded[index] = 1;
+              const currentInt = Math.round(currentFrame);
+              if (currentInt === index && isCanvasReady) {
+                drawFrame(img);
+                lastRenderedFrame = index;
+              }
+            };
+          }
+        }
+
+        function animate(now) {
+          const dt = Math.min((now - lastTime) / 1000, 0.1);
+          lastTime = now;
+
+          const decay = 12;
+          const factor = 1 - Math.exp(-decay * dt);
+          currentFrame += (targetFrame - currentFrame) * factor;
+
+          if (Math.abs(targetFrame - currentFrame) < 0.005) {
+            currentFrame = targetFrame;
+          }
+
+          const frameToRender = Math.max(0, Math.min(TOTAL_FRAMES - 1, Math.round(currentFrame)));
+
+          if (frameToRender !== lastRenderedFrame && isCanvasReady) {
+            const img = getBestAvailableFrame(frameToRender);
+            if (img) {
+              drawFrame(img);
+              lastRenderedFrame = frameToRender;
+            }
+          }
+
+          requestAnimationFrame(animate);
+        }
+
+        window.addEventListener('scroll', updateTargetFrame, { passive: true });
+        document.addEventListener('scroll', updateTargetFrame, { passive: true });
+        window.addEventListener('resize', () => {
+          resizeCanvas();
+          updateTargetFrame();
+        }, { passive: true });
+
+        window.addEventListener('keydown', (e) => {
+          const step = window.innerHeight * 0.4;
+          if (e.key === 'ArrowDown' || e.key === 'PageDown' || e.key === ' ') {
+            window.scrollBy({ top: step, behavior: 'smooth' });
+          } else if (e.key === 'ArrowUp' || e.key === 'PageUp') {
+            window.scrollBy({ top: -step, behavior: 'smooth' });
+          }
+        });
+
+        resizeCanvas();
+        preloadImages();
+        updateTargetFrame();
+        requestAnimationFrame(animate);
+      }) ();
+  </script>
+</body>
+
+</html>
