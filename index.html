@@ -20,8 +20,8 @@
     }
 
     :root {
-      --primary-orange: #f25b20;
-      --primary-orange-hover: #d94b14;
+      --primary-red: #dc2626;
+      --primary-red-hover: #b91c1c;
       --text-dark: #11141c;
       --text-muted: #59677b;
       --text-eyebrow: #7c8ba1;
@@ -108,7 +108,7 @@
     }
 
     .intro-logo-flight .dot {
-      color: var(--primary-orange);
+      color: var(--primary-red);
     }
 
     /* Top Header Navigation Layer */
@@ -175,7 +175,7 @@
     }
 
     .brand-logo .dot {
-      color: var(--primary-orange);
+      color: var(--primary-red);
     }
 
     .nav-center-zone {
@@ -221,14 +221,14 @@
       bottom: -4px;
       width: 100%;
       height: 1.5px;
-      background: var(--primary-orange);
+      background: var(--primary-red);
       transform: scaleX(0);
       transform-origin: center;
       transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
     }
 
     .nav-links a:hover {
-      color: var(--primary-orange);
+      color: var(--primary-red);
     }
 
     .nav-links a:hover::after {
@@ -293,7 +293,7 @@
 
     .btn-explore-circle:hover {
       transform: translateY(-1px) scale(1.04);
-      background: var(--primary-orange);
+      background: var(--primary-red);
     }
 
     .btn-explore-circle svg {
@@ -418,8 +418,8 @@
     }
 
     .mobile-nav-list a:hover {
-      background: rgba(242, 91, 32, 0.08);
-      color: var(--primary-orange);
+      background: rgba(220, 38, 38, 0.08);
+      color: var(--primary-red);
     }
 
     /* Fixed UI Stage (Proportioned to fit entirely within viewport on open) */
@@ -497,8 +497,8 @@
       text-wrap: balance;
     }
 
-    .hero-title .line-orange {
-      color: var(--primary-orange);
+    .hero-title .line-red {
+      color: var(--primary-red);
       display: inline-block;
     }
 
@@ -537,7 +537,7 @@
     .hero-cta-btn:hover {
       transform: translateY(-2px);
       background: #000000;
-      box-shadow: 0 16px 34px -6px rgba(242, 91, 32, 0.28);
+      box-shadow: 0 16px 34px -6px rgba(220, 38, 38, 0.28);
     }
 
     .hero-cta-circle {
@@ -554,7 +554,7 @@
     }
 
     .hero-cta-btn:hover .hero-cta-circle {
-      background: var(--primary-orange);
+      background: var(--primary-red);
       color: #ffffff;
       transform: rotate(12deg);
     }
@@ -627,18 +627,20 @@
       margin: 0;
     }
 
-    /* 4-Column Editorial Portrait Flip Cards (Matches Reference Design) */
+    /* 4-Column Square Flip Cards (Front: Photo + Title/Tags/Button, No Description) */
     .services-grid {
       width: 100%;
       display: grid;
       grid-template-columns: repeat(4, minmax(0, 1fr));
       gap: 20px;
-      padding-top: 28px;
+      padding-top: 26px;
     }
 
     .flip-card {
       position: relative;
-      height: 440px;
+      width: 100%;
+      height: auto;
+      aspect-ratio: 1 / 1;
       will-change: transform, opacity;
     }
 
@@ -658,18 +660,18 @@
     }
 
     @media (hover: hover) {
-      .flip-card:hover .flip-card-inner,
-      .flip-card:focus-within .flip-card-inner {
+      .flip-card:not(.is-buried):hover .flip-card-inner,
+      .flip-card:not(.is-buried):focus-within .flip-card-inner {
         transform: rotateY(180deg);
       }
 
-      .flip-card:hover .flip-front,
-      .flip-card:focus-within .flip-front {
+      .flip-card:not(.is-buried):hover .flip-front,
+      .flip-card:not(.is-buried):focus-within .flip-front {
         pointer-events: none;
       }
 
-      .flip-card:hover .flip-back,
-      .flip-card:focus-within .flip-back {
+      .flip-card:not(.is-buried):hover .flip-back,
+      .flip-card:not(.is-buried):focus-within .flip-back {
         pointer-events: auto;
       }
     }
@@ -691,13 +693,13 @@
       inset: 0;
       width: 100%;
       height: 100%;
-      border-radius: 26px;
+      border-radius: 24px;
       overflow: hidden;
       backface-visibility: hidden;
       -webkit-backface-visibility: hidden;
     }
 
-    /* Front Face */
+    /* Front Face (Matches Reference: Full-bleed Photo, Top Bookmark, Bottom Title + Meta + White CTA, NO Description) */
     .flip-front {
       transform: rotateY(0deg);
       z-index: 2;
@@ -715,11 +717,15 @@
       height: 100%;
       object-fit: cover;
       display: block;
-      transition: transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+      transition: transform 0.8s cubic-bezier(0.22, 1, 0.36, 1), filter 0.35s ease;
     }
 
-    .flip-card:hover .flip-card-bg {
+    .flip-card:not(.is-buried):hover .flip-card-bg {
       transform: scale(1.05);
+    }
+
+    .flip-card.is-buried .flip-card-bg {
+      filter: brightness(0.76);
     }
 
     .flip-front-scrim {
@@ -728,21 +734,75 @@
       pointer-events: none;
       background: linear-gradient(
         to top,
-        var(--card-tint-solid, rgba(16, 56, 68, 0.98)) 0%,
-        var(--card-tint-mid, rgba(16, 56, 68, 0.90)) 36%,
-        var(--card-tint-fade, rgba(16, 56, 68, 0.42)) 58%,
-        rgba(15, 23, 42, 0.10) 76%,
-        rgba(15, 23, 42, 0.04) 100%
+        var(--card-tint-solid, rgba(16, 48, 58, 0.98)) 0%,
+        var(--card-tint-mid, rgba(16, 48, 58, 0.88)) 32%,
+        var(--card-tint-fade, rgba(16, 48, 58, 0.32)) 54%,
+        rgba(15, 23, 42, 0.08) 76%,
+        rgba(15, 23, 42, 0.02) 100%
       );
+    }
+
+    /* Top Spine Bar for Mobile Stacked-Book Effect */
+    .mobile-card-spine {
+      display: none;
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 28px;
+      padding: 0 14px;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      background: linear-gradient(180deg, rgba(12, 15, 22, 0.84) 0%, rgba(12, 15, 22, 0.68) 100%);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.14);
+      z-index: 5;
+      color: #ffffff;
+      cursor: pointer;
+    }
+
+    .mobile-spine-left {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      min-width: 0;
+    }
+
+    .mobile-spine-num {
+      font-size: 10px;
+      font-weight: 800;
+      color: var(--primary-red);
+      font-variant-numeric: tabular-nums;
+      flex-shrink: 0;
+    }
+
+    .mobile-spine-name {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: -0.1px;
+      color: #ffffff;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .mobile-spine-tag {
+      font-size: 9.5px;
+      font-weight: 600;
+      color: rgba(255, 255, 255, 0.72);
+      white-space: nowrap;
+      flex-shrink: 0;
     }
 
     .card-bookmark-btn {
       position: absolute;
-      top: 14px;
-      right: 14px;
+      top: 12px;
+      right: 12px;
       z-index: 4;
-      width: 34px;
-      height: 34px;
+      width: 32px;
+      height: 32px;
       border-radius: 50%;
       border: 1px solid rgba(255, 255, 255, 0.28);
       background: rgba(15, 23, 42, 0.28);
@@ -762,13 +822,13 @@
     }
 
     .card-bookmark-btn.saved {
-      background: var(--primary-orange);
-      border-color: var(--primary-orange);
+      background: var(--primary-red);
+      border-color: var(--primary-red);
     }
 
     .card-bookmark-btn svg {
-      width: 14px;
-      height: 14px;
+      width: 13px;
+      height: 13px;
       stroke: currentColor;
       fill: none;
     }
@@ -780,73 +840,61 @@
     .card-front-content {
       position: relative;
       z-index: 3;
-      padding: 18px;
+      padding: 16px;
       display: flex;
       flex-direction: column;
-      gap: 10px;
+      gap: 9px;
       color: #ffffff;
     }
 
     .card-title-row {
       display: flex;
-      align-items: flex-start;
+      align-items: center;
       justify-content: space-between;
-      gap: 10px;
+      gap: 8px;
     }
 
     .card-front-title {
-      font-size: 16.5px;
+      font-size: 15.5px;
       font-weight: 700;
       letter-spacing: -0.35px;
-      line-height: 1.24;
+      line-height: 1.22;
       color: #ffffff;
       margin: 0;
     }
 
     .card-price-badge {
       flex-shrink: 0;
-      padding: 4px 9px;
+      padding: 3px 8px;
       border-radius: 9999px;
       background: rgba(255, 255, 255, 0.18);
       backdrop-filter: blur(6px);
       -webkit-backdrop-filter: blur(6px);
       border: 1px solid rgba(255, 255, 255, 0.16);
-      font-size: 11px;
+      font-size: 10.5px;
       font-weight: 700;
       color: #ffffff;
       white-space: nowrap;
       font-variant-numeric: tabular-nums;
     }
 
-    .card-front-desc {
-      font-size: 12px;
-      line-height: 1.48;
-      color: rgba(255, 255, 255, 0.84);
-      font-weight: 400;
-      margin: 0;
-      display: -webkit-box;
-      -webkit-line-clamp: 3;
-      -webkit-box-orient: vertical;
-      overflow: hidden;
-    }
-
     .card-meta-row {
       display: flex;
       flex-wrap: nowrap;
       align-items: center;
-      gap: 5px;
+      gap: 4px;
       overflow: hidden;
     }
 
     .card-meta-chip {
       display: inline-flex;
       align-items: center;
-      gap: 4px;
-      padding: 4px 8px;
+      gap: 3px;
+      padding: 3px 7px;
       border-radius: 9999px;
-      background: rgba(255, 255, 255, 0.14);
+      background: rgba(255, 255, 255, 0.15);
       border: 1px solid rgba(255, 255, 255, 0.12);
-      font-size: 10.5px;
+      font-size: 10px;
       font-weight: 600;
       color: rgba(255, 255, 255, 0.94);
       white-space: nowrap;
@@ -855,21 +903,21 @@
     }
 
     .card-meta-chip svg {
-      width: 10.5px;
-      height: 10.5px;
+      width: 10px;
+      height: 10px;
       flex-shrink: 0;
       color: #ffffff;
     }
 
     .card-front-btn {
       width: 100%;
-      height: 40px;
-      margin-top: 2px;
+      height: 36px;
+      margin-top: 1px;
       border: none;
       border-radius: 9999px;
       background: #ffffff;
       color: #11141c;
-      font-size: 12.5px;
+      font-size: 12px;
       font-weight: 700;
       cursor: pointer;
       display: inline-flex;
@@ -884,7 +932,7 @@
       transform: translateY(-1px);
     }
 
-    /* Back Face (Detail Layanan + Chat WhatsApp) */
+    /* Back Face (Service Details + Description + Chat on WhatsApp) */
     .flip-back {
       transform: rotateY(180deg);
       z-index: 1;
@@ -893,17 +941,17 @@
       color: #ffffff;
       border: 1px solid rgba(255, 255, 255, 0.10);
       box-shadow: 0 22px 44px -14px rgba(15, 23, 42, 0.34);
-      padding: 20px;
+      padding: 15px 16px;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
-      gap: 12px;
+      gap: 8px;
     }
 
     .flip-back-top {
       display: flex;
       flex-direction: column;
-      gap: 8px;
+      gap: 4px;
     }
 
     .flip-back-kicker-row {
@@ -914,11 +962,11 @@
     }
 
     .flip-back-kicker {
-      font-size: 10px;
+      font-size: 9.5px;
       font-weight: 800;
-      letter-spacing: 1.6px;
+      letter-spacing: 1.5px;
       text-transform: uppercase;
-      color: var(--primary-orange);
+      color: var(--primary-red);
     }
 
     .flip-back-close {
@@ -927,8 +975,8 @@
       border: 1px solid rgba(255, 255, 255, 0.16);
       color: #ffffff;
       border-radius: 9999px;
-      padding: 4px 10px;
-      font-size: 10.5px;
+      padding: 3px 9px;
+      font-size: 10px;
       font-weight: 600;
       cursor: pointer;
     }
@@ -941,27 +989,31 @@
     }
 
     .flip-back-title {
-      font-size: 16.5px;
+      font-size: 14.5px;
       font-weight: 700;
-      line-height: 1.25;
-      letter-spacing: -0.3px;
+      line-height: 1.22;
+      letter-spacing: -0.25px;
       color: #ffffff;
       margin: 0;
     }
 
     .flip-back-sub {
-      font-size: 12px;
-      line-height: 1.45;
+      font-size: 11px;
+      line-height: 1.38;
       color: #94a3b8;
       margin: 0;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
     }
 
     .back-detail-list {
       list-style: none;
       display: flex;
       flex-direction: column;
-      gap: 9px;
-      padding: 12px 0;
+      gap: 5px;
+      padding: 8px 0;
       border-top: 1px solid rgba(255, 255, 255, 0.10);
       border-bottom: 1px solid rgba(255, 255, 255, 0.10);
       margin: auto 0;
@@ -970,66 +1022,52 @@
     .back-detail-list li {
       display: flex;
       align-items: flex-start;
-      gap: 8px;
-      font-size: 12px;
-      line-height: 1.4;
+      gap: 7px;
+      font-size: 10.5px;
+      line-height: 1.32;
       color: #e2e8f0;
     }
 
     .back-detail-list svg {
-      width: 14px;
-      height: 14px;
+      width: 12px;
+      height: 12px;
       flex-shrink: 0;
-      margin-top: 2px;
-      color: var(--primary-orange);
+      margin-top: 1px;
+      color: var(--primary-red);
     }
 
     .flip-back-footer {
       display: flex;
       flex-direction: column;
-      gap: 10px;
-    }
-
-    .flip-back-note {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      font-size: 11px;
-      color: #94a3b8;
-    }
-
-    .flip-back-note strong {
-      color: #ffffff;
-      font-weight: 700;
-      font-variant-numeric: tabular-nums;
+      gap: 6px;
     }
 
     .wa-flip-cta {
       width: 100%;
-      height: 42px;
+      height: 36px;
       border-radius: 9999px;
-      background: var(--primary-orange);
+      background: var(--primary-red);
       color: #ffffff;
       text-decoration: none;
-      font-size: 12.5px;
+      font-size: 12px;
       font-weight: 700;
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      gap: 8px;
-      padding: 0 16px;
-      box-shadow: 0 10px 22px -6px rgba(242, 91, 32, 0.45);
+      gap: 7px;
+      padding: 0 14px;
+      box-shadow: 0 10px 22px -6px rgba(220, 38, 38, 0.45);
       transition: background 0.2s ease, transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
     }
 
     .wa-flip-cta:hover {
-      background: var(--primary-orange-hover);
+      background: var(--primary-red-hover);
       transform: translateY(-1px);
     }
 
     .wa-flip-cta svg {
-      width: 15px;
-      height: 15px;
+      width: 14px;
+      height: 14px;
       flex-shrink: 0;
     }
 
@@ -1067,7 +1105,7 @@
       font-weight: 800;
       letter-spacing: 2px;
       text-transform: uppercase;
-      color: var(--primary-orange);
+      color: var(--primary-red);
       margin-bottom: 10px;
     }
 
@@ -1136,7 +1174,7 @@
             .scroll-wheel {
               width: 3px;
               height: 5px;
-              background: var(--primary-orange);
+              background: var(--primary-red);
               border-radius: 2px;
               position: absolute;
               top: 5px;
@@ -1269,12 +1307,16 @@
               .services-grid {
                 gap: 16px;
               }
-              .flip-card {
-                height: 426px;
+              .card-front-content {
+                padding: 14px;
+                gap: 8px;
               }
-              .card-front-content,
+              .card-front-title {
+                font-size: 14.5px;
+              }
               .flip-back {
-                padding: 16px;
+                padding: 13px 14px;
+                gap: 6px;
               }
               .services-lead-wrap {
                 padding-left: 22px;
@@ -1286,8 +1328,14 @@
                 grid-template-columns: repeat(2, minmax(0, 1fr));
                 gap: 18px;
               }
-              .flip-card {
-                height: 435px;
+              .card-front-content {
+                padding: 18px;
+              }
+              .card-front-title {
+                font-size: 17px;
+              }
+              .flip-back {
+                padding: 18px;
               }
             }
 
@@ -1305,23 +1353,109 @@
 
             @media (max-width: 860px) {
               .white-scroll-track {
-                padding: 20px 16px 56px 16px;
+                padding: 0;
               }
 
-              .milestone-card {
-                padding: 26px 22px;
+              .services-top-header {
+                position: fixed;
+                top: 0;
+                left: 16px;
+                right: 16px;
+                padding: 6px 0 14px 0;
+                gap: 8px;
+                background: transparent;
+                z-index: 5;
               }
-            }
 
-            @media (max-width: 600px) {
+              .services-heading {
+                font-size: 28px;
+              }
+
+              .services-lead {
+                font-size: 12.5px;
+                line-height: 1.48;
+              }
+
               .services-grid {
-                grid-template-columns: 1fr;
-                gap: 16px;
-                padding-top: 22px;
+                display: block;
+                padding-top: 0;
               }
 
               .flip-card {
-                height: 430px;
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                margin: 0 auto;
+                transform-origin: top center;
+              }
+
+              .mobile-card-spine {
+                display: flex;
+              }
+
+              .card-bookmark-btn {
+                top: 36px;
+                right: 12px;
+              }
+
+              .flip-face {
+                border-radius: 22px;
+              }
+
+              .card-front-content {
+                padding: 15px;
+                gap: 8px;
+              }
+
+              .card-front-title {
+                font-size: 16px;
+              }
+
+              .flip-back {
+                padding: 12px 13px;
+                gap: 6px;
+                overflow-y: auto;
+              }
+
+              .flip-back-title {
+                font-size: 13.5px;
+              }
+
+              .flip-back-sub {
+                font-size: 10.5px;
+                line-height: 1.3;
+              }
+
+              .back-detail-list {
+                gap: 4px;
+                padding: 6px 0;
+              }
+
+              .back-detail-list li {
+                font-size: 10px;
+                line-height: 1.25;
+                gap: 6px;
+              }
+
+              .wa-flip-cta {
+                height: 34px;
+                font-size: 11.5px;
+                flex-shrink: 0;
+              }
+
+              .final-cta-stage {
+                position: fixed;
+                top: 0;
+                left: 16px;
+                right: 16px;
+                width: auto;
+                padding: 0;
+              }
+
+              .milestone-card {
+                padding: 24px 20px;
+                border-radius: 24px;
               }
             }
   </style>
@@ -1350,8 +1484,8 @@
         <ul class="nav-links">
           <li><a href="#destinations" data-scroll-progress="0.26">Destinations</a></li>
           <li><a href="#tours" data-scroll-progress="0.26">Private Tours</a></li>
-          <li><a href="#passes" data-scroll-progress="0.50">JR Pass</a></li>
-          <li><a href="#pricing" data-scroll-progress="0.72">Pricing</a></li>
+          <li><a href="#passes" data-scroll-progress="0.58">JR Pass</a></li>
+          <li><a href="#pricing" data-scroll-progress="0.90">Pricing</a></li>
           <li><a href="#guides" data-scroll-progress="0.26">Guides</a></li>
         </ul>
       </div>
@@ -1359,7 +1493,7 @@
         <!-- Desktop Explore Pill + Circular Arrow -->
         <div class="header-cta-group">
           <a href="#explore" class="btn-explore" data-scroll-progress="0.26">Explore Now</a>
-          <a href="https://wa.me/6281318939319?text=Halo%20Tanogaido,%20saya%20ingin%20konsultasi%20liburan%20ke%20Jepang." target="_blank" class="btn-explore-circle" aria-label="Konsultasi WhatsApp">
+          <a href="https://wa.me/6281318939319?text=Hello%20Tanogaido,%20I%20would%20like%20to%20consult%20about%20a%20trip%20to%20Japan." target="_blank" rel="noopener noreferrer" class="btn-explore-circle" aria-label="Chat on WhatsApp">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <path d="M7 17L17 7M17 7H8M17 7V16" />
             </svg>
@@ -1386,14 +1520,14 @@
       <ul class="mobile-nav-list">
         <li><a href="#destinations" class="mobile-nav-item" data-scroll-progress="0.26">Destinations</a></li>
         <li><a href="#tours" class="mobile-nav-item" data-scroll-progress="0.26">Private Tours</a></li>
-        <li><a href="#passes" class="mobile-nav-item" data-scroll-progress="0.50">JR Pass</a></li>
-        <li><a href="#pricing" class="mobile-nav-item" data-scroll-progress="0.72">Pricing</a></li>
+        <li><a href="#passes" class="mobile-nav-item" data-scroll-progress="0.58">JR Pass</a></li>
+        <li><a href="#pricing" class="mobile-nav-item" data-scroll-progress="0.90">Pricing</a></li>
         <li><a href="#guides" class="mobile-nav-item" data-scroll-progress="0.26">Guides</a></li>
       </ul>
       <a href="#explore" class="btn-explore mobile-nav-item" data-scroll-progress="0.26"
         style="display: flex; justify-content: center; width: 100%; margin-top: 6px; gap: 6px;">
         <span>Explore Now</span>
-        <span style="color: var(--primary-orange);">→</span>
+        <span style="color: var(--primary-red);">→</span>
       </a>
     </div>
   </div>
@@ -1408,7 +1542,7 @@
         </div>
         <h1 class="hero-title" id="hero-title">
           Explore Every Wonder.<br>
-          <span class="line-orange">Across Japan.</span>
+          <span class="line-red">Across Japan.</span>
         </h1>
         <p class="hero-desc" id="hero-desc">
           Curated private tours, seamless rail transport, and licensed bilingual guides for travelers who seek
@@ -1431,59 +1565,60 @@
     <div class="white-scroll-track" id="white-scroll-track">
       <section class="editorial-services" id="services-stage">
         <header class="services-top-header reveal-item" id="services-top-header">
-          <h2 class="services-heading">Layanan Eksklusif</h2>
+          <h2 class="services-heading">Exclusive Services</h2>
           <div class="services-lead-wrap">
             <p class="services-lead">
-              Temukan layanan wisata privat, panduan virtual real-time 24/7, transportasi resmi, serta pengalaman budaya Jepang yang dirancang khusus untuk kenyamanan perjalanan Anda.
+              Find every Japan travel essential right here. Explore our curated tour packages, transport, logistics, and assistance crafted for your unforgettable holiday.
             </p>
           </div>
         </header>
 
-        <div class="services-grid">
-          <!-- Card 1: Virtual Tour Guide Online 24/7 -->
-          <article class="flip-card reveal-item" data-stagger="0" tabindex="0" style="--card-tint-solid: rgba(16, 59, 70, 0.98); --card-tint-mid: rgba(16, 59, 70, 0.88); --card-tint-fade: rgba(16, 59, 70, 0.34);">
+        <div class="services-grid" id="services-grid">
+          <!-- 1. Japan Tour Guide -->
+          <article class="flip-card reveal-item" data-stagger="0" data-index="0" tabindex="0" style="--card-tint-solid: rgba(16, 48, 58, 0.98); --card-tint-mid: rgba(16, 48, 58, 0.88); --card-tint-fade: rgba(16, 48, 58, 0.34);">
             <div class="flip-card-scene">
               <div class="flip-card-inner">
                 <div class="flip-face flip-front">
-                  <img class="flip-card-bg" src="assets/cards/card-4.jpg" alt="Virtual Tour Guide Online 24/7 di Tokyo" loading="lazy" referrerpolicy="no-referrer">
+                  <div class="mobile-card-spine" role="button" tabindex="0" aria-label="Open Japan Tour Guide">
+                    <span class="mobile-spine-left"><span class="mobile-spine-num">01</span><span class="mobile-spine-name">Japan Tour Guide</span></span>
+                    <span class="mobile-spine-tag">On-Site / 24/7</span>
+                  </div>
+                  <img class="flip-card-bg" src="assets/cards/card-4.jpg" alt="Japan Tour Guide Service" loading="lazy" referrerpolicy="no-referrer">
                   <div class="flip-front-scrim"></div>
-                  <button class="card-bookmark-btn" type="button" aria-label="Simpan layanan Virtual Tour Guide">
+                  <button class="card-bookmark-btn" type="button" aria-label="Bookmark Japan Tour Guide">
                     <svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
                   </button>
                   <div class="card-front-content">
                     <div class="card-title-row">
-                      <h3 class="card-front-title">Virtual Tour Guide</h3>
-                      <span class="card-price-badge">Hemat 70%</span>
+                      <h3 class="card-front-title">Japan Tour Guide</h3>
+                      <span class="card-price-badge">24/7 Live</span>
                     </div>
-                    <p class="card-front-desc">Pendampingan wisata Jepang secara live 24 jam via WhatsApp, lengkap navigasi kereta &amp; terjemahan.</p>
                     <div class="card-meta-row">
                       <span class="card-meta-chip"><svg viewBox="0 0 20 20" fill="currentColor"><path d="M10 1.5l2.6 5.3 5.8.8-4.2 4.1 1 5.8L10 14.8l-5.2 2.7 1-5.8-4.2-4.1 5.8-.8z"/></svg>4.9</span>
-                      <span class="card-meta-chip">Live 24/7</span>
+                      <span class="card-meta-chip">Bilingual</span>
                       <span class="card-meta-chip">All Japan</span>
                     </div>
-                    <button class="card-front-btn" type="button">Lihat Detail</button>
+                    <button class="card-front-btn" type="button">View Details</button>
                   </div>
                 </div>
                 <div class="flip-face flip-back">
                   <div class="flip-back-top">
                     <div class="flip-back-kicker-row">
-                      <span class="flip-back-kicker">Detail Layanan</span>
-                      <button class="flip-back-close" type="button">Tutup</button>
+                      <span class="flip-back-kicker">Service Details</span>
+                      <button class="flip-back-close" type="button">Close</button>
                     </div>
-                    <h4 class="flip-back-title">Virtual Tour Guide Online 24/7</h4>
-                    <p class="flip-back-sub">Solusi hemat bagi solo traveler, pasangan &amp; keluarga tanpa biaya akomodasi guide.</p>
+                    <h4 class="flip-back-title">Japan Tour Guide</h4>
+                    <p class="flip-back-sub">Licensed bilingual local guides or live 24/7 online companion across Tokyo, Kyoto, and Osaka.</p>
                   </div>
                   <ul class="back-detail-list">
-                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span>Panduan rute Shinkansen, subway &amp; bus real-time</span></li>
-                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span>Bantuan translasi &amp; pesan restoran halal/lokal</span></li>
-                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span>Rencana itinerary harian custom sesuai minat</span></li>
-                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span>Dipercaya 1.200+ traveler Indonesia</span></li>
+                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span>Real-time rail navigation &amp; local etiquette help</span></li>
+                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span>On-site licensed guide or cost-saving live mode</span></li>
+                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span>Trusted by 1,200+ travelers across Japan</span></li>
                   </ul>
                   <div class="flip-back-footer">
-                    <div class="flip-back-note"><span>Cakupan: Tokyo, Kyoto, Osaka</span><strong>24/7 Live</strong></div>
-                    <a href="https://wa.me/6281318939319?text=Halo%20Tanogaido,%20saya%20ingin%20konsultasi%20layanan%20Virtual%20Tour%20Guide%20Online%2024/7." target="_blank" rel="noopener noreferrer" class="wa-flip-cta">
+                    <a href="https://wa.me/6281318939319?text=Hello%20Tanogaido,%20I%20would%20like%20to%20inquire%20about%20the%20Japan%20Tour%20Guide%20service." target="_blank" rel="noopener noreferrer" class="wa-flip-cta">
                       <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.5 3.5A11.8 11.8 0 0 0 12 0C5.4 0 0 5.4 0 12c0 2.1.6 4.2 1.6 6L0 24l6.2-1.6A12 12 0 0 0 12 24c6.6 0 12-5.4 12-12 0-3.2-1.2-6.2-3.5-8.5zM12 21.8c-1.8 0-3.6-.5-5.1-1.4l-.4-.2-3.7 1 1-3.6-.2-.4A9.8 9.8 0 0 1 2.2 12c0-5.4 4.4-9.8 9.8-9.8 2.6 0 5.1 1 6.9 2.9A9.7 9.7 0 0 1 21.8 12c0 5.4-4.4 9.8-9.8 9.8zm5.4-7.4c-.3-.2-1.8-.9-2-.1-.3-.1-.5-.2-.7.2-.2.3-.8 1-.9 1.2-.2.2-.3.2-.6.1-.3-.2-1.3-.5-2.4-1.5-.9-.8-1.5-1.8-1.7-2.1-.2-.3 0-.5.1-.6l.5-.5.3-.5v-.5c-.1-.2-.7-1.6-.9-2.2-.3-.6-.5-.5-.7-.5h-.6c-.2 0-.6.1-.9.4-.3.3-1.1 1.1-1.1 2.7s1.1 3.1 1.3 3.3c.2.2 2.2 3.4 5.4 4.7.8.3 1.4.5 1.8.6.8.2 1.5.2 2 .1.6-.1 1.8-.7 2-1.4.3-.7.3-1.3.2-1.4-.1-.2-.3-.3-.6-.4z"/></svg>
-                      <span>Chat ke WhatsApp</span>
+                      <span>Chat on WhatsApp</span>
                     </a>
                   </div>
                 </div>
@@ -1491,50 +1626,103 @@
             </div>
           </article>
 
-          <!-- Card 2: Private Tour & Custom Itinerary -->
-          <article class="flip-card reveal-item" data-stagger="1" tabindex="0" style="--card-tint-solid: rgba(20, 38, 61, 0.98); --card-tint-mid: rgba(20, 38, 61, 0.88); --card-tint-fade: rgba(20, 38, 61, 0.34);">
+          <!-- 2. Japan Tour Packages -->
+          <article class="flip-card reveal-item" data-stagger="1" data-index="1" tabindex="0" style="--card-tint-solid: rgba(20, 38, 61, 0.98); --card-tint-mid: rgba(20, 38, 61, 0.88); --card-tint-fade: rgba(20, 38, 61, 0.34);">
             <div class="flip-card-scene">
               <div class="flip-card-inner">
                 <div class="flip-face flip-front">
-                  <img class="flip-card-bg" src="assets/fuji-climb.jpg" alt="Private Tour Gunung Fuji dan Sakura" loading="lazy" referrerpolicy="no-referrer">
+                  <div class="mobile-card-spine" role="button" tabindex="0" aria-label="Open Japan Tour Packages">
+                    <span class="mobile-spine-left"><span class="mobile-spine-num">02</span><span class="mobile-spine-name">Japan Tour Packages</span></span>
+                    <span class="mobile-spine-tag">All-In</span>
+                  </div>
+                  <img class="flip-card-bg" src="assets/fuji-climb.jpg" alt="Japan Tour Packages Mount Fuji" loading="lazy" referrerpolicy="no-referrer">
                   <div class="flip-front-scrim"></div>
-                  <button class="card-bookmark-btn" type="button" aria-label="Simpan layanan Private Tour">
+                  <button class="card-bookmark-btn" type="button" aria-label="Bookmark Japan Tour Packages">
                     <svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
                   </button>
                   <div class="card-front-content">
                     <div class="card-title-row">
-                      <h3 class="card-front-title">Private Tour Jepang</h3>
+                      <h3 class="card-front-title">Japan Tour Packages</h3>
+                      <span class="card-price-badge">All-In</span>
+                    </div>
+                    <div class="card-meta-row">
+                      <span class="card-meta-chip"><svg viewBox="0 0 20 20" fill="currentColor"><path d="M10 1.5l2.6 5.3 5.8.8-4.2 4.1 1 5.8L10 14.8l-5.2 2.7 1-5.8-4.2-4.1 5.8-.8z"/></svg>5.0</span>
+                      <span class="card-meta-chip">Golden Route</span>
+                      <span class="card-meta-chip">5–10 Days</span>
+                    </div>
+                    <button class="card-front-btn" type="button">View Details</button>
+                  </div>
+                </div>
+                <div class="flip-face flip-back">
+                  <div class="flip-back-top">
+                    <div class="flip-back-kicker-row">
+                      <span class="flip-back-kicker">Service Details</span>
+                      <button class="flip-back-close" type="button">Close</button>
+                    </div>
+                    <h4 class="flip-back-title">Japan Tour Packages</h4>
+                    <p class="flip-back-sub">Complete seasonal tours covering hotels, iconic attractions, dining, and seamless transport.</p>
+                  </div>
+                  <ul class="back-detail-list">
+                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span>Tokyo, Mt. Fuji, Kyoto, Osaka &amp; Hokkaido departures</span></li>
+                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span>Sakura spring, autumn foliage &amp; winter snow dates</span></li>
+                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span>Handpicked hotels &amp; experienced tour leaders</span></li>
+                  </ul>
+                  <div class="flip-back-footer">
+                    <a href="https://wa.me/6281318939319?text=Hello%20Tanogaido,%20I%20would%20like%20to%20see%20available%20Japan%20Tour%20Packages." target="_blank" rel="noopener noreferrer" class="wa-flip-cta">
+                      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.5 3.5A11.8 11.8 0 0 0 12 0C5.4 0 0 5.4 0 12c0 2.1.6 4.2 1.6 6L0 24l6.2-1.6A12 12 0 0 0 12 24c6.6 0 12-5.4 12-12 0-3.2-1.2-6.2-3.5-8.5zM12 21.8c-1.8 0-3.6-.5-5.1-1.4l-.4-.2-3.7 1 1-3.6-.2-.4A9.8 9.8 0 0 1 2.2 12c0-5.4 4.4-9.8 9.8-9.8 2.6 0 5.1 1 6.9 2.9A9.7 9.7 0 0 1 21.8 12c0 5.4-4.4 9.8-9.8 9.8zm5.4-7.4c-.3-.2-1.8-.9-2-.1-.3-.1-.5-.2-.7.2-.2.3-.8 1-.9 1.2-.2.2-.3.2-.6.1-.3-.2-1.3-.5-2.4-1.5-.9-.8-1.5-1.8-1.7-2.1-.2-.3 0-.5.1-.6l.5-.5.3-.5v-.5c-.1-.2-.7-1.6-.9-2.2-.3-.6-.5-.5-.7-.5h-.6c-.2 0-.6.1-.9.4-.3.3-1.1 1.1-1.1 2.7s1.1 3.1 1.3 3.3c.2.2 2.2 3.4 5.4 4.7.8.3 1.4.5 1.8.6.8.2 1.5.2 2 .1.6-.1 1.8-.7 2-1.4.3-.7.3-1.3.2-1.4-.1-.2-.3-.3-.6-.4z"/></svg>
+                      <span>Chat on WhatsApp</span>
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <!-- 3. Private Japan Tour -->
+          <article class="flip-card reveal-item" data-stagger="2" data-index="2" tabindex="0" style="--card-tint-solid: rgba(34, 24, 20, 0.98); --card-tint-mid: rgba(34, 24, 20, 0.88); --card-tint-fade: rgba(34, 24, 20, 0.34);">
+            <div class="flip-card-scene">
+              <div class="flip-card-inner">
+                <div class="flip-face flip-front">
+                  <div class="mobile-card-spine" role="button" tabindex="0" aria-label="Open Private Japan Tour">
+                    <span class="mobile-spine-left"><span class="mobile-spine-num">03</span><span class="mobile-spine-name">Private Japan Tour</span></span>
+                    <span class="mobile-spine-tag">1–15 Pax</span>
+                  </div>
+                  <img class="flip-card-bg" src="assets/cards/card-5.jpg" alt="Private Japan Tour Kyoto" loading="lazy" referrerpolicy="no-referrer">
+                  <div class="flip-front-scrim"></div>
+                  <button class="card-bookmark-btn" type="button" aria-label="Bookmark Private Japan Tour">
+                    <svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
+                  </button>
+                  <div class="card-front-content">
+                    <div class="card-title-row">
+                      <h3 class="card-front-title">Private Japan Tour</h3>
                       <span class="card-price-badge">1–15 Pax</span>
                     </div>
-                    <p class="card-front-desc">Perjalanan privat eksklusif dengan guide lokal bilingual berlisensi menuju Fuji, Kyoto &amp; Shirakawa-go.</p>
                     <div class="card-meta-row">
                       <span class="card-meta-chip"><svg viewBox="0 0 20 20" fill="currentColor"><path d="M10 1.5l2.6 5.3 5.8.8-4.2 4.1 1 5.8L10 14.8l-5.2 2.7 1-5.8-4.2-4.1 5.8-.8z"/></svg>5.0</span>
                       <span class="card-meta-chip">Custom Route</span>
-                      <span class="card-meta-chip">3–14 Hari</span>
+                      <span class="card-meta-chip">Flexible</span>
                     </div>
-                    <button class="card-front-btn" type="button">Lihat Detail</button>
+                    <button class="card-front-btn" type="button">View Details</button>
                   </div>
                 </div>
                 <div class="flip-face flip-back">
                   <div class="flip-back-top">
                     <div class="flip-back-kicker-row">
-                      <span class="flip-back-kicker">Detail Layanan</span>
-                      <button class="flip-back-close" type="button">Tutup</button>
+                      <span class="flip-back-kicker">Service Details</span>
+                      <button class="flip-back-close" type="button">Close</button>
                     </div>
-                    <h4 class="flip-back-title">Private Tour &amp; Custom Itinerary</h4>
-                    <p class="flip-back-sub">Liburan nyaman tanpa digabung rombongan lain, jadwal fleksibel sesuai ritme keluarga.</p>
+                    <h4 class="flip-back-title">Private Japan Tour</h4>
+                    <p class="flip-back-sub">Tailor-made private itineraries paced around your family, honeymoon, or corporate team.</p>
                   </div>
                   <ul class="back-detail-list">
-                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span>Tour leader berpengalaman fasih bahasa Indonesia &amp; Jepang</span></li>
-                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span>Rute Mount Fuji, Hakone, Kyoto, Osaka &amp; Hokkaido</span></li>
-                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span>Kurasi hotel strategis, tiket atraksi &amp; kuliner</span></li>
-                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span>Dipercaya 650+ rombongan privat &amp; korporat</span></li>
+                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span>100% private schedule without outside groups</span></li>
+                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span>Child- and senior-friendly travel pace &amp; routing</span></li>
+                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span>Trusted by 650+ private &amp; VIP groups</span></li>
                   </ul>
                   <div class="flip-back-footer">
-                    <div class="flip-back-note"><span>Kapasitas: Keluarga &amp; Grup</span><strong>1–15 Pax</strong></div>
-                    <a href="https://wa.me/6281318939319?text=Halo%20Tanogaido,%20saya%20ingin%20konsultasi%20paket%20Private%20Tour%20dan%20Custom%20Itinerary%20Jepang." target="_blank" rel="noopener noreferrer" class="wa-flip-cta">
+                    <a href="https://wa.me/6281318939319?text=Hello%20Tanogaido,%20I%20would%20like%20to%20plan%20a%20Private%20Japan%20Tour." target="_blank" rel="noopener noreferrer" class="wa-flip-cta">
                       <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.5 3.5A11.8 11.8 0 0 0 12 0C5.4 0 0 5.4 0 12c0 2.1.6 4.2 1.6 6L0 24l6.2-1.6A12 12 0 0 0 12 24c6.6 0 12-5.4 12-12 0-3.2-1.2-6.2-3.5-8.5zM12 21.8c-1.8 0-3.6-.5-5.1-1.4l-.4-.2-3.7 1 1-3.6-.2-.4A9.8 9.8 0 0 1 2.2 12c0-5.4 4.4-9.8 9.8-9.8 2.6 0 5.1 1 6.9 2.9A9.7 9.7 0 0 1 21.8 12c0 5.4-4.4 9.8-9.8 9.8zm5.4-7.4c-.3-.2-1.8-.9-2-.1-.3-.1-.5-.2-.7.2-.2.3-.8 1-.9 1.2-.2.2-.3.2-.6.1-.3-.2-1.3-.5-2.4-1.5-.9-.8-1.5-1.8-1.7-2.1-.2-.3 0-.5.1-.6l.5-.5.3-.5v-.5c-.1-.2-.7-1.6-.9-2.2-.3-.6-.5-.5-.7-.5h-.6c-.2 0-.6.1-.9.4-.3.3-1.1 1.1-1.1 2.7s1.1 3.1 1.3 3.3c.2.2 2.2 3.4 5.4 4.7.8.3 1.4.5 1.8.6.8.2 1.5.2 2 .1.6-.1 1.8-.7 2-1.4.3-.7.3-1.3.2-1.4-.1-.2-.3-.3-.6-.4z"/></svg>
-                      <span>Chat ke WhatsApp</span>
+                      <span>Chat on WhatsApp</span>
                     </a>
                   </div>
                 </div>
@@ -1542,50 +1730,51 @@
             </div>
           </article>
 
-          <!-- Card 3: Sewa Mobil & Private Driver -->
-          <article class="flip-card reveal-item" data-stagger="2" tabindex="0" style="--card-tint-solid: rgba(38, 27, 22, 0.98); --card-tint-mid: rgba(38, 27, 22, 0.88); --card-tint-fade: rgba(38, 27, 22, 0.34);">
+          <!-- 4. Japan Visa Assistance -->
+          <article class="flip-card reveal-item" data-stagger="3" data-index="3" tabindex="0" style="--card-tint-solid: rgba(24, 24, 28, 0.98); --card-tint-mid: rgba(24, 24, 28, 0.88); --card-tint-fade: rgba(24, 24, 28, 0.34);">
             <div class="flip-card-scene">
               <div class="flip-card-inner">
                 <div class="flip-face flip-front">
-                  <img class="flip-card-bg" src="assets/cards/card-1.jpg" alt="Sewa Mobil Private Driver Kyoto" loading="lazy" referrerpolicy="no-referrer">
+                  <div class="mobile-card-spine" role="button" tabindex="0" aria-label="Open Japan Visa Assistance">
+                    <span class="mobile-spine-left"><span class="mobile-spine-num">04</span><span class="mobile-spine-name">Japan Visa Assistance</span></span>
+                    <span class="mobile-spine-tag">Fast Track</span>
+                  </div>
+                  <img class="flip-card-bg" src="assets/cards/japan-documents.jpg" alt="Japan Visa Assistance Desk" loading="lazy" referrerpolicy="no-referrer">
                   <div class="flip-front-scrim"></div>
-                  <button class="card-bookmark-btn" type="button" aria-label="Simpan layanan Sewa Mobil">
+                  <button class="card-bookmark-btn" type="button" aria-label="Bookmark Japan Visa Assistance">
                     <svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
                   </button>
                   <div class="card-front-content">
                     <div class="card-title-row">
-                      <h3 class="card-front-title">Sewa Mobil &amp; Driver</h3>
-                      <span class="card-price-badge">Alphard/HiAce</span>
+                      <h3 class="card-front-title">Japan Visa Assistance</h3>
+                      <span class="card-price-badge">Fast Track</span>
                     </div>
-                    <p class="card-front-desc">Armada legal pelat hijau berizin resmi untuk transfer bandara Haneda/Narita dan charter harian.</p>
                     <div class="card-meta-row">
                       <span class="card-meta-chip"><svg viewBox="0 0 20 20" fill="currentColor"><path d="M10 1.5l2.6 5.3 5.8.8-4.2 4.1 1 5.8L10 14.8l-5.2 2.7 1-5.8-4.2-4.1 5.8-.8z"/></svg>4.9</span>
-                      <span class="card-meta-chip">10–12 Jam</span>
-                      <span class="card-meta-chip">Door-to-Door</span>
+                      <span class="card-meta-chip">E-Visa</span>
+                      <span class="card-meta-chip">Waiver</span>
                     </div>
-                    <button class="card-front-btn" type="button">Lihat Detail</button>
+                    <button class="card-front-btn" type="button">View Details</button>
                   </div>
                 </div>
                 <div class="flip-face flip-back">
                   <div class="flip-back-top">
                     <div class="flip-back-kicker-row">
-                      <span class="flip-back-kicker">Detail Layanan</span>
-                      <button class="flip-back-close" type="button">Tutup</button>
+                      <span class="flip-back-kicker">Service Details</span>
+                      <button class="flip-back-close" type="button">Close</button>
                     </div>
-                    <h4 class="flip-back-title">Sewa Mobil &amp; Private Driver</h4>
-                    <p class="flip-back-sub">Perjalanan praktis membawa koper besar, anak kecil, atau orang tua tanpa pindah kereta.</p>
+                    <h4 class="flip-back-title">Japan Visa Assistance</h4>
+                    <p class="flip-back-sub">Thorough pre-check and smooth filing for E-Visa, Visa Waiver, and Single or Multiple Entry visas.</p>
                   </div>
                   <ul class="back-detail-list">
-                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span>Pilihan Toyota Alphard, HiAce Grand Cabin &amp; Bus</span></li>
-                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span>Antar jemput Haneda, Narita, Kansai &amp; Chitose</span></li>
-                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span>Sudah termasuk BBM, tol jalan bebas hambatan &amp; driver</span></li>
-                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span>Dipercaya 480+ perjalanan keluarga</span></li>
+                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span>Detailed document review before embassy submission</span></li>
+                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span>Tourism, family visit &amp; business visa support</span></li>
+                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span>Trusted by 940+ approved visa applicants</span></li>
                   </ul>
                   <div class="flip-back-footer">
-                    <div class="flip-back-note"><span>Durasi Charter Harian</span><strong>10–12 Jam</strong></div>
-                    <a href="https://wa.me/6281318939319?text=Halo%20Tanogaido,%20saya%20ingin%20info%20sewa%20mobil%20dan%20private%20driver%20di%20Jepang." target="_blank" rel="noopener noreferrer" class="wa-flip-cta">
+                    <a href="https://wa.me/6281318939319?text=Hello%20Tanogaido,%20I%20would%20like%20assistance%20with%20my%20Japan%20Visa%20application." target="_blank" rel="noopener noreferrer" class="wa-flip-cta">
                       <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.5 3.5A11.8 11.8 0 0 0 12 0C5.4 0 0 5.4 0 12c0 2.1.6 4.2 1.6 6L0 24l6.2-1.6A12 12 0 0 0 12 24c6.6 0 12-5.4 12-12 0-3.2-1.2-6.2-3.5-8.5zM12 21.8c-1.8 0-3.6-.5-5.1-1.4l-.4-.2-3.7 1 1-3.6-.2-.4A9.8 9.8 0 0 1 2.2 12c0-5.4 4.4-9.8 9.8-9.8 2.6 0 5.1 1 6.9 2.9A9.7 9.7 0 0 1 21.8 12c0 5.4-4.4 9.8-9.8 9.8zm5.4-7.4c-.3-.2-1.8-.9-2-.1-.3-.1-.5-.2-.7.2-.2.3-.8 1-.9 1.2-.2.2-.3.2-.6.1-.3-.2-1.3-.5-2.4-1.5-.9-.8-1.5-1.8-1.7-2.1-.2-.3 0-.5.1-.6l.5-.5.3-.5v-.5c-.1-.2-.7-1.6-.9-2.2-.3-.6-.5-.5-.7-.5h-.6c-.2 0-.6.1-.9.4-.3.3-1.1 1.1-1.1 2.7s1.1 3.1 1.3 3.3c.2.2 2.2 3.4 5.4 4.7.8.3 1.4.5 1.8.6.8.2 1.5.2 2 .1.6-.1 1.8-.7 2-1.4.3-.7.3-1.3.2-1.4-.1-.2-.3-.3-.6-.4z"/></svg>
-                      <span>Chat ke WhatsApp</span>
+                      <span>Chat on WhatsApp</span>
                     </a>
                   </div>
                 </div>
@@ -1593,50 +1782,51 @@
             </div>
           </article>
 
-          <!-- Card 4: JR Pass & Tiket Shinkansen -->
-          <article class="flip-card reveal-item" data-stagger="3" tabindex="0" style="--card-tint-solid: rgba(22, 26, 36, 0.98); --card-tint-mid: rgba(22, 26, 36, 0.88); --card-tint-fade: rgba(22, 26, 36, 0.34);">
+          <!-- 5. Pocket WiFi Rental -->
+          <article class="flip-card reveal-item" data-stagger="0" data-index="4" tabindex="0" style="--card-tint-solid: rgba(19, 29, 51, 0.98); --card-tint-mid: rgba(19, 29, 51, 0.88); --card-tint-fade: rgba(19, 29, 51, 0.34);">
             <div class="flip-card-scene">
               <div class="flip-card-inner">
                 <div class="flip-face flip-front">
-                  <img class="flip-card-bg" src="assets/shinkansen.jpg" alt="JR Pass dan Tiket Shinkansen Resmi" loading="lazy" referrerpolicy="no-referrer">
+                  <div class="mobile-card-spine" role="button" tabindex="0" aria-label="Open Pocket WiFi Rental">
+                    <span class="mobile-spine-left"><span class="mobile-spine-num">05</span><span class="mobile-spine-name">Pocket WiFi Rental</span></span>
+                    <span class="mobile-spine-tag">4G Unlimited</span>
+                  </div>
+                  <img class="flip-card-bg" src="assets/cards/card-7.jpg" alt="Japan Pocket WiFi 4G LTE" loading="lazy" referrerpolicy="no-referrer">
                   <div class="flip-front-scrim"></div>
-                  <button class="card-bookmark-btn" type="button" aria-label="Simpan layanan JR Pass">
+                  <button class="card-bookmark-btn" type="button" aria-label="Bookmark Pocket WiFi Rental">
                     <svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
                   </button>
                   <div class="card-front-content">
                     <div class="card-title-row">
-                      <h3 class="card-front-title">JR Pass &amp; Shinkansen</h3>
-                      <span class="card-price-badge">Resmi</span>
+                      <h3 class="card-front-title">Pocket WiFi Rental</h3>
+                      <span class="card-price-badge">4G LTE</span>
                     </div>
-                    <p class="card-front-desc">Tiket Whole Japan Pass, Regional Pass &amp; reservasi kursi Shinkansen Nozomi atau Hikari antarkota.</p>
                     <div class="card-meta-row">
                       <span class="card-meta-chip"><svg viewBox="0 0 20 20" fill="currentColor"><path d="M10 1.5l2.6 5.3 5.8.8-4.2 4.1 1 5.8L10 14.8l-5.2 2.7 1-5.8-4.2-4.1 5.8-.8z"/></svg>4.9</span>
-                      <span class="card-meta-chip">7 / 14 / 21 Hari</span>
-                      <span class="card-meta-chip">Green &amp; Ord</span>
+                      <span class="card-meta-chip">Unlimited</span>
+                      <span class="card-meta-chip">5 Devices</span>
                     </div>
-                    <button class="card-front-btn" type="button">Lihat Detail</button>
+                    <button class="card-front-btn" type="button">View Details</button>
                   </div>
                 </div>
                 <div class="flip-face flip-back">
                   <div class="flip-back-top">
                     <div class="flip-back-kicker-row">
-                      <span class="flip-back-kicker">Detail Layanan</span>
-                      <button class="flip-back-close" type="button">Tutup</button>
+                      <span class="flip-back-kicker">Service Details</span>
+                      <button class="flip-back-close" type="button">Close</button>
                     </div>
-                    <h4 class="flip-back-title">JR Pass &amp; Tiket Shinkansen</h4>
-                    <p class="flip-back-sub">Konsultasi perhitungan rute terlebih dulu agar pilihan pass benar-benar hemat biaya kereta.</p>
+                    <h4 class="flip-back-title">Pocket WiFi Rental</h4>
+                    <p class="flip-back-sub">Reliable unlimited Japanese 4G LTE pocket WiFi and travel eSIM ready from touchdown.</p>
                   </div>
                   <ul class="back-detail-list">
-                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span>Whole Japan Rail Pass &amp; Kansai/Hokkaido Regional Pass</span></li>
-                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span>Bantu pilih posisi kursi sisi Gunung Fuji</span></li>
-                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span>Panduan tukar voucher di stasiun kedatangan Jepang</span></li>
-                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span>Dipercaya 890+ pemegang JR Pass</span></li>
+                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span>True unlimited high-speed nationwide coverage</span></li>
+                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span>Share securely across up to 5 smartphones</span></li>
+                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span>Airport counter pickup or doorstep delivery</span></li>
                   </ul>
                   <div class="flip-back-footer">
-                    <div class="flip-back-note"><span>Masa Berlaku Berturut</span><strong>7 / 14 / 21 Hari</strong></div>
-                    <a href="https://wa.me/6281318939319?text=Halo%20Tanogaido,%20saya%20ingin%20beli%20JR%20Pass%20dan%20tiket%20Shinkansen%20Jepang." target="_blank" rel="noopener noreferrer" class="wa-flip-cta">
+                    <a href="https://wa.me/6281318939319?text=Hello%20Tanogaido,%20I%20would%20like%20to%20rent%20a%20Japan%20Pocket%20WiFi." target="_blank" rel="noopener noreferrer" class="wa-flip-cta">
                       <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.5 3.5A11.8 11.8 0 0 0 12 0C5.4 0 0 5.4 0 12c0 2.1.6 4.2 1.6 6L0 24l6.2-1.6A12 12 0 0 0 12 24c6.6 0 12-5.4 12-12 0-3.2-1.2-6.2-3.5-8.5zM12 21.8c-1.8 0-3.6-.5-5.1-1.4l-.4-.2-3.7 1 1-3.6-.2-.4A9.8 9.8 0 0 1 2.2 12c0-5.4 4.4-9.8 9.8-9.8 2.6 0 5.1 1 6.9 2.9A9.7 9.7 0 0 1 21.8 12c0 5.4-4.4 9.8-9.8 9.8zm5.4-7.4c-.3-.2-1.8-.9-2-.1-.3-.1-.5-.2-.7.2-.2.3-.8 1-.9 1.2-.2.2-.3.2-.6.1-.3-.2-1.3-.5-2.4-1.5-.9-.8-1.5-1.8-1.7-2.1-.2-.3 0-.5.1-.6l.5-.5.3-.5v-.5c-.1-.2-.7-1.6-.9-2.2-.3-.6-.5-.5-.7-.5h-.6c-.2 0-.6.1-.9.4-.3.3-1.1 1.1-1.1 2.7s1.1 3.1 1.3 3.3c.2.2 2.2 3.4 5.4 4.7.8.3 1.4.5 1.8.6.8.2 1.5.2 2 .1.6-.1 1.8-.7 2-1.4.3-.7.3-1.3.2-1.4-.1-.2-.3-.3-.6-.4z"/></svg>
-                      <span>Chat ke WhatsApp</span>
+                      <span>Chat on WhatsApp</span>
                     </a>
                   </div>
                 </div>
@@ -1644,50 +1834,51 @@
             </div>
           </article>
 
-          <!-- Card 5: Visa Jepang & Pocket WiFi 4G -->
-          <article class="flip-card reveal-item" data-stagger="0" tabindex="0" style="--card-tint-solid: rgba(19, 29, 51, 0.98); --card-tint-mid: rgba(19, 29, 51, 0.88); --card-tint-fade: rgba(19, 29, 51, 0.34);">
+          <!-- 6. Car & Tour Bus Rental -->
+          <article class="flip-card reveal-item" data-stagger="1" data-index="5" tabindex="0" style="--card-tint-solid: rgba(20, 32, 42, 0.98); --card-tint-mid: rgba(20, 32, 42, 0.88); --card-tint-fade: rgba(20, 32, 42, 0.34);">
             <div class="flip-card-scene">
               <div class="flip-card-inner">
                 <div class="flip-face flip-front">
-                  <img class="flip-card-bg" src="assets/cards/card-7.jpg" alt="Visa Jepang dan Pocket WiFi 4G LTE" loading="lazy" referrerpolicy="no-referrer">
+                  <div class="mobile-card-spine" role="button" tabindex="0" aria-label="Open Car & Tour Bus Rental">
+                    <span class="mobile-spine-left"><span class="mobile-spine-num">06</span><span class="mobile-spine-name">Car &amp; Tour Bus Rental</span></span>
+                    <span class="mobile-spine-tag">Alphard / Bus</span>
+                  </div>
+                  <img class="flip-card-bg" src="assets/cards/japan-van.jpg" alt="Car and Tour Bus Rental Japan" loading="lazy" referrerpolicy="no-referrer">
                   <div class="flip-front-scrim"></div>
-                  <button class="card-bookmark-btn" type="button" aria-label="Simpan layanan Visa dan WiFi">
+                  <button class="card-bookmark-btn" type="button" aria-label="Bookmark Car & Tour Bus Rental">
                     <svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
                   </button>
                   <div class="card-front-content">
                     <div class="card-title-row">
-                      <h3 class="card-front-title">Visa &amp; Pocket WiFi</h3>
-                      <span class="card-price-badge">4G Unlimited</span>
+                      <h3 class="card-front-title">Car &amp; Tour Bus</h3>
+                      <span class="card-price-badge">Alphard / Bus</span>
                     </div>
-                    <p class="card-front-desc">Pengurusan E-Visa, Visa Waiver, maupun visa tempel Jepang plus sewa Pocket WiFi &amp; eSIM cepat.</p>
                     <div class="card-meta-row">
                       <span class="card-meta-chip"><svg viewBox="0 0 20 20" fill="currentColor"><path d="M10 1.5l2.6 5.3 5.8.8-4.2 4.1 1 5.8L10 14.8l-5.2 2.7 1-5.8-4.2-4.1 5.8-.8z"/></svg>4.9</span>
-                      <span class="card-meta-chip">Cek Berkas</span>
-                      <span class="card-meta-chip">5 Perangkat</span>
+                      <span class="card-meta-chip">10–12 Hrs</span>
+                      <span class="card-meta-chip">Licensed</span>
                     </div>
-                    <button class="card-front-btn" type="button">Lihat Detail</button>
+                    <button class="card-front-btn" type="button">View Details</button>
                   </div>
                 </div>
                 <div class="flip-face flip-back">
                   <div class="flip-back-top">
                     <div class="flip-back-kicker-row">
-                      <span class="flip-back-kicker">Detail Layanan</span>
-                      <button class="flip-back-close" type="button">Tutup</button>
+                      <span class="flip-back-kicker">Service Details</span>
+                      <button class="flip-back-close" type="button">Close</button>
                     </div>
-                    <h4 class="flip-back-title">Visa Jepang &amp; Pocket WiFi 4G</h4>
-                    <p class="flip-back-sub">Persiapan dokumen teliti sebelum berangkat dan internet stabil sejak mendarat.</p>
+                    <h4 class="flip-back-title">Car &amp; Tour Bus Rental</h4>
+                    <p class="flip-back-sub">Official green-plate charter fleet from Toyota Alphard and HiAce to executive tour coaches.</p>
                   </div>
                   <ul class="back-detail-list">
-                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span>Review dokumen lengkap untuk E-Visa &amp; Single/Multiple Entry</span></li>
-                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span>Unlimited 4G LTE bisa dibagi hingga 5 smartphone</span></li>
-                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span>Opsi ambil di bandara atau kirim langsung ke rumah</span></li>
-                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span>Dipercaya 940+ pemohon visa wisata &amp; bisnis</span></li>
+                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span>Haneda, Narita, Kansai &amp; Chitose airport pickups</span></li>
+                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span>Alphard, HiAce Grand Cabin &amp; coach buses</span></li>
+                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span>Includes licensed driver, fuel &amp; highway tolls</span></li>
                   </ul>
                   <div class="flip-back-footer">
-                    <div class="flip-back-note"><span>Proses Transparan</span><strong>Anti Ribet</strong></div>
-                    <a href="https://wa.me/6281318939319?text=Halo%20Tanogaido,%20saya%20ingin%20info%20pengurusan%20Visa%20Jepang%20dan%20sewa%20Pocket%20WiFi." target="_blank" rel="noopener noreferrer" class="wa-flip-cta">
+                    <a href="https://wa.me/6281318939319?text=Hello%20Tanogaido,%20I%20would%20like%20to%20book%20a%20Car%20or%20Tour%20Bus%20Rental%20in%20Japan." target="_blank" rel="noopener noreferrer" class="wa-flip-cta">
                       <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.5 3.5A11.8 11.8 0 0 0 12 0C5.4 0 0 5.4 0 12c0 2.1.6 4.2 1.6 6L0 24l6.2-1.6A12 12 0 0 0 12 24c6.6 0 12-5.4 12-12 0-3.2-1.2-6.2-3.5-8.5zM12 21.8c-1.8 0-3.6-.5-5.1-1.4l-.4-.2-3.7 1 1-3.6-.2-.4A9.8 9.8 0 0 1 2.2 12c0-5.4 4.4-9.8 9.8-9.8 2.6 0 5.1 1 6.9 2.9A9.7 9.7 0 0 1 21.8 12c0 5.4-4.4 9.8-9.8 9.8zm5.4-7.4c-.3-.2-1.8-.9-2-.1-.3-.1-.5-.2-.7.2-.2.3-.8 1-.9 1.2-.2.2-.3.2-.6.1-.3-.2-1.3-.5-2.4-1.5-.9-.8-1.5-1.8-1.7-2.1-.2-.3 0-.5.1-.6l.5-.5.3-.5v-.5c-.1-.2-.7-1.6-.9-2.2-.3-.6-.5-.5-.7-.5h-.6c-.2 0-.6.1-.9.4-.3.3-1.1 1.1-1.1 2.7s1.1 3.1 1.3 3.3c.2.2 2.2 3.4 5.4 4.7.8.3 1.4.5 1.8.6.8.2 1.5.2 2 .1.6-.1 1.8-.7 2-1.4.3-.7.3-1.3.2-1.4-.1-.2-.3-.3-.6-.4z"/></svg>
-                      <span>Chat ke WhatsApp</span>
+                      <span>Chat on WhatsApp</span>
                     </a>
                   </div>
                 </div>
@@ -1695,101 +1886,51 @@
             </div>
           </article>
 
-          <!-- Card 6: Kurasi Budaya & Kuliner Halal -->
-          <article class="flip-card reveal-item" data-stagger="1" tabindex="0" style="--card-tint-solid: rgba(20, 42, 40, 0.98); --card-tint-mid: rgba(20, 42, 40, 0.88); --card-tint-fade: rgba(20, 42, 40, 0.34);">
+          <!-- 7. JR Pass Tickets -->
+          <article class="flip-card reveal-item" data-stagger="2" data-index="6" tabindex="0" style="--card-tint-solid: rgba(22, 26, 36, 0.98); --card-tint-mid: rgba(22, 26, 36, 0.88); --card-tint-fade: rgba(22, 26, 36, 0.34);">
             <div class="flip-card-scene">
               <div class="flip-card-inner">
                 <div class="flip-face flip-front">
-                  <img class="flip-card-bg" src="assets/cards/card-2.jpg" alt="Kurasi Budaya Tradisional dan Kuliner Halal Jepang" loading="lazy" referrerpolicy="no-referrer">
+                  <div class="mobile-card-spine" role="button" tabindex="0" aria-label="Open JR Pass Tickets">
+                    <span class="mobile-spine-left"><span class="mobile-spine-num">07</span><span class="mobile-spine-name">JR Pass Tickets</span></span>
+                    <span class="mobile-spine-tag">Official Pass</span>
+                  </div>
+                  <img class="flip-card-bg" src="assets/shinkansen.jpg" alt="JR Pass and Shinkansen Tickets" loading="lazy" referrerpolicy="no-referrer">
                   <div class="flip-front-scrim"></div>
-                  <button class="card-bookmark-btn" type="button" aria-label="Simpan layanan Kurasi Budaya">
+                  <button class="card-bookmark-btn" type="button" aria-label="Bookmark JR Pass Tickets">
                     <svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
                   </button>
                   <div class="card-front-content">
                     <div class="card-title-row">
-                      <h3 class="card-front-title">Budaya &amp; Kuliner Halal</h3>
-                      <span class="card-price-badge">Muslim Friendly</span>
+                      <h3 class="card-front-title">JR Pass Tickets</h3>
+                      <span class="card-price-badge">Official</span>
                     </div>
-                    <p class="card-front-desc">Reservasi upacara minum teh Uji, penginapan ryokan onsen privat &amp; restoran Wagyu halal tersertifikasi.</p>
-                    <div class="card-meta-row">
-                      <span class="card-meta-chip"><svg viewBox="0 0 20 20" fill="currentColor"><path d="M10 1.5l2.6 5.3 5.8.8-4.2 4.1 1 5.8L10 14.8l-5.2 2.7 1-5.8-4.2-4.1 5.8-.8z"/></svg>4.8</span>
-                      <span class="card-meta-chip">Ryokan &amp; Tea</span>
-                      <span class="card-meta-chip">Kyoto / Uji</span>
-                    </div>
-                    <button class="card-front-btn" type="button">Lihat Detail</button>
-                  </div>
-                </div>
-                <div class="flip-face flip-back">
-                  <div class="flip-back-top">
-                    <div class="flip-back-kicker-row">
-                      <span class="flip-back-kicker">Detail Layanan</span>
-                      <button class="flip-back-close" type="button">Tutup</button>
-                    </div>
-                    <h4 class="flip-back-title">Kurasi Budaya &amp; Kuliner Halal</h4>
-                    <p class="flip-back-sub">Pengalaman Jepang autentik sekaligus tenang mencari ruang sholat dan makanan halal.</p>
-                  </div>
-                  <ul class="back-detail-list">
-                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span>Reservasi restoran ramen &amp; Wagyu halal populer Jepang</span></li>
-                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span>Sesi tea ceremony privat &amp; workshop kerajinan Kyoto</span></li>
-                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span>Pilihan ryokan tradisional dengan private onsen keluarga</span></li>
-                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span>Dipercaya 410+ keluarga Muslim Indonesia</span></li>
-                  </ul>
-                  <div class="flip-back-footer">
-                    <div class="flip-back-note"><span>Reservasi Terjamin</span><strong>100% Kurasi</strong></div>
-                    <a href="https://wa.me/6281318939319?text=Halo%20Tanogaido,%20saya%20tertarik%20dengan%20kurasi%20Budaya%20dan%20Kuliner%20Halal%20Jepang." target="_blank" rel="noopener noreferrer" class="wa-flip-cta">
-                      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.5 3.5A11.8 11.8 0 0 0 12 0C5.4 0 0 5.4 0 12c0 2.1.6 4.2 1.6 6L0 24l6.2-1.6A12 12 0 0 0 12 24c6.6 0 12-5.4 12-12 0-3.2-1.2-6.2-3.5-8.5zM12 21.8c-1.8 0-3.6-.5-5.1-1.4l-.4-.2-3.7 1 1-3.6-.2-.4A9.8 9.8 0 0 1 2.2 12c0-5.4 4.4-9.8 9.8-9.8 2.6 0 5.1 1 6.9 2.9A9.7 9.7 0 0 1 21.8 12c0 5.4-4.4 9.8-9.8 9.8zm5.4-7.4c-.3-.2-1.8-.9-2-.1-.3-.1-.5-.2-.7.2-.2.3-.8 1-.9 1.2-.2.2-.3.2-.6.1-.3-.2-1.3-.5-2.4-1.5-.9-.8-1.5-1.8-1.7-2.1-.2-.3 0-.5.1-.6l.5-.5.3-.5v-.5c-.1-.2-.7-1.6-.9-2.2-.3-.6-.5-.5-.7-.5h-.6c-.2 0-.6.1-.9.4-.3.3-1.1 1.1-1.1 2.7s1.1 3.1 1.3 3.3c.2.2 2.2 3.4 5.4 4.7.8.3 1.4.5 1.8.6.8.2 1.5.2 2 .1.6-.1 1.8-.7 2-1.4.3-.7.3-1.3.2-1.4-.1-.2-.3-.3-.6-.4z"/></svg>
-                      <span>Chat ke WhatsApp</span>
-                    </a>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </article>
-
-          <!-- Card 7: Sewa Kimono & Dokumentasi Foto -->
-          <article class="flip-card reveal-item" data-stagger="2" tabindex="0" style="--card-tint-solid: rgba(43, 25, 25, 0.98); --card-tint-mid: rgba(43, 25, 25, 0.88); --card-tint-fade: rgba(43, 25, 25, 0.34);">
-            <div class="flip-card-scene">
-              <div class="flip-card-inner">
-                <div class="flip-face flip-front">
-                  <img class="flip-card-bg" src="assets/cards/card-5.jpg" alt="Sewa Kimono dan Sesi Foto Privat Kyoto" loading="lazy" referrerpolicy="no-referrer">
-                  <div class="flip-front-scrim"></div>
-                  <button class="card-bookmark-btn" type="button" aria-label="Simpan layanan Kimono dan Foto">
-                    <svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
-                  </button>
-                  <div class="card-front-content">
-                    <div class="card-title-row">
-                      <h3 class="card-front-title">Kimono &amp; Foto Privat</h3>
-                      <span class="card-price-badge">Pro Fotografer</span>
-                    </div>
-                    <p class="card-front-desc">Sesi foto profesional berbusana kimono autentik di Gion, Arashiyama &amp; spot ikonik Asakusa.</p>
                     <div class="card-meta-row">
                       <span class="card-meta-chip"><svg viewBox="0 0 20 20" fill="currentColor"><path d="M10 1.5l2.6 5.3 5.8.8-4.2 4.1 1 5.8L10 14.8l-5.2 2.7 1-5.8-4.2-4.1 5.8-.8z"/></svg>4.9</span>
-                      <span class="card-meta-chip">Couple &amp; Fam</span>
-                      <span class="card-meta-chip">Gion / Tokyo</span>
+                      <span class="card-meta-chip">7/14/21 Days</span>
+                      <span class="card-meta-chip">Shinkansen</span>
                     </div>
-                    <button class="card-front-btn" type="button">Lihat Detail</button>
+                    <button class="card-front-btn" type="button">View Details</button>
                   </div>
                 </div>
                 <div class="flip-face flip-back">
                   <div class="flip-back-top">
                     <div class="flip-back-kicker-row">
-                      <span class="flip-back-kicker">Detail Layanan</span>
-                      <button class="flip-back-close" type="button">Tutup</button>
+                      <span class="flip-back-kicker">Service Details</span>
+                      <button class="flip-back-close" type="button">Close</button>
                     </div>
-                    <h4 class="flip-back-title">Kimono &amp; Dokumentasi Privat</h4>
-                    <p class="flip-back-sub">Abadikan momen honeymoon atau liburan keluarga tanpa repot mengatur tripod sendiri.</p>
+                    <h4 class="flip-back-title">JR Pass Tickets</h4>
+                    <p class="flip-back-sub">Official Whole Japan Rail Pass, Regional Passes, and Shinkansen seat reservations.</p>
                   </div>
                   <ul class="back-detail-list">
-                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span>Sewa kimono premium lengkap aksesori &amp; hijab styling</span></li>
-                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span>Fotografer lokal di spot sepi turis pagi/sore hari</span></li>
-                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span>Semua file resolusi tinggi + pilihan edit warna editorial</span></li>
-                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span>Dipercaya 310+ pasangan &amp; keluarga</span></li>
+                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span>Free fare calculation to ensure maximum rail savings</span></li>
+                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span>Whole Japan, Kansai, Takayama &amp; Hokkaido passes</span></li>
+                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span>Trusted by 890+ JR Pass holders</span></li>
                   </ul>
                   <div class="flip-back-footer">
-                    <div class="flip-back-note"><span>Hasil Foto Siap Cepat</span><strong>2–4 Hari</strong></div>
-                    <a href="https://wa.me/6281318939319?text=Halo%20Tanogaido,%20saya%20tertarik%20dengan%20paket%20Kimono%20dan%20Foto%20Privat%20di%20Jepang." target="_blank" rel="noopener noreferrer" class="wa-flip-cta">
+                    <a href="https://wa.me/6281318939319?text=Hello%20Tanogaido,%20I%20would%20like%20to%20buy%20JR%20Pass%20tickets%20for%20Japan." target="_blank" rel="noopener noreferrer" class="wa-flip-cta">
                       <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.5 3.5A11.8 11.8 0 0 0 12 0C5.4 0 0 5.4 0 12c0 2.1.6 4.2 1.6 6L0 24l6.2-1.6A12 12 0 0 0 12 24c6.6 0 12-5.4 12-12 0-3.2-1.2-6.2-3.5-8.5zM12 21.8c-1.8 0-3.6-.5-5.1-1.4l-.4-.2-3.7 1 1-3.6-.2-.4A9.8 9.8 0 0 1 2.2 12c0-5.4 4.4-9.8 9.8-9.8 2.6 0 5.1 1 6.9 2.9A9.7 9.7 0 0 1 21.8 12c0 5.4-4.4 9.8-9.8 9.8zm5.4-7.4c-.3-.2-1.8-.9-2-.1-.3-.1-.5-.2-.7.2-.2.3-.8 1-.9 1.2-.2.2-.3.2-.6.1-.3-.2-1.3-.5-2.4-1.5-.9-.8-1.5-1.8-1.7-2.1-.2-.3 0-.5.1-.6l.5-.5.3-.5v-.5c-.1-.2-.7-1.6-.9-2.2-.3-.6-.5-.5-.7-.5h-.6c-.2 0-.6.1-.9.4-.3.3-1.1 1.1-1.1 2.7s1.1 3.1 1.3 3.3c.2.2 2.2 3.4 5.4 4.7.8.3 1.4.5 1.8.6.8.2 1.5.2 2 .1.6-.1 1.8-.7 2-1.4.3-.7.3-1.3.2-1.4-.1-.2-.3-.3-.6-.4z"/></svg>
-                      <span>Chat ke WhatsApp</span>
+                      <span>Chat on WhatsApp</span>
                     </a>
                   </div>
                 </div>
@@ -1797,50 +1938,259 @@
             </div>
           </article>
 
-          <!-- Card 8: Paket Musiman Sakura, Momiji & Salju -->
-          <article class="flip-card reveal-item" data-stagger="3" tabindex="0" style="--card-tint-solid: rgba(22, 35, 59, 0.98); --card-tint-mid: rgba(22, 35, 59, 0.88); --card-tint-fade: rgba(22, 35, 59, 0.34);">
+          <!-- 8. Theme Park Tickets -->
+          <article class="flip-card reveal-item" data-stagger="3" data-index="7" tabindex="0" style="--card-tint-solid: rgba(29, 24, 52, 0.98); --card-tint-mid: rgba(29, 24, 52, 0.88); --card-tint-fade: rgba(29, 24, 52, 0.34);">
             <div class="flip-card-scene">
               <div class="flip-card-inner">
                 <div class="flip-face flip-front">
-                  <img class="flip-card-bg" src="assets/cards/card-6.jpg" alt="Paket Wisata Musiman Sakura dan Winter Jepang" loading="lazy" referrerpolicy="no-referrer">
+                  <div class="mobile-card-spine" role="button" tabindex="0" aria-label="Open Theme Park Tickets">
+                    <span class="mobile-spine-left"><span class="mobile-spine-num">08</span><span class="mobile-spine-name">Theme Park Tickets</span></span>
+                    <span class="mobile-spine-tag">Instant QR</span>
+                  </div>
+                  <img class="flip-card-bg" src="assets/cards/japan-theme-park.jpg" alt="Japan Theme Park Admission Tickets" loading="lazy" referrerpolicy="no-referrer">
                   <div class="flip-front-scrim"></div>
-                  <button class="card-bookmark-btn" type="button" aria-label="Simpan layanan Paket Musiman">
+                  <button class="card-bookmark-btn" type="button" aria-label="Bookmark Theme Park Tickets">
                     <svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
                   </button>
                   <div class="card-front-content">
                     <div class="card-title-row">
-                      <h3 class="card-front-title">Paket 4 Musim &amp; Pulau</h3>
-                      <span class="card-price-badge">Musiman</span>
+                      <h3 class="card-front-title">Theme Park Tickets</h3>
+                      <span class="card-price-badge">Instant QR</span>
                     </div>
-                    <p class="card-front-desc">Eksplorasi mekarnya Sakura, daun gugur Kyoto, ski resort Hokkaido hingga pulau seni Naoshima.</p>
                     <div class="card-meta-row">
                       <span class="card-meta-chip"><svg viewBox="0 0 20 20" fill="currentColor"><path d="M10 1.5l2.6 5.3 5.8.8-4.2 4.1 1 5.8L10 14.8l-5.2 2.7 1-5.8-4.2-4.1 5.8-.8z"/></svg>5.0</span>
-                      <span class="card-meta-chip">Hidden Gems</span>
-                      <span class="card-meta-chip">Hokkaido / Uji</span>
+                      <span class="card-meta-chip">USJ &amp; Disney</span>
+                      <span class="card-meta-chip">Express</span>
                     </div>
-                    <button class="card-front-btn" type="button">Lihat Detail</button>
+                    <button class="card-front-btn" type="button">View Details</button>
                   </div>
                 </div>
                 <div class="flip-face flip-back">
                   <div class="flip-back-top">
                     <div class="flip-back-kicker-row">
-                      <span class="flip-back-kicker">Detail Layanan</span>
-                      <button class="flip-back-close" type="button">Tutup</button>
+                      <span class="flip-back-kicker">Service Details</span>
+                      <button class="flip-back-close" type="button">Close</button>
                     </div>
-                    <h4 class="flip-back-title">Paket 4 Musim &amp; Hidden Gems</h4>
-                    <p class="flip-back-sub">Kejar momen musiman terbaik di Jepang dengan jadwal akurat mengikuti prakiraan cuaca lokal.</p>
+                    <h4 class="flip-back-title">Theme Park Tickets</h4>
+                    <p class="flip-back-sub">Guaranteed entry &amp; Express Passes for Universal Studios Japan, Tokyo Disney, and teamLab.</p>
                   </div>
                   <ul class="back-detail-list">
-                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span>Spot Sakura &amp; Momiji terbaik jauh dari kerumunan</span></li>
-                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span>Paket Winter bermain salju di Gala Yuzawa &amp; Niseko</span></li>
-                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span>Tur pulau eksotis Okinawa, Naoshima &amp; Shirakawa-go</span></li>
-                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span>Dipercaya 340+ tamu repeater Tanogaido</span></li>
+                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span>Tokyo Disneyland, DisneySea &amp; Universal Studios Japan</span></li>
+                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span>Super Nintendo World, Shibuya Sky &amp; teamLab</span></li>
+                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span>Instant mobile QR e-tickets to skip booth lines</span></li>
                   </ul>
                   <div class="flip-back-footer">
-                    <div class="flip-back-note"><span>Musim Terjadwal</span><strong>Sakura · Winter</strong></div>
-                    <a href="https://wa.me/6281318939319?text=Halo%20Tanogaido,%20saya%20ingin%20konsultasi%20Paket%204%20Musim%20dan%20Hidden%20Gems%20Jepang." target="_blank" rel="noopener noreferrer" class="wa-flip-cta">
+                    <a href="https://wa.me/6281318939319?text=Hello%20Tanogaido,%20I%20would%20like%20to%20order%20Japan%20Theme%20Park%20tickets." target="_blank" rel="noopener noreferrer" class="wa-flip-cta">
                       <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.5 3.5A11.8 11.8 0 0 0 12 0C5.4 0 0 5.4 0 12c0 2.1.6 4.2 1.6 6L0 24l6.2-1.6A12 12 0 0 0 12 24c6.6 0 12-5.4 12-12 0-3.2-1.2-6.2-3.5-8.5zM12 21.8c-1.8 0-3.6-.5-5.1-1.4l-.4-.2-3.7 1 1-3.6-.2-.4A9.8 9.8 0 0 1 2.2 12c0-5.4 4.4-9.8 9.8-9.8 2.6 0 5.1 1 6.9 2.9A9.7 9.7 0 0 1 21.8 12c0 5.4-4.4 9.8-9.8 9.8zm5.4-7.4c-.3-.2-1.8-.9-2-.1-.3-.1-.5-.2-.7.2-.2.3-.8 1-.9 1.2-.2.2-.3.2-.6.1-.3-.2-1.3-.5-2.4-1.5-.9-.8-1.5-1.8-1.7-2.1-.2-.3 0-.5.1-.6l.5-.5.3-.5v-.5c-.1-.2-.7-1.6-.9-2.2-.3-.6-.5-.5-.7-.5h-.6c-.2 0-.6.1-.9.4-.3.3-1.1 1.1-1.1 2.7s1.1 3.1 1.3 3.3c.2.2 2.2 3.4 5.4 4.7.8.3 1.4.5 1.8.6.8.2 1.5.2 2 .1.6-.1 1.8-.7 2-1.4.3-.7.3-1.3.2-1.4-.1-.2-.3-.3-.6-.4z"/></svg>
-                      <span>Chat ke WhatsApp</span>
+                      <span>Chat on WhatsApp</span>
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <!-- 9. Japan Personal Shopper -->
+          <article class="flip-card reveal-item" data-stagger="0" data-index="8" tabindex="0" style="--card-tint-solid: rgba(18, 22, 34, 0.98); --card-tint-mid: rgba(18, 22, 34, 0.88); --card-tint-fade: rgba(18, 22, 34, 0.34);">
+            <div class="flip-card-scene">
+              <div class="flip-card-inner">
+                <div class="flip-face flip-front">
+                  <div class="mobile-card-spine" role="button" tabindex="0" aria-label="Open Japan Personal Shopper">
+                    <span class="mobile-spine-left"><span class="mobile-spine-num">09</span><span class="mobile-spine-name">Japan Personal Shopper</span></span>
+                    <span class="mobile-spine-tag">Authentic</span>
+                  </div>
+                  <img class="flip-card-bg" src="assets/cards/card-3.jpg" alt="Japan Personal Shopper Shinjuku" loading="lazy" referrerpolicy="no-referrer">
+                  <div class="flip-front-scrim"></div>
+                  <button class="card-bookmark-btn" type="button" aria-label="Bookmark Japan Personal Shopper">
+                    <svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
+                  </button>
+                  <div class="card-front-content">
+                    <div class="card-title-row">
+                      <h3 class="card-front-title">Japan Personal Shopper</h3>
+                      <span class="card-price-badge">Authentic</span>
+                    </div>
+                    <div class="card-meta-row">
+                      <span class="card-meta-chip"><svg viewBox="0 0 20 20" fill="currentColor"><path d="M10 1.5l2.6 5.3 5.8.8-4.2 4.1 1 5.8L10 14.8l-5.2 2.7 1-5.8-4.2-4.1 5.8-.8z"/></svg>4.9</span>
+                      <span class="card-meta-chip">Tokyo Picks</span>
+                      <span class="card-meta-chip">Original</span>
+                    </div>
+                    <button class="card-front-btn" type="button">View Details</button>
+                  </div>
+                </div>
+                <div class="flip-face flip-back">
+                  <div class="flip-back-top">
+                    <div class="flip-back-kicker-row">
+                      <span class="flip-back-kicker">Service Details</span>
+                      <button class="flip-back-close" type="button">Close</button>
+                    </div>
+                    <h4 class="flip-back-title">Japan Personal Shopper</h4>
+                    <p class="flip-back-sub">Shop limited Japanese fashion, sneakers, skincare, snacks, and collectibles directly from Tokyo.</p>
+                  </div>
+                  <ul class="back-detail-list">
+                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span>Exclusive sneakers, luxury boutiques &amp; Tokyo streetwear</span></li>
+                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span>Matcha, skincare, Pokémon Center &amp; anime figures</span></li>
+                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span>100% genuine store receipts &amp; live shopping check</span></li>
+                  </ul>
+                  <div class="flip-back-footer">
+                    <a href="https://wa.me/6281318939319?text=Hello%20Tanogaido,%20I%20would%20like%20to%20request%20your%20Japan%20Personal%20Shopper%20service." target="_blank" rel="noopener noreferrer" class="wa-flip-cta">
+                      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.5 3.5A11.8 11.8 0 0 0 12 0C5.4 0 0 5.4 0 12c0 2.1.6 4.2 1.6 6L0 24l6.2-1.6A12 12 0 0 0 12 24c6.6 0 12-5.4 12-12 0-3.2-1.2-6.2-3.5-8.5zM12 21.8c-1.8 0-3.6-.5-5.1-1.4l-.4-.2-3.7 1 1-3.6-.2-.4A9.8 9.8 0 0 1 2.2 12c0-5.4 4.4-9.8 9.8-9.8 2.6 0 5.1 1 6.9 2.9A9.7 9.7 0 0 1 21.8 12c0 5.4-4.4 9.8-9.8 9.8zm5.4-7.4c-.3-.2-1.8-.9-2-.1-.3-.1-.5-.2-.7.2-.2.3-.8 1-.9 1.2-.2.2-.3.2-.6.1-.3-.2-1.3-.5-2.4-1.5-.9-.8-1.5-1.8-1.7-2.1-.2-.3 0-.5.1-.6l.5-.5.3-.5v-.5c-.1-.2-.7-1.6-.9-2.2-.3-.6-.5-.5-.7-.5h-.6c-.2 0-.6.1-.9.4-.3.3-1.1 1.1-1.1 2.7s1.1 3.1 1.3 3.3c.2.2 2.2 3.4 5.4 4.7.8.3 1.4.5 1.8.6.8.2 1.5.2 2 .1.6-.1 1.8-.7 2-1.4.3-.7.3-1.3.2-1.4-.1-.2-.3-.3-.6-.4z"/></svg>
+                      <span>Chat on WhatsApp</span>
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <!-- 10. Japan Cargo & Import -->
+          <article class="flip-card reveal-item" data-stagger="1" data-index="9" tabindex="0" style="--card-tint-solid: rgba(38, 30, 24, 0.98); --card-tint-mid: rgba(38, 30, 24, 0.88); --card-tint-fade: rgba(38, 30, 24, 0.34);">
+            <div class="flip-card-scene">
+              <div class="flip-card-inner">
+                <div class="flip-face flip-front">
+                  <div class="mobile-card-spine" role="button" tabindex="0" aria-label="Open Japan Cargo & Import">
+                    <span class="mobile-spine-left"><span class="mobile-spine-num">10</span><span class="mobile-spine-name">Japan Cargo &amp; Import</span></span>
+                    <span class="mobile-spine-tag">Air &amp; Sea</span>
+                  </div>
+                  <img class="flip-card-bg" src="assets/cards/japan-cargo.jpg" alt="Japan Cargo and Import Logistics" loading="lazy" referrerpolicy="no-referrer">
+                  <div class="flip-front-scrim"></div>
+                  <button class="card-bookmark-btn" type="button" aria-label="Bookmark Japan Cargo & Import">
+                    <svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
+                  </button>
+                  <div class="card-front-content">
+                    <div class="card-title-row">
+                      <h3 class="card-front-title">Japan Cargo &amp; Import</h3>
+                      <span class="card-price-badge">Air &amp; Sea</span>
+                    </div>
+                    <div class="card-meta-row">
+                      <span class="card-meta-chip"><svg viewBox="0 0 20 20" fill="currentColor"><path d="M10 1.5l2.6 5.3 5.8.8-4.2 4.1 1 5.8L10 14.8l-5.2 2.7 1-5.8-4.2-4.1 5.8-.8z"/></svg>4.8</span>
+                      <span class="card-meta-chip">Door-to-Door</span>
+                      <span class="card-meta-chip">Insured</span>
+                    </div>
+                    <button class="card-front-btn" type="button">View Details</button>
+                  </div>
+                </div>
+                <div class="flip-face flip-back">
+                  <div class="flip-back-top">
+                    <div class="flip-back-kicker-row">
+                      <span class="flip-back-kicker">Service Details</span>
+                      <button class="flip-back-close" type="button">Close</button>
+                    </div>
+                    <h4 class="flip-back-title">Japan Cargo &amp; Import</h4>
+                    <p class="flip-back-sub">Reliable door-to-door air and sea freight shipping from Japan to Indonesia with customs handling.</p>
+                  </div>
+                  <ul class="back-detail-list">
+                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span>Fast air freight &amp; cost-effective sea consolidation</span></li>
+                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span>Supplier pickup, safe repacking &amp; customs clearance</span></li>
+                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span>Clear per-kg rates for personal &amp; commercial goods</span></li>
+                  </ul>
+                  <div class="flip-back-footer">
+                    <a href="https://wa.me/6281318939319?text=Hello%20Tanogaido,%20I%20would%20like%20a%20quote%20for%20Japan%20Cargo%20and%20Import%20shipping." target="_blank" rel="noopener noreferrer" class="wa-flip-cta">
+                      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.5 3.5A11.8 11.8 0 0 0 12 0C5.4 0 0 5.4 0 12c0 2.1.6 4.2 1.6 6L0 24l6.2-1.6A12 12 0 0 0 12 24c6.6 0 12-5.4 12-12 0-3.2-1.2-6.2-3.5-8.5zM12 21.8c-1.8 0-3.6-.5-5.1-1.4l-.4-.2-3.7 1 1-3.6-.2-.4A9.8 9.8 0 0 1 2.2 12c0-5.4 4.4-9.8 9.8-9.8 2.6 0 5.1 1 6.9 2.9A9.7 9.7 0 0 1 21.8 12c0 5.4-4.4 9.8-9.8 9.8zm5.4-7.4c-.3-.2-1.8-.9-2-.1-.3-.1-.5-.2-.7.2-.2.3-.8 1-.9 1.2-.2.2-.3.2-.6.1-.3-.2-1.3-.5-2.4-1.5-.9-.8-1.5-1.8-1.7-2.1-.2-.3 0-.5.1-.6l.5-.5.3-.5v-.5c-.1-.2-.7-1.6-.9-2.2-.3-.6-.5-.5-.7-.5h-.6c-.2 0-.6.1-.9.4-.3.3-1.1 1.1-1.1 2.7s1.1 3.1 1.3 3.3c.2.2 2.2 3.4 5.4 4.7.8.3 1.4.5 1.8.6.8.2 1.5.2 2 .1.6-.1 1.8-.7 2-1.4.3-.7.3-1.3.2-1.4-.1-.2-.3-.3-.6-.4z"/></svg>
+                      <span>Chat on WhatsApp</span>
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <!-- 11. Japan Prewedding Shoot -->
+          <article class="flip-card reveal-item" data-stagger="2" data-index="10" tabindex="0" style="--card-tint-solid: rgba(20, 42, 40, 0.98); --card-tint-mid: rgba(20, 42, 40, 0.88); --card-tint-fade: rgba(20, 42, 40, 0.34);">
+            <div class="flip-card-scene">
+              <div class="flip-card-inner">
+                <div class="flip-face flip-front">
+                  <div class="mobile-card-spine" role="button" tabindex="0" aria-label="Open Japan Prewedding Shoot">
+                    <span class="mobile-spine-left"><span class="mobile-spine-num">11</span><span class="mobile-spine-name">Japan Prewedding Shoot</span></span>
+                    <span class="mobile-spine-tag">Pro Crew</span>
+                  </div>
+                  <img class="flip-card-bg" src="assets/cards/card-2.jpg" alt="Japan Prewedding Photography Kyoto" loading="lazy" referrerpolicy="no-referrer">
+                  <div class="flip-front-scrim"></div>
+                  <button class="card-bookmark-btn" type="button" aria-label="Bookmark Japan Prewedding Shoot">
+                    <svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
+                  </button>
+                  <div class="card-front-content">
+                    <div class="card-title-row">
+                      <h3 class="card-front-title">Japan Prewedding</h3>
+                      <span class="card-price-badge">Pro Crew</span>
+                    </div>
+                    <div class="card-meta-row">
+                      <span class="card-meta-chip"><svg viewBox="0 0 20 20" fill="currentColor"><path d="M10 1.5l2.6 5.3 5.8.8-4.2 4.1 1 5.8L10 14.8l-5.2 2.7 1-5.8-4.2-4.1 5.8-.8z"/></svg>5.0</span>
+                      <span class="card-meta-chip">Kyoto / Fuji</span>
+                      <span class="card-meta-chip">Kimono</span>
+                    </div>
+                    <button class="card-front-btn" type="button">View Details</button>
+                  </div>
+                </div>
+                <div class="flip-face flip-back">
+                  <div class="flip-back-top">
+                    <div class="flip-back-kicker-row">
+                      <span class="flip-back-kicker">Service Details</span>
+                      <button class="flip-back-close" type="button">Close</button>
+                    </div>
+                    <h4 class="flip-back-title">Japan Prewedding Shoot</h4>
+                    <p class="flip-back-sub">Editorial couples photography across Kyoto, Mount Fuji, and Tokyo with wardrobe and styling.</p>
+                  </div>
+                  <ul class="back-detail-list">
+                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span>Experienced local photographer &amp; creative director</span></li>
+                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span>Traditional kimono rental &amp; hair or hijab styling</span></li>
+                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span>Full high-resolution gallery + color retouching</span></li>
+                  </ul>
+                  <div class="flip-back-footer">
+                    <a href="https://wa.me/6281318939319?text=Hello%20Tanogaido,%20I%20would%20like%20to%20inquire%20about%20a%20Japan%20Prewedding%20Shoot." target="_blank" rel="noopener noreferrer" class="wa-flip-cta">
+                      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.5 3.5A11.8 11.8 0 0 0 12 0C5.4 0 0 5.4 0 12c0 2.1.6 4.2 1.6 6L0 24l6.2-1.6A12 12 0 0 0 12 24c6.6 0 12-5.4 12-12 0-3.2-1.2-6.2-3.5-8.5zM12 21.8c-1.8 0-3.6-.5-5.1-1.4l-.4-.2-3.7 1 1-3.6-.2-.4A9.8 9.8 0 0 1 2.2 12c0-5.4 4.4-9.8 9.8-9.8 2.6 0 5.1 1 6.9 2.9A9.7 9.7 0 0 1 21.8 12c0 5.4-4.4 9.8-9.8 9.8zm5.4-7.4c-.3-.2-1.8-.9-2-.1-.3-.1-.5-.2-.7.2-.2.3-.8 1-.9 1.2-.2.2-.3.2-.6.1-.3-.2-1.3-.5-2.4-1.5-.9-.8-1.5-1.8-1.7-2.1-.2-.3 0-.5.1-.6l.5-.5.3-.5v-.5c-.1-.2-.7-1.6-.9-2.2-.3-.6-.5-.5-.7-.5h-.6c-.2 0-.6.1-.9.4-.3.3-1.1 1.1-1.1 2.7s1.1 3.1 1.3 3.3c.2.2 2.2 3.4 5.4 4.7.8.3 1.4.5 1.8.6.8.2 1.5.2 2 .1.6-.1 1.8-.7 2-1.4.3-.7.3-1.3.2-1.4-.1-.2-.3-.3-.6-.4z"/></svg>
+                      <span>Chat on WhatsApp</span>
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <!-- 12. Document Translation -->
+          <article class="flip-card reveal-item" data-stagger="3" data-index="11" tabindex="0" style="--card-tint-solid: rgba(34, 23, 21, 0.98); --card-tint-mid: rgba(34, 23, 21, 0.88); --card-tint-fade: rgba(34, 23, 21, 0.34);">
+            <div class="flip-card-scene">
+              <div class="flip-card-inner">
+                <div class="flip-face flip-front">
+                  <div class="mobile-card-spine" role="button" tabindex="0" aria-label="Open Document Translation">
+                    <span class="mobile-spine-left"><span class="mobile-spine-num">12</span><span class="mobile-spine-name">Document Translation</span></span>
+                    <span class="mobile-spine-tag">Sworn / Legal</span>
+                  </div>
+                  <img class="flip-card-bg" src="assets/cards/card-1.jpg" alt="Japanese Document Translation Service" loading="lazy" referrerpolicy="no-referrer">
+                  <div class="flip-front-scrim"></div>
+                  <button class="card-bookmark-btn" type="button" aria-label="Bookmark Document Translation">
+                    <svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
+                  </button>
+                  <div class="card-front-content">
+                    <div class="card-title-row">
+                      <h3 class="card-front-title">Document Translation</h3>
+                      <span class="card-price-badge">Certified</span>
+                    </div>
+                    <div class="card-meta-row">
+                      <span class="card-meta-chip"><svg viewBox="0 0 20 20" fill="currentColor"><path d="M10 1.5l2.6 5.3 5.8.8-4.2 4.1 1 5.8L10 14.8l-5.2 2.7 1-5.8-4.2-4.1 5.8-.8z"/></svg>4.9</span>
+                      <span class="card-meta-chip">JP ↔ EN/ID</span>
+                      <span class="card-meta-chip">Sworn</span>
+                    </div>
+                    <button class="card-front-btn" type="button">View Details</button>
+                  </div>
+                </div>
+                <div class="flip-face flip-back">
+                  <div class="flip-back-top">
+                    <div class="flip-back-kicker-row">
+                      <span class="flip-back-kicker">Service Details</span>
+                      <button class="flip-back-close" type="button">Close</button>
+                    </div>
+                    <h4 class="flip-back-title">Document Translation</h4>
+                    <p class="flip-back-sub">Accurate certified Japanese translation for visa, academic, legal, and corporate files.</p>
+                  </div>
+                  <ul class="back-detail-list">
+                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span>Certificates, academic transcripts &amp; family registries</span></li>
+                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span>Contracts, product specs &amp; legal paperwork</span></li>
+                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span>Fast turnaround with strict confidentiality</span></li>
+                  </ul>
+                  <div class="flip-back-footer">
+                    <a href="https://wa.me/6281318939319?text=Hello%20Tanogaido,%20I%20would%20like%20to%20request%20Japanese%20Document%20Translation." target="_blank" rel="noopener noreferrer" class="wa-flip-cta">
+                      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.5 3.5A11.8 11.8 0 0 0 12 0C5.4 0 0 5.4 0 12c0 2.1.6 4.2 1.6 6L0 24l6.2-1.6A12 12 0 0 0 12 24c6.6 0 12-5.4 12-12 0-3.2-1.2-6.2-3.5-8.5zM12 21.8c-1.8 0-3.6-.5-5.1-1.4l-.4-.2-3.7 1 1-3.6-.2-.4A9.8 9.8 0 0 1 2.2 12c0-5.4 4.4-9.8 9.8-9.8 2.6 0 5.1 1 6.9 2.9A9.7 9.7 0 0 1 21.8 12c0 5.4-4.4 9.8-9.8 9.8zm5.4-7.4c-.3-.2-1.8-.9-2-.1-.3-.1-.5-.2-.7.2-.2.3-.8 1-.9 1.2-.2.2-.3.2-.6.1-.3-.2-1.3-.5-2.4-1.5-.9-.8-1.5-1.8-1.7-2.1-.2-.3 0-.5.1-.6l.5-.5.3-.5v-.5c-.1-.2-.7-1.6-.9-2.2-.3-.6-.5-.5-.7-.5h-.6c-.2 0-.6.1-.9.4-.3.3-1.1 1.1-1.1 2.7s1.1 3.1 1.3 3.3c.2.2 2.2 3.4 5.4 4.7.8.3 1.4.5 1.8.6.8.2 1.5.2 2 .1.6-.1 1.8-.7 2-1.4.3-.7.3-1.3.2-1.4-.1-.2-.3-.3-.6-.4z"/></svg>
+                      <span>Chat on WhatsApp</span>
                     </a>
                   </div>
                 </div>
@@ -1852,14 +2202,14 @@
         <!-- Final Call To Action Milestone -->
         <div class="final-cta-stage reveal-item" id="final-cta-stage">
           <div class="milestone-card">
-            <div class="milestone-tag">Konsultasi Sekarang</div>
-            <h2 class="milestone-title">Wujudkan Liburan Impian ke Jepang Bersama Tanogaido</h2>
+            <div class="milestone-tag">Start Planning</div>
+            <h2 class="milestone-title">Plan Your Unforgettable Japan Journey with Tanogaido</h2>
             <p class="milestone-desc">
-              Dari tour virtual interaktif, private tour keluarga, sewa mobil, tiket JR Pass, hingga visa. Dapatkan penawaran terbaik dan konsultasi gratis sekarang!
+              From licensed tour guides, custom private tours, JR Passes, and car charters to visa filing and shipping—get tailored advice and instant quotes today.
             </p>
             <div class="milestone-actions">
-              <a href="https://wa.me/6281318939319?text=Halo%20Tanogaido,%20saya%20ingin%20merencanakan%20liburan%20ke%20Jepang.%20Mohon%20bantuannya!" target="_blank" rel="noopener noreferrer" class="btn-explore" style="display: inline-flex;">
-                <span>Hubungi Tanogaido via WhatsApp</span>
+              <a href="https://wa.me/6281318939319?text=Hello%20Tanogaido,%20I%20would%20like%20to%20plan%20my%20trip%20to%20Japan.%20Could%20you%20assist%20me?" target="_blank" rel="noopener noreferrer" class="btn-explore" style="display: inline-flex;">
+                <span>Chat with Tanogaido on WhatsApp</span>
                 <span class="arrow">→</span>
               </a>
             </div>
@@ -2060,12 +2410,18 @@
         });
       }
 
-      // Service Flip Cards (Touch Flip Toggle + Bookmark Save State)
+      // Service Flip Cards (Hover/Touch Flip Toggle + Bookmark Save + Mobile Stacked Spine Jump)
+      const servicesHeaderEl = document.getElementById('services-top-header');
+      const finalCtaStageEl = document.getElementById('final-cta-stage');
       const flipCards = document.querySelectorAll('.flip-card');
-      flipCards.forEach((card) => {
+      const MOBILE_DECK_START = 0.25;
+      const MOBILE_DECK_END = 0.86;
+
+      flipCards.forEach((card, idx) => {
         const frontBtn = card.querySelector('.card-front-btn');
         const closeBtn = card.querySelector('.flip-back-close');
         const bookmarkBtn = card.querySelector('.card-bookmark-btn');
+        const spineBtn = card.querySelector('.mobile-card-spine');
 
         if (bookmarkBtn) {
           bookmarkBtn.addEventListener('click', (e) => {
@@ -2074,9 +2430,29 @@
           });
         }
 
+        if (spineBtn) {
+          spineBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const isBuried = card.classList.contains('is-buried');
+            if (isBuried) {
+              flipCards.forEach((other) => other.classList.remove('is-flipped'));
+              const frac = flipCards.length > 1 ? idx / (flipCards.length - 1) : 0;
+              const target = idx === 0
+                ? MOBILE_DECK_START + 0.045
+                : MOBILE_DECK_START + frac * (MOBILE_DECK_END - MOBILE_DECK_START);
+              scrollToProgress(target);
+            }
+          });
+        }
+
         if (frontBtn) {
           frontBtn.addEventListener('click', (e) => {
             e.stopPropagation();
+            if (card.classList.contains('is-buried')) {
+              const frac = flipCards.length > 1 ? idx / (flipCards.length - 1) : 0;
+              scrollToProgress(MOBILE_DECK_START + frac * (MOBILE_DECK_END - MOBILE_DECK_START));
+              return;
+            }
             flipCards.forEach((other) => {
               if (other !== card) other.classList.remove('is-flipped');
             });
@@ -2092,7 +2468,12 @@
         }
 
         card.addEventListener('click', (e) => {
-          if (e.target.closest('a, .card-bookmark-btn, .flip-back-close')) return;
+          if (e.target.closest('a, .card-bookmark-btn, .flip-back-close, .mobile-card-spine')) return;
+          if (card.classList.contains('is-buried')) {
+            const frac = flipCards.length > 1 ? idx / (flipCards.length - 1) : 0;
+            scrollToProgress(MOBILE_DECK_START + frac * (MOBILE_DECK_END - MOBILE_DECK_START));
+            return;
+          }
           if (!window.matchMedia('(hover: hover)').matches) {
             const willFlip = !card.classList.contains('is-flipped');
             flipCards.forEach((other) => other.classList.remove('is-flipped'));
@@ -2233,7 +2614,7 @@
           return { path: outer, bottomY: tWindow <= 0.002 ? h : T_target };
         }
 
-        // Phase A (Splash -> Hero): Portal opens directly from orange dot next to tanogaido
+        // Phase A (Splash -> Hero): Portal opens directly from red dot next to tanogaido
         // Phase B (Hero -> Services): Bottom white bezel line rises smoothly up to unite with top menu
         const ox = clamp(dotX, L_target, R_target);
         const oy = clamp(dotY, T_target, B_target);
@@ -2352,7 +2733,7 @@
         const pad = isMobile ? 8 : 14;
 
         // Beat 1 (0.00 -> 0.36): Logo glides from splash center into header wing
-        // Beat 2 (0.20 -> 1.00): Window + header shape open outward from the orange dot beside tanogaido in header
+        // Beat 2 (0.20 -> 1.00): Window + header shape open outward from the red dot beside tanogaido in header
         const tLogo = easeInOutCubic(clamp(sRaw / 0.36, 0, 1));
         const tWindow = clamp((sRaw - 0.20) / 0.80, 0, 1);
 
@@ -2493,34 +2874,168 @@
           }
         }
 
-        // Editorial Services Grid + CTA Track: anchored right below rising Hero edge, then scrolls smoothly
+        // Services Stage Layout: Desktop 4-Col Square Grid vs Mobile Stacked-Book Deck
         if (whiteScrollTrack) {
           const headerSafeTop = isMobile ? 60 : 76;
-          const trackHeight = whiteScrollTrack.offsetHeight || h;
-          const maxTrackTravel = Math.max(0, (headerSafeTop + trackHeight) - h);
-
-          let trackY = headerSafeTop;
-          if (progress < HERO_RISE_END) {
-            trackY = Math.max(headerSafeTop, currentBottomY);
-          } else {
-            const tTrackScroll = clamp((progress - HERO_RISE_END) / (1.0 - HERO_RISE_END), 0, 1);
-            trackY = headerSafeTop - tTrackScroll * maxTrackTravel;
-          }
-
-          whiteScrollTrack.style.transform = `translate3d(0, ${trackY.toFixed(1)}px, 0)`;
-
           const enterGlobal = easeOutCubic(clamp(tCurtainRise / 0.22, 0, 1));
-          const revealSpan = Math.max(110, Math.min(200, h * 0.24));
-          for (let i = 0; i < revealItems.length; i++) {
-            const item = revealItems[i];
-            const stagger = parseFloat(item.getAttribute('data-stagger') || '0');
-            const screenTop = item.offsetTop + trackY;
-            const rawReveal = clamp((h * 0.98 - screenTop) / revealSpan, 0, 1);
-            const staggeredReveal = clamp((rawReveal - stagger * 0.08) / (1 - stagger * 0.08), 0, 1);
-            const easedReveal = easeOutCubic(staggeredReveal) * enterGlobal;
 
-            item.style.opacity = String(easedReveal);
-            item.style.transform = `translate3d(0, ${((1 - easedReveal) * 20).toFixed(1)}px, 0)`;
+          if (isMobile) {
+            whiteScrollTrack.style.transform = 'none';
+
+            const cardCount = flipCards.length;
+            const stackTop = 66;
+            const maxDeckCard = Math.min(336, w - 32, Math.round(h * 0.43));
+            const cardSize = Math.max(220, maxDeckCard);
+            const tabH = Math.max(20, Math.min(27, Math.floor((h - stackTop - cardSize - 18) / Math.max(1, cardCount - 1))));
+            const headerH = servicesHeaderEl ? (servicesHeaderEl.offsetHeight || 110) : 110;
+            const deckRiseOffset = Math.max(0, currentBottomY - headerSafeTop);
+
+            if (progress < HERO_RISE_END) {
+              // Phase 1: Header + First square card follow rising white floor together
+              if (servicesHeaderEl) {
+                servicesHeaderEl.style.opacity = String(enterGlobal);
+                servicesHeaderEl.style.transform = `translate3d(0, ${(stackTop + deckRiseOffset).toFixed(1)}px, 0)`;
+                servicesHeaderEl.style.pointerEvents = 'auto';
+              }
+
+              for (let i = 0; i < cardCount; i++) {
+                const card = flipCards[i];
+                card.style.width = `${cardSize}px`;
+                card.style.height = `${cardSize}px`;
+                card.style.zIndex = String(10 + i);
+                card.classList.remove('is-buried');
+
+                if (i === 0) {
+                  card.style.opacity = String(enterGlobal);
+                  card.style.transform = `translate3d(0, ${(stackTop + headerH + 14 + deckRiseOffset).toFixed(1)}px, 0) scale(1)`;
+                  card.style.pointerEvents = tCurtainRise >= 0.65 ? 'auto' : 'none';
+                } else {
+                  card.style.opacity = '0';
+                  card.style.transform = `translate3d(0, ${h + 40}px, 0) scale(1)`;
+                  card.style.pointerEvents = 'none';
+                }
+              }
+
+              if (finalCtaStageEl) {
+                finalCtaStageEl.style.opacity = '0';
+                finalCtaStageEl.style.transform = `translate3d(0, ${h + 40}px, 0)`;
+                finalCtaStageEl.style.pointerEvents = 'none';
+              }
+            } else {
+              // Phase 2 & 3: Stacked-book pinning of all 12 cards, then final CTA reveal
+              const uDeck = clamp((progress - HERO_RISE_END) / (MOBILE_DECK_END - HERO_RISE_END), 0, 1);
+              const activeFloat = uDeck * Math.max(1, cardCount - 1);
+              const uHdr = easeInOutCubic(clamp(activeFloat / 0.55, 0, 1));
+              const uEnd = easeInOutCubic(clamp((progress - MOBILE_DECK_END) / (1.0 - MOBILE_DECK_END), 0, 1));
+              const deckBottomY = stackTop + (cardCount - 1) * tabH + cardSize;
+              const endShift = uEnd * (deckBottomY + 24);
+
+              if (servicesHeaderEl) {
+                const hdrY = stackTop - uHdr * (headerH + 30);
+                servicesHeaderEl.style.opacity = String(1 - uHdr);
+                servicesHeaderEl.style.transform = `translate3d(0, ${hdrY.toFixed(1)}px, 0)`;
+                servicesHeaderEl.style.pointerEvents = uHdr < 0.7 ? 'auto' : 'none';
+              }
+
+              for (let i = 0; i < cardCount; i++) {
+                const card = flipCards[i];
+                card.style.width = `${cardSize}px`;
+                card.style.height = `${cardSize}px`;
+                card.style.zIndex = String(10 + i);
+
+                const pinnedY = stackTop + i * tabH;
+                let cardY = h + 40;
+                let cardScale = 1;
+                let cardOp = 0;
+                let buried = false;
+
+                if (i === 0) {
+                  cardY = lerp(stackTop + headerH + 14, pinnedY, uHdr);
+                  const depth = Math.max(0, activeFloat);
+                  cardScale = 1 - Math.min(depth, 10) * 0.012;
+                  cardOp = 1;
+                  buried = depth > 0.35;
+                } else if (activeFloat <= i - 1) {
+                  cardY = h + 40;
+                  cardOp = 0;
+                } else if (activeFloat < i) {
+                  const tEnter = easeOutCubic(clamp(activeFloat - (i - 1), 0, 1));
+                  cardY = lerp(h + 24, pinnedY, tEnter);
+                  cardScale = 1;
+                  cardOp = clamp(tEnter * 2.2, 0, 1);
+                } else {
+                  const depth = activeFloat - i;
+                  cardY = pinnedY;
+                  cardScale = 1 - Math.min(depth, 10) * 0.012;
+                  cardOp = 1;
+                  buried = depth > 0.35;
+                }
+
+                if (buried) {
+                  card.classList.add('is-buried');
+                  card.classList.remove('is-flipped');
+                } else {
+                  card.classList.remove('is-buried');
+                }
+
+                const finalY = cardY - endShift;
+                const finalOp = cardOp * clamp(1 - Math.max(0, uEnd - 0.3) / 0.65, 0, 1);
+                card.style.opacity = String(finalOp);
+                card.style.transform = `translate3d(0, ${finalY.toFixed(1)}px, 0) scale(${cardScale.toFixed(4)})`;
+                card.style.pointerEvents = finalOp > 0.15 ? 'auto' : 'none';
+              }
+
+              if (finalCtaStageEl) {
+                const ctaH = finalCtaStageEl.offsetHeight || 280;
+                const ctaTargetY = Math.max(headerSafeTop + 20, Math.round((h - ctaH) / 2));
+                const ctaY = lerp(h + 32, ctaTargetY, uEnd);
+                finalCtaStageEl.style.opacity = String(uEnd);
+                finalCtaStageEl.style.transform = `translate3d(0, ${ctaY.toFixed(1)}px, 0)`;
+                finalCtaStageEl.style.pointerEvents = uEnd > 0.3 ? 'auto' : 'none';
+              }
+            }
+          } else {
+            // Desktop: Reset any mobile inline deck sizing and drive continuous 4-col square grid scroll
+            if (servicesHeaderEl) {
+              servicesHeaderEl.style.pointerEvents = 'auto';
+            }
+            for (let i = 0; i < flipCards.length; i++) {
+              const card = flipCards[i];
+              card.style.width = '';
+              card.style.height = '';
+              card.style.zIndex = '';
+              card.style.pointerEvents = 'auto';
+              card.classList.remove('is-buried');
+            }
+            if (finalCtaStageEl) {
+              finalCtaStageEl.style.pointerEvents = 'auto';
+            }
+
+            const trackHeight = whiteScrollTrack.offsetHeight || h;
+            const maxTrackTravel = Math.max(0, (headerSafeTop + trackHeight) - h);
+
+            let trackY = headerSafeTop;
+            if (progress < HERO_RISE_END) {
+              trackY = Math.max(headerSafeTop, currentBottomY);
+            } else {
+              const tTrackScroll = clamp((progress - HERO_RISE_END) / (1.0 - HERO_RISE_END), 0, 1);
+              trackY = headerSafeTop - tTrackScroll * maxTrackTravel;
+            }
+
+            whiteScrollTrack.style.transform = `translate3d(0, ${trackY.toFixed(1)}px, 0)`;
+
+            const revealSpan = Math.max(110, Math.min(200, h * 0.24));
+            for (let i = 0; i < revealItems.length; i++) {
+              const item = revealItems[i];
+              const stagger = parseFloat(item.getAttribute('data-stagger') || '0');
+              const screenTop = item.offsetTop + trackY;
+              const rawReveal = clamp((h * 0.98 - screenTop) / revealSpan, 0, 1);
+              const staggeredReveal = clamp((rawReveal - stagger * 0.08) / (1 - stagger * 0.08), 0, 1);
+              const easedReveal = easeOutCubic(staggeredReveal) * enterGlobal;
+
+              item.style.opacity = String(easedReveal);
+              item.style.transform = `translate3d(0, ${((1 - easedReveal) * 20).toFixed(1)}px, 0)`;
+            }
           }
         }
 
