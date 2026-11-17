@@ -295,23 +295,23 @@
       width: 40px;
       height: 40px;
       border-radius: 50%;
-      background: #ffffff;
-      color: var(--primary-red);
-      border: 1px solid #e2e8f0;
+      background: var(--primary-red);
+      color: #ffffff;
+      border: none;
       display: inline-flex;
       align-items: center;
       justify-content: center;
       text-decoration: none;
       flex-shrink: 0;
-      box-shadow: 0 6px 16px -4px rgba(15, 23, 42, 0.12);
-      transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), background 0.2s ease, border-color 0.2s ease;
+      box-shadow: 0 6px 16px -4px rgba(220, 38, 38, 0.34);
+      transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), background 0.2s ease, box-shadow 0.2s ease;
     }
 
     .btn-explore-circle:hover {
       transform: translateY(-1px) scale(1.04);
-      background: #fef2f2;
-      border-color: #fecaca;
-      color: var(--primary-red);
+      background: var(--primary-red-hover);
+      color: #ffffff;
+      box-shadow: 0 8px 20px -4px rgba(220, 38, 38, 0.42);
     }
 
     .btn-explore-circle svg {
@@ -327,9 +327,9 @@
     /* Mobile Menu Toggle Button (Visible only on mobile) */
     .btn-mobile-menu {
       display: none;
-      background: #11141b;
-      color: #ffffff;
-      border: none;
+      background: #ffffff;
+      color: #11141b;
+      border: 1px solid #e2e8f0;
       border-radius: 9999px;
       height: 36px;
       padding: 0 14px;
@@ -338,65 +338,70 @@
       cursor: pointer;
       align-items: center;
       gap: 7px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+      box-shadow: 0 4px 12px rgba(15, 23, 42, 0.12);
+      transition: transform 0.2s ease, background 0.2s ease, border-color 0.2s ease;
+    }
+
+    .btn-mobile-menu:hover {
+      background: #f8fafc;
+      border-color: #cbd5e1;
     }
 
     .btn-mobile-menu svg {
       width: 15px;
       height: 15px;
-      stroke: #ffffff;
+      stroke: #11141b;
     }
 
-    /* Mobile Menu Drawer / Modal */
+    /* Fluid Fullscreen Mobile Menu (Expands organically from right header curve) */
     .mobile-menu-overlay {
       position: fixed;
-      top: 0;
-      left: 0;
+      inset: 0;
       width: 100vw;
       height: 100vh;
-      background: rgba(11, 13, 18, 0.6);
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
-      z-index: 200;
-      opacity: 0;
+      height: 100dvh;
+      background: #ffffff;
+      z-index: 220;
       pointer-events: none;
-      transition: opacity 0.3s ease;
       display: flex;
-      justify-content: center;
-      align-items: flex-start;
-      padding: 24px;
+      justify-content: stretch;
+      align-items: stretch;
+      padding: 0;
+      opacity: 0;
+      clip-path: circle(0px at var(--menu-origin-x, calc(100% - 64px)) var(--menu-origin-y, 32px));
+      transition: clip-path 0.62s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.28s ease;
+      will-change: clip-path, opacity;
     }
 
     .mobile-menu-overlay.active {
       opacity: 1;
       pointer-events: auto;
+      clip-path: circle(155vmax at var(--menu-origin-x, calc(100% - 64px)) var(--menu-origin-y, 32px));
     }
 
     .mobile-menu-card {
-      background: var(--surface-white);
-      border: 1px solid var(--border-light);
-      border-radius: 28px;
+      background: transparent;
+      border: none;
+      border-radius: 0;
       width: 100%;
-      max-width: 360px;
-      padding: 24px;
-      box-shadow: 0 20px 45px rgba(0, 0, 0, 0.2);
-      transform: translateY(-20px);
-      transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      height: 100%;
+      max-width: none;
+      padding: 14px 24px 36px 24px;
+      box-shadow: none;
       display: flex;
       flex-direction: column;
-      gap: 18px;
-    }
-
-    .mobile-menu-overlay.active .mobile-menu-card {
-      transform: translateY(0);
+      justify-content: space-between;
+      gap: 20px;
+      overflow-y: auto;
     }
 
     .mobile-menu-header {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      border-bottom: 1px solid #e2e8f0;
+      border-bottom: 1px solid #f1f5f9;
       padding-bottom: 14px;
+      min-height: 48px;
     }
 
     .mobile-menu-header .brand-logo {
@@ -404,40 +409,80 @@
     }
 
     .btn-close-menu {
-      background: rgba(0, 0, 0, 0.05);
-      border: none;
-      width: 32px;
-      height: 32px;
-      border-radius: 50%;
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      height: 36px;
+      padding: 0 14px;
+      border-radius: 9999px;
       cursor: pointer;
-      display: flex;
+      display: inline-flex;
       align-items: center;
       justify-content: center;
-      font-size: 16px;
-      color: #334155;
+      gap: 6px;
+      font-size: 12.5px;
+      font-weight: 700;
+      color: #11141b;
+      box-shadow: 0 4px 12px rgba(15, 23, 42, 0.08);
     }
 
     .mobile-nav-list {
       list-style: none;
       display: flex;
       flex-direction: column;
-      gap: 12px;
+      justify-content: center;
+      gap: 10px;
+      margin: auto 0;
     }
+
+    .mobile-nav-list li {
+      opacity: 0;
+      transform: translateY(14px);
+      transition: opacity 0.35s ease, transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    .mobile-menu-overlay.active .mobile-nav-list li {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .mobile-menu-overlay.active .mobile-nav-list li:nth-child(1) { transition-delay: 0.10s; }
+    .mobile-menu-overlay.active .mobile-nav-list li:nth-child(2) { transition-delay: 0.14s; }
+    .mobile-menu-overlay.active .mobile-nav-list li:nth-child(3) { transition-delay: 0.18s; }
+    .mobile-menu-overlay.active .mobile-nav-list li:nth-child(4) { transition-delay: 0.22s; }
+    .mobile-menu-overlay.active .mobile-nav-list li:nth-child(5) { transition-delay: 0.26s; }
 
     .mobile-nav-list a {
       text-decoration: none;
-      font-size: 16px;
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: clamp(26px, 7.2vw, 34px);
       font-weight: 700;
-      color: #1e293b;
-      padding: 8px 12px;
+      letter-spacing: -0.5px;
+      color: #11141c;
+      padding: 8px 4px;
       border-radius: 12px;
       display: block;
-      transition: background 0.2s ease, color 0.2s ease;
+      transition: color 0.2s ease, transform 0.2s ease;
     }
 
     .mobile-nav-list a:hover {
-      background: rgba(220, 38, 38, 0.08);
       color: var(--primary-red);
+      transform: translateX(4px);
+    }
+
+    .mobile-menu-footer {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      padding-top: 14px;
+      border-top: 1px solid #f1f5f9;
+      opacity: 0;
+      transform: translateY(12px);
+      transition: opacity 0.35s ease 0.24s, transform 0.45s cubic-bezier(0.22, 1, 0.36, 1) 0.24s;
+    }
+
+    .mobile-menu-overlay.active .mobile-menu-footer {
+      opacity: 1;
+      transform: translateY(0);
     }
 
     /* Fixed UI Stage (Proportioned to fit entirely within viewport on open) */
@@ -566,9 +611,9 @@
       width: 36px;
       height: 36px;
       border-radius: 50%;
-      background: #fef2f2;
-      color: var(--primary-red);
-      border: 1px solid rgba(220, 38, 38, 0.16);
+      background: var(--primary-red);
+      color: #ffffff;
+      border: none;
       display: inline-flex;
       align-items: center;
       justify-content: center;
@@ -577,8 +622,8 @@
     }
 
     .hero-cta-btn:hover .hero-cta-circle {
-      background: #fee2e2;
-      color: var(--primary-red);
+      background: var(--primary-red-hover);
+      color: #ffffff;
       transform: rotate(12deg);
     }
 
@@ -1718,10 +1763,10 @@
         height: 60px;
       }
       .navbar {
-        grid-template-columns: 158px 1fr 124px;
+        grid-template-columns: 136px 1fr 136px;
       }
       .nav-brand-zone {
-        padding: 0 18px;
+        padding: 0 14px;
       }
       .brand-logo {
         font-size: 18px;
@@ -1992,8 +2037,11 @@
   <div class="mobile-menu-overlay" id="mobile-menu-modal">
     <div class="mobile-menu-card">
       <div class="mobile-menu-header">
-        <a href="#" class="brand-logo">tanogaido<span class="dot">.</span></a>
-        <button class="btn-close-menu" id="close-menu-btn" aria-label="Close menu">&times;</button>
+        <a href="#" class="brand-logo mobile-nav-item">tanogaido<span class="dot">.</span></a>
+        <button class="btn-close-menu" id="close-menu-btn" aria-label="Close menu">
+          <span>Close</span>
+          <span style="font-size:16px;line-height:1;">&times;</span>
+        </button>
       </div>
       <ul class="mobile-nav-list">
         <li><a href="#destinations" class="mobile-nav-item" data-scroll-progress="0.26">Destinations</a></li>
@@ -2002,11 +2050,18 @@
         <li><a href="#pricing" class="mobile-nav-item" data-scroll-progress="0.90">Pricing</a></li>
         <li><a href="#guides" class="mobile-nav-item" data-scroll-progress="0.26">Guides</a></li>
       </ul>
-      <a href="#explore" class="btn-explore mobile-nav-item" data-scroll-progress="0.26"
-        style="display: flex; justify-content: center; width: 100%; margin-top: 6px; gap: 6px;">
-        <span>Explore Now</span>
-        <span style="color: var(--primary-red);">→</span>
-      </a>
+      <div class="mobile-menu-footer">
+        <a href="#explore" class="hero-cta-btn mobile-nav-item" data-scroll-progress="0.26"
+          style="width: 100%; justify-content: space-between; border: 1px solid #e2e8f0; box-shadow: 0 8px 20px -6px rgba(15, 23, 42, 0.14);">
+          <span>Explore Now</span>
+          <span class="hero-cta-circle" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M7 17L17 7M17 7H8M17 7V16" />
+            </svg>
+          </span>
+        </a>
+        <p style="font-size: 11.5px; color: #64748b; text-align: center;">Trusted Japan private travel concierge · 24/7 bilingual support</p>
+      </div>
     </div>
   </div>
 
@@ -3116,26 +3171,39 @@
         return 1 - Math.pow(1 - t, 3);
       }
 
-      // Mobile Menu Logic
+      // Fluid Fullscreen Mobile Menu Logic (Expands from right header curve)
       const openMenuBtn = document.getElementById('open-menu-btn');
       const closeMenuBtn = document.getElementById('close-menu-btn');
       const mobileMenuModal = document.getElementById('mobile-menu-modal');
       const mobileNavItems = document.querySelectorAll('.mobile-nav-item');
 
+      function updateFluidMenuOrigin() {
+        if (!mobileMenuModal || !openMenuBtn) return;
+        const rect = openMenuBtn.getBoundingClientRect();
+        if (rect.width > 0 && rect.height > 0) {
+          mobileMenuModal.style.setProperty('--menu-origin-x', `${(rect.left + rect.width / 2).toFixed(1)}px`);
+          mobileMenuModal.style.setProperty('--menu-origin-y', `${(rect.top + rect.height / 2).toFixed(1)}px`);
+        }
+      }
+
       if (openMenuBtn && closeMenuBtn && mobileMenuModal) {
         openMenuBtn.addEventListener('click', () => {
+          updateFluidMenuOrigin();
           mobileMenuModal.classList.add('active');
         });
         closeMenuBtn.addEventListener('click', () => {
+          updateFluidMenuOrigin();
           mobileMenuModal.classList.remove('active');
         });
         mobileMenuModal.addEventListener('click', (e) => {
           if (e.target === mobileMenuModal) {
+            updateFluidMenuOrigin();
             mobileMenuModal.classList.remove('active');
           }
         });
         mobileNavItems.forEach(item => {
           item.addEventListener('click', () => {
+            updateFluidMenuOrigin();
             mobileMenuModal.classList.remove('active');
           });
         });
@@ -3431,8 +3499,8 @@
         const pad = isMobile ? 8 : 14;
         const targetR = isMobile ? 18 : 24;
         const targetWingH = isMobile ? 48 : 58;
-        const targetWingL = isMobile ? 158 : (isTablet ? 180 : clamp(0.21 * w, 190, 260));
-        const targetWingR = isMobile ? 124 : (isTablet ? 196 : clamp(0.21 * w, 205, 256));
+        const targetWingL = isMobile ? 136 : (isTablet ? 180 : clamp(0.21 * w, 190, 260));
+        const targetWingR = isMobile ? 136 : (isTablet ? 196 : clamp(0.21 * w, 205, 256));
 
         const L_target = pad;
         const R_target = Math.max(pad, w - pad);
@@ -3769,28 +3837,30 @@
             const releaseShiftY = Math.max(0, (headerSafeTop + pinnedBlockH) - servicesBottomScreenY);
 
             const baseCatY = Math.max(headerSafeTop, currentBottomY);
-            const catBarY = baseCatY - releaseShiftY;
-            const hdrY = baseCatY + catLiveH - releaseShiftY;
+            const desiredCatY = baseCatY - releaseShiftY;
+            const desiredHdrY = desiredCatY + catLiveH;
+            const localCatY = desiredCatY - trackY;
+            const localHdrY = desiredHdrY - trackY;
 
             if (categoryBarBand) {
               categoryBarBand.classList.toggle('is-mobile-pinned', isPinned && releaseShiftY < 2);
-              categoryBarBand.style.position = 'fixed';
+              categoryBarBand.style.position = 'absolute';
               categoryBarBand.style.top = '0px';
               categoryBarBand.style.left = '0px';
               categoryBarBand.style.width = '100%';
               categoryBarBand.style.zIndex = '65';
               categoryBarBand.style.opacity = String(enterGlobal);
-              categoryBarBand.style.transform = `translate3d(0, ${catBarY.toFixed(1)}px, 0)`;
+              categoryBarBand.style.transform = `translate3d(0, ${localCatY.toFixed(1)}px, 0)`;
             }
 
             if (servicesHeaderEl) {
-              servicesHeaderEl.style.position = 'fixed';
+              servicesHeaderEl.style.position = 'absolute';
               servicesHeaderEl.style.top = '0px';
               servicesHeaderEl.style.left = '0px';
               servicesHeaderEl.style.width = '100%';
               servicesHeaderEl.style.zIndex = '62';
               servicesHeaderEl.style.opacity = String(enterGlobal);
-              servicesHeaderEl.style.transform = `translate3d(0, ${hdrY.toFixed(1)}px, 0)`;
+              servicesHeaderEl.style.transform = `translate3d(0, ${localHdrY.toFixed(1)}px, 0)`;
             }
           }
 
