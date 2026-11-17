@@ -345,17 +345,23 @@
       border-bottom: none;
     }
 
-    .mobile-nav-list > li a {
+    .mobile-nav-list > li > a,
+    .mobile-services-row > a {
       text-decoration: none;
-      font-size: 24px;
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: clamp(26px, 7.2vw, 34px);
       font-weight: 700;
       letter-spacing: -0.5px;
       color: #11141c;
+      padding: 4px 4px;
       display: block;
+      transition: color 0.2s ease, transform 0.2s ease;
     }
 
-    .mobile-nav-list > li a:hover,
-    .mobile-nav-list > li a.nav-active {
+    .mobile-nav-list > li > a:hover,
+    .mobile-nav-list > li > a.nav-active,
+    .mobile-services-row > a:hover,
+    .mobile-services-row > a.nav-active {
       color: var(--primary-red);
     }
 
@@ -1214,12 +1220,11 @@
       </div>
       <ul class="mobile-nav-list">
         <li>
-          <div class="mobile-services-group is-expanded mobile-nav-item">
+          <div class="mobile-services-group mobile-nav-item">
             <div class="mobile-services-row">
               <a href="services.html" class="nav-active">Services</a>
-              <button type="button" class="mobile-services-toggle" data-mobile-services-toggle aria-expanded="true">
-                <span>All 20</span>
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><polyline points="6 9 12 15 18 9"/></svg>
+              <button type="button" class="mobile-services-toggle" data-mobile-services-toggle aria-expanded="false" aria-label="Toggle services list">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
               </button>
             </div>
             <div class="mobile-services-sublist" data-mobile-services-list></div>
