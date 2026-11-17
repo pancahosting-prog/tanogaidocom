@@ -212,11 +212,17 @@
       text-decoration: none;
       font-size: 13.5px;
       font-weight: 600;
-      color: #11141c;
+      color: #ffffff;
+      text-shadow: 0 1px 10px rgba(0, 0, 0, 0.35);
       white-space: nowrap;
       flex-shrink: 0;
       position: relative;
-      transition: color 0.2s ease;
+      transition: color 0.2s ease, text-shadow 0.2s ease;
+    }
+
+    .navbar-container.unified .nav-links a {
+      color: #11141c;
+      text-shadow: none;
     }
 
     .nav-links a::after {
@@ -232,7 +238,8 @@
       transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
     }
 
-    .nav-links a:hover {
+    .nav-links a:hover,
+    .navbar-container.unified .nav-links a:hover {
       color: var(--primary-red);
     }
 
@@ -262,8 +269,9 @@
       text-decoration: none;
       font-size: 13px;
       font-weight: 600;
-      background: #11141b;
-      color: #ffffff;
+      background: #ffffff;
+      color: #11141b;
+      border: 1px solid #e2e8f0;
       height: 40px;
       padding: 0 20px;
       border-radius: 9999px;
@@ -272,33 +280,38 @@
       justify-content: center;
       white-space: nowrap;
       flex-shrink: 0;
-      box-shadow: 0 6px 16px -4px rgba(17, 20, 27, 0.25);
-      transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), background 0.2s ease;
+      box-shadow: 0 6px 16px -4px rgba(15, 23, 42, 0.12);
+      transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), background 0.2s ease, border-color 0.2s ease;
     }
 
     .btn-explore:hover {
       transform: translateY(-1px);
-      background: #000000;
+      background: #f8fafc;
+      border-color: #cbd5e1;
+      color: #11141b;
     }
 
     .btn-explore-circle {
       width: 40px;
       height: 40px;
       border-radius: 50%;
-      background: #11141b;
-      color: #ffffff;
+      background: #ffffff;
+      color: var(--primary-red);
+      border: 1px solid #e2e8f0;
       display: inline-flex;
       align-items: center;
       justify-content: center;
       text-decoration: none;
       flex-shrink: 0;
-      box-shadow: 0 6px 16px -4px rgba(17, 20, 27, 0.25);
-      transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), background 0.2s ease;
+      box-shadow: 0 6px 16px -4px rgba(15, 23, 42, 0.12);
+      transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), background 0.2s ease, border-color 0.2s ease;
     }
 
     .btn-explore-circle:hover {
       transform: translateY(-1px) scale(1.04);
-      background: var(--primary-red);
+      background: #fef2f2;
+      border-color: #fecaca;
+      color: var(--primary-red);
     }
 
     .btn-explore-circle svg {
@@ -526,8 +539,8 @@
       display: inline-flex;
       align-items: center;
       gap: 14px;
-      background: #11141b;
-      color: #ffffff;
+      background: #ffffff;
+      color: #11141b;
       text-decoration: none;
       font-size: 13.5px;
       font-weight: 600;
@@ -537,7 +550,7 @@
       border: none;
       cursor: pointer;
       white-space: nowrap;
-      box-shadow: 0 12px 28px -6px rgba(17, 20, 27, 0.28);
+      box-shadow: 0 12px 28px -6px rgba(15, 23, 42, 0.32);
       transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1),
         background 0.2s ease,
         box-shadow 0.2s ease;
@@ -545,7 +558,7 @@
 
     .hero-cta-btn:hover {
       transform: translateY(-2px);
-      background: #000000;
+      background: #f8fafc;
       box-shadow: 0 16px 34px -6px rgba(220, 38, 38, 0.28);
     }
 
@@ -553,8 +566,9 @@
       width: 36px;
       height: 36px;
       border-radius: 50%;
-      background: #ffffff;
-      color: #11141b;
+      background: #fef2f2;
+      color: var(--primary-red);
+      border: 1px solid rgba(220, 38, 38, 0.16);
       display: inline-flex;
       align-items: center;
       justify-content: center;
@@ -563,8 +577,8 @@
     }
 
     .hero-cta-btn:hover .hero-cta-circle {
-      background: var(--primary-red);
-      color: #ffffff;
+      background: #fee2e2;
+      color: var(--primary-red);
       transform: rotate(12deg);
     }
 
@@ -1852,70 +1866,21 @@
         margin-top: 1px;
       }
       .services-band {
-        padding: 0;
-        background: transparent;
-      }
-      .services-band > .page-container {
-        padding: 0;
+        padding: 14px 0 38px 0;
+        background: #ffffff;
       }
       .services-grid {
-        display: block;
-        position: relative;
-        width: 100%;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 10px;
       }
       .service-flip-card {
-        position: fixed;
-        top: 0;
-        left: 50%;
-        height: 290px;
-        transform-origin: center top;
-        will-change: transform, opacity;
-      }
-      .service-flip-front {
-        padding: 0 8px 8px 8px;
-        box-shadow: 0 -4px 16px rgba(15, 23, 42, 0.08), 0 10px 24px -10px rgba(15, 23, 42, 0.16);
-      }
-      .mobile-card-spine {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 8px;
-        height: 23px;
-        padding: 2px 5px 1px 5px;
-        border-bottom: 1px solid #f1f5f9;
-        margin-bottom: 5px;
-        background: #ffffff;
-        flex-shrink: 0;
-        cursor: pointer;
-      }
-      .mobile-spine-title {
-        font-size: 11px;
-        line-height: 1.38;
-        font-weight: 400;
-        color: #64748b;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-      }
-      .mobile-spine-tag {
-        font-size: 10px;
-        line-height: 1.2;
-        font-weight: 400;
-        color: #94a3b8;
-        white-space: nowrap;
-        flex-shrink: 0;
-      }
-      .service-flip-card.is-buried .mobile-card-spine:hover .mobile-spine-title {
-        color: var(--primary-red);
+        height: 274px;
       }
       .svc-thumb-wrap {
-        height: auto;
-        flex: 1;
-        min-height: 92px;
+        height: 128px;
       }
       .svc-card-body {
-        flex: 0 0 auto;
-        padding: 8px 4px 3px 4px;
+        padding: 9px 4px 4px 4px;
       }
       .styles-band {
         padding: 40px 0;
@@ -3001,16 +2966,12 @@
       let mobileStylesApplied = false;
       const mobileMetrics = {
         riseEnd: 0.20,
-        headerEnd: 0.26,
-        deckEnd: 0.62,
+        headerEnd: 0.255,
         catFullH: 52,
         catCompactH: 40,
         hdrFullH: 96,
         hdrCompactH: 34,
-        cardW: 344,
-        cardH: 276,
-        tabH: 22,
-        postTravel: 2200
+        reserveH: 148
       };
 
       function getViewportSize() {
@@ -3097,19 +3058,26 @@
       document.querySelectorAll('[data-scroll-progress]').forEach((el) => {
         el.addEventListener('click', (e) => {
           e.preventDefault();
-          const { w } = getViewportSize();
+          const { w, h } = getViewportSize();
           const href = el.getAttribute('href') || '';
           let prog = parseFloat(el.getAttribute('data-scroll-progress'));
-          if (w <= 860) {
-            if (href === '#styles') {
-              prog = mobileMetrics.deckEnd + (1 - mobileMetrics.deckEnd) * 0.02;
-            } else if (href === '#trips') {
-              prog = mobileMetrics.deckEnd + (1 - mobileMetrics.deckEnd) * 0.26;
-            } else if (href === '#reviews') {
-              prog = mobileMetrics.deckEnd + (1 - mobileMetrics.deckEnd) * 0.62;
-            } else if (href === '#passes') {
-              const step = (mobileMetrics.deckEnd - mobileMetrics.headerEnd) / 11;
-              prog = mobileMetrics.headerEnd + 6 * step;
+          if (w <= 860 && whiteScrollTrack) {
+            const trackHeight = whiteScrollTrack.offsetHeight || h;
+            const maxTrackTravel = Math.max(1, (60 + trackHeight) - h);
+            const targetEl = href === '#styles'
+              ? document.getElementById('travel-styles-band')
+              : href === '#trips'
+                ? document.getElementById('featured-trips-band')
+                : href === '#reviews'
+                  ? document.getElementById('reviews-band')
+                  : null;
+            if (targetEl) {
+              const pinnedH = mobileMetrics.catCompactH + mobileMetrics.hdrCompactH;
+              const offsetInTrack = Math.max(0, targetEl.offsetTop - pinnedH);
+              const tTrack = clamp(offsetInTrack / maxTrackTravel, 0, 1);
+              prog = mobileMetrics.riseEnd + tTrack * (1 - mobileMetrics.riseEnd);
+            } else if (href === '#services' || href === '#destinations' || href === '#tours' || href === '#guides' || href === '#explore') {
+              prog = mobileMetrics.headerEnd;
             }
           }
           if (!Number.isNaN(prog)) {
@@ -3181,33 +3149,15 @@
         });
       });
 
-      // 6-Column Service Flip Cards (Desktop Grid Hover/Tap + Mobile Stacked Deck Interaction)
+      // Service Flip Cards (Hover + Tap/Arrow Flip Toggle)
       const serviceCards = document.querySelectorAll('.service-flip-card');
-
-      function getVisibleServiceCards() {
-        return Array.from(serviceCards).filter((card) => !card.classList.contains('is-hidden-cat'));
-      }
-
-      function scrollToMobileServiceCard(card) {
-        const visible = getVisibleServiceCards();
-        const visIdx = visible.indexOf(card);
-        if (visIdx < 0) return;
-        const n = visible.length;
-        if (n <= 1) {
-          scrollToProgress(mobileMetrics.headerEnd);
-          return;
-        }
-        const deckSpan = Math.max(0.04, mobileMetrics.deckEnd - mobileMetrics.headerEnd);
-        const stepFrac = deckSpan / (n - 1);
-        const targetProg = mobileMetrics.headerEnd + visIdx * stepFrac;
-        scrollToProgress(clamp(targetProg, mobileMetrics.headerEnd, mobileMetrics.deckEnd));
-      }
 
       function clearMobileInlineStyles() {
         if (!mobileStylesApplied) return;
         mobileStylesApplied = false;
 
         if (whiteScrollTrack) {
+          whiteScrollTrack.style.paddingTop = '';
           whiteScrollTrack.style.background = '';
         }
         if (categoryBarBand) {
@@ -3235,59 +3185,15 @@
           servicesSubtitleEl.style.maxHeight = '';
           servicesSubtitleEl.style.marginTop = '';
         }
-        serviceCards.forEach((card) => {
-          card.classList.remove('is-buried');
-          card.style.position = '';
-          card.style.top = '';
-          card.style.left = '';
-          card.style.width = '';
-          card.style.height = '';
-          card.style.zIndex = '';
-          card.style.transform = '';
-          card.style.opacity = '';
-          card.style.pointerEvents = '';
-        });
-        if (postServicesWrap) {
-          postServicesWrap.style.position = '';
-          postServicesWrap.style.top = '';
-          postServicesWrap.style.left = '';
-          postServicesWrap.style.width = '';
-          postServicesWrap.style.zIndex = '';
-          postServicesWrap.style.background = '';
-          postServicesWrap.style.transform = '';
-          postServicesWrap.style.opacity = '';
-          postServicesWrap.style.pointerEvents = '';
-        }
       }
 
       serviceCards.forEach((card) => {
         const arrowBtn = card.querySelector('.svc-arrow-btn');
         const closeBtn = card.querySelector('.flip-back-close');
-        const spine = card.querySelector('.mobile-card-spine');
-
-        if (spine) {
-          spine.addEventListener('click', (e) => {
-            if (getViewportSize().w <= 860 && card.classList.contains('is-buried')) {
-              e.stopPropagation();
-              scrollToMobileServiceCard(card);
-            }
-          });
-          spine.addEventListener('keydown', (e) => {
-            if ((e.key === 'Enter' || e.key === ' ') && getViewportSize().w <= 860 && card.classList.contains('is-buried')) {
-              e.preventDefault();
-              e.stopPropagation();
-              scrollToMobileServiceCard(card);
-            }
-          });
-        }
 
         if (arrowBtn) {
           arrowBtn.addEventListener('click', (e) => {
             e.stopPropagation();
-            if (getViewportSize().w <= 860 && card.classList.contains('is-buried')) {
-              scrollToMobileServiceCard(card);
-              return;
-            }
             const willFlip = !card.classList.contains('is-flipped');
             serviceCards.forEach((other) => other.classList.remove('is-flipped'));
             if (willFlip) card.classList.add('is-flipped');
@@ -3303,11 +3209,6 @@
 
         card.addEventListener('click', (e) => {
           if (e.target.closest('a, .card-bookmark-btn, .flip-back-close, .svc-arrow-btn')) return;
-          if (getViewportSize().w <= 860 && card.classList.contains('is-buried')) {
-            e.stopPropagation();
-            scrollToMobileServiceCard(card);
-            return;
-          }
           if (!window.matchMedia('(hover: hover)').matches) {
             const willFlip = !card.classList.contains('is-flipped');
             serviceCards.forEach((other) => other.classList.remove('is-flipped'));
@@ -3336,13 +3237,20 @@
           const cardCat = card.getAttribute('data-category') || '';
           const visible = cat === 'all' || cardCat.split(/\s+/).includes(cat);
           card.classList.toggle('is-hidden-cat', !visible);
-          card.classList.remove('is-flipped', 'is-buried');
+          card.classList.remove('is-flipped');
         });
         if (typeof syncScrollBudget === 'function') {
           syncScrollBudget();
         }
-        if (getViewportSize().w <= 860 && targetProgress > mobileMetrics.deckEnd - 0.02) {
-          scrollToProgress(mobileMetrics.headerEnd);
+        if (getViewportSize().w <= 860 && postServicesWrap && whiteScrollTrack) {
+          const { h } = getViewportSize();
+          const maxTrackTravel = Math.max(1, (60 + whiteScrollTrack.offsetHeight) - h);
+          const servicesBottomInTrack = postServicesWrap.offsetTop;
+          const pinnedBottomInTrack = (servicesBottomInTrack - mobileMetrics.catCompactH - mobileMetrics.hdrCompactH);
+          const maxSafeProg = mobileMetrics.riseEnd + clamp(pinnedBottomInTrack / maxTrackTravel, 0, 1) * (1 - mobileMetrics.riseEnd);
+          if (targetProgress > maxSafeProg) {
+            scrollToProgress(mobileMetrics.headerEnd);
+          }
         }
       }
 
@@ -3807,66 +3715,40 @@
         if (whiteScrollTrack) {
           const enterGlobal = easeOutCubic(clamp(tCurtainRise / 0.22, 0, 1));
           const revealSpan = Math.max(100, Math.min(180, h * 0.22));
+          const headerSafeTop = isMobile ? 60 : 72;
 
           if (!isMobile) {
-            // Desktop: Unchanged Unified Continuous Scroll Track
             clearMobileInlineStyles();
-
-            const headerSafeTop = 72;
-            const trackHeight = whiteScrollTrack.offsetHeight || h;
-            const maxTrackTravel = Math.max(0, (headerSafeTop + trackHeight) - h);
-
-            let trackY = headerSafeTop;
-            if (progress < HERO_RISE_END) {
-              trackY = Math.max(headerSafeTop, currentBottomY);
-            } else {
-              const tTrackScroll = clamp((progress - HERO_RISE_END) / (1.0 - HERO_RISE_END), 0, 1);
-              trackY = headerSafeTop - tTrackScroll * maxTrackTravel;
-            }
-
-            whiteScrollTrack.style.transform = `translate3d(0, ${trackY.toFixed(1)}px, 0)`;
-
-            for (let i = 0; i < revealItems.length; i++) {
-              const item = revealItems[i];
-              if (item.classList.contains('is-hidden-cat')) continue;
-              const stagger = parseFloat(item.getAttribute('data-stagger') || '0');
-              let itemTop = 0;
-              let cur = item;
-              while (cur && cur !== whiteScrollTrack) {
-                itemTop += cur.offsetTop || 0;
-                cur = cur.offsetParent;
-              }
-              const screenTop = itemTop + trackY;
-              const rawReveal = clamp((h * 0.98 - screenTop) / revealSpan, 0, 1);
-              const staggerShift = stagger * 0.04;
-              const staggeredReveal = clamp((rawReveal - staggerShift) / (1 - staggerShift), 0, 1);
-              const easedReveal = easeOutCubic(staggeredReveal) * enterGlobal;
-
-              item.style.opacity = String(easedReveal);
-              item.style.transform = `translate3d(0, ${((1 - easedReveal) * 18).toFixed(1)}px, 0)`;
-            }
           } else {
-            // Mobile: Fixed Compact Category Bar + Shrinking Services Header (fading subtitle) + Stacked Service Cards Deck
             mobileStylesApplied = true;
-            whiteScrollTrack.style.transform = 'none';
-            whiteScrollTrack.style.background = 'transparent';
+            whiteScrollTrack.style.paddingTop = `${mobileMetrics.reserveH}px`;
+            whiteScrollTrack.style.background = '#ffffff';
+          }
 
-            const headerSafeTop = 60;
+          const trackHeight = whiteScrollTrack.offsetHeight || h;
+          const maxTrackTravel = Math.max(0, (headerSafeTop + trackHeight) - h);
+
+          let trackY = headerSafeTop;
+          if (progress < HERO_RISE_END) {
+            trackY = Math.max(headerSafeTop, currentBottomY);
+          } else {
+            const tTrackScroll = clamp((progress - HERO_RISE_END) / (1.0 - HERO_RISE_END), 0, 1);
+            trackY = headerSafeTop - tTrackScroll * maxTrackTravel;
+          }
+
+          whiteScrollTrack.style.transform = `translate3d(0, ${trackY.toFixed(1)}px, 0)`;
+
+          if (isMobile) {
             const riseEnd = mobileMetrics.riseEnd;
             const headerEnd = mobileMetrics.headerEnd;
-            const deckEnd = mobileMetrics.deckEnd;
             const compactSpan = Math.max(0.01, headerEnd - riseEnd);
 
             const tCompact = clamp((progress - riseEnd) / compactSpan, 0, 1);
-            const tSubFade = easeOutCubic(clamp((progress - (riseEnd - 0.005)) / (compactSpan * 0.92), 0, 1));
+            const tSubFade = easeOutCubic(clamp((progress - (riseEnd - 0.005)) / (compactSpan * 0.88), 0, 1));
             const isPinned = currentBottomY <= headerSafeTop + 2 || progress >= riseEnd;
             const isCompact = tCompact >= 0.22;
 
-            const uPost = progress > deckEnd ? clamp((progress - deckEnd) / Math.max(0.01, 1 - deckEnd), 0, 1) : 0;
-            const shiftY = uPost * mobileMetrics.postTravel;
-
             if (categoryBarBand) {
-              categoryBarBand.classList.toggle('is-mobile-pinned', isPinned && uPost < 0.02);
               categoryBarBand.classList.toggle('is-mobile-compact', isCompact);
             }
             if (servicesHeaderEl) {
@@ -3881,12 +3763,17 @@
             const catLiveH = categoryBarBand ? (categoryBarBand.offsetHeight || (isCompact ? mobileMetrics.catCompactH : mobileMetrics.catFullH)) : mobileMetrics.catCompactH;
             const hdrLiveH = servicesHeaderEl ? (servicesHeaderEl.offsetHeight || (isCompact ? mobileMetrics.hdrCompactH : mobileMetrics.hdrFullH)) : mobileMetrics.hdrCompactH;
 
+            const servicesBottomInTrack = postServicesWrap ? postServicesWrap.offsetTop : trackHeight;
+            const servicesBottomScreenY = servicesBottomInTrack + trackY;
+            const pinnedBlockH = catLiveH + hdrLiveH;
+            const releaseShiftY = Math.max(0, (headerSafeTop + pinnedBlockH) - servicesBottomScreenY);
+
             const baseCatY = Math.max(headerSafeTop, currentBottomY);
-            const catBarY = baseCatY - shiftY;
-            const hdrY = baseCatY + catLiveH - shiftY;
-            const liveStackTop = baseCatY + catLiveH + hdrLiveH + 8;
+            const catBarY = baseCatY - releaseShiftY;
+            const hdrY = baseCatY + catLiveH - releaseShiftY;
 
             if (categoryBarBand) {
+              categoryBarBand.classList.toggle('is-mobile-pinned', isPinned && releaseShiftY < 2);
               categoryBarBand.style.position = 'fixed';
               categoryBarBand.style.top = '0px';
               categoryBarBand.style.left = '0px';
@@ -3905,87 +3792,27 @@
               servicesHeaderEl.style.opacity = String(enterGlobal);
               servicesHeaderEl.style.transform = `translate3d(0, ${hdrY.toFixed(1)}px, 0)`;
             }
+          }
 
-            const visibleCards = getVisibleServiceCards();
-            const n = visibleCards.length;
-            const deckSpan = Math.max(0.04, deckEnd - headerEnd);
-            const activeIdxFloat = n <= 1 ? 0 : clamp((progress - headerEnd) / (deckSpan / (n - 1)), 0, n - 1);
-
-            serviceCards.forEach((card) => {
-              if (card.classList.contains('is-hidden-cat')) {
-                card.classList.remove('is-buried');
-                card.style.opacity = '0';
-                card.style.pointerEvents = 'none';
-              }
-            });
-
-            let lastCardY = liveStackTop;
-            visibleCards.forEach((card, i) => {
-              card.style.position = 'fixed';
-              card.style.top = '0px';
-              card.style.left = '50%';
-              card.style.width = `${mobileMetrics.cardW}px`;
-              card.style.height = `${mobileMetrics.cardH}px`;
-              card.style.zIndex = String(20 + i);
-
-              let cardY;
-              let enterAlpha;
-              if (i === 0) {
-                cardY = liveStackTop - shiftY;
-                enterAlpha = enterGlobal;
-              } else {
-                const uEnter = easeOutCubic(clamp(activeIdxFloat - (i - 1), 0, 1));
-                const dockY = liveStackTop + i * mobileMetrics.tabH;
-                cardY = lerp(h + 26, dockY, uEnter) - shiftY;
-                enterAlpha = uEnter <= 0.005 ? 0 : clamp(uEnter / 0.14, 0, 1) * enterGlobal;
-              }
-
-              if (i === n - 1) {
-                lastCardY = cardY;
-              }
-
-              const depth = Math.max(0, activeIdxFloat - i);
-              const scale = 1 - Math.min(depth, 10) * 0.012;
-              const isBuried = depth > 0.35;
-
-              card.classList.toggle('is-buried', isBuried);
-              if (isBuried) {
-                card.classList.remove('is-flipped');
-              }
-
-              card.style.opacity = String(enterAlpha);
-              card.style.pointerEvents = enterAlpha > 0.4 ? 'auto' : 'none';
-              card.style.transform = `translate3d(-50%, ${cardY.toFixed(1)}px, 0) scale(${scale.toFixed(4)})`;
-            });
-
-            if (postServicesWrap) {
-              const postWrapY = n > 0 ? (lastCardY + mobileMetrics.cardH + 26) : (liveStackTop - shiftY);
-              postServicesWrap.style.position = 'fixed';
-              postServicesWrap.style.top = '0px';
-              postServicesWrap.style.left = '0px';
-              postServicesWrap.style.width = '100%';
-              postServicesWrap.style.zIndex = '58';
-              postServicesWrap.style.background = '#ffffff';
-              postServicesWrap.style.opacity = String(enterGlobal);
-              postServicesWrap.style.pointerEvents = postWrapY < h ? 'auto' : 'none';
-              postServicesWrap.style.transform = `translate3d(0, ${postWrapY.toFixed(1)}px, 0)`;
-
-              for (let i = 0; i < postRevealItems.length; i++) {
-                const item = postRevealItems[i];
-                let itemTop = 0;
-                let cur = item;
-                while (cur && cur !== postServicesWrap) {
-                  itemTop += cur.offsetTop || 0;
-                  cur = cur.offsetParent;
-                }
-                const screenTop = itemTop + postWrapY;
-                const rawReveal = clamp((h * 0.98 - screenTop) / revealSpan, 0, 1);
-                const easedReveal = easeOutCubic(rawReveal) * enterGlobal;
-
-                item.style.opacity = String(easedReveal);
-                item.style.transform = `translate3d(0, ${((1 - easedReveal) * 16).toFixed(1)}px, 0)`;
-              }
+          for (let i = 0; i < revealItems.length; i++) {
+            const item = revealItems[i];
+            if (isMobile && item === servicesHeaderEl) continue;
+            if (item.classList.contains('is-hidden-cat')) continue;
+            const stagger = parseFloat(item.getAttribute('data-stagger') || '0');
+            let itemTop = 0;
+            let cur = item;
+            while (cur && cur !== whiteScrollTrack) {
+              itemTop += cur.offsetTop || 0;
+              cur = cur.offsetParent;
             }
+            const screenTop = itemTop + trackY;
+            const rawReveal = clamp((h * 0.98 - screenTop) / revealSpan, 0, 1);
+            const staggerShift = stagger * 0.04;
+            const staggeredReveal = clamp((rawReveal - staggerShift) / (1 - staggerShift), 0, 1);
+            const easedReveal = easeOutCubic(staggeredReveal) * enterGlobal;
+
+            item.style.opacity = String(easedReveal);
+            item.style.transform = `translate3d(0, ${((1 - easedReveal) * 18).toFixed(1)}px, 0)`;
           }
         }
 
@@ -4155,27 +3982,15 @@
           }
         }
 
-        const compactStackTop = headerSafeTop + mobileMetrics.catCompactH + mobileMetrics.hdrCompactH + 8;
-        const visibleCount = Math.max(1, getVisibleServiceCards().length);
-        const cardW = Math.min(390, Math.max(248, w - 28));
-        const availDeckH = Math.max(250, h - compactStackTop - 16);
-        const tabH = visibleCount > 1 ? clamp(Math.floor((availDeckH * 0.44) / (visibleCount - 1)), 17, 24) : 0;
-        const cardH = clamp(availDeckH - (visibleCount - 1) * tabH, 234, 330);
-
-        const postStartTop = compactStackTop + (visibleCount - 1) * tabH + cardH + 26;
-        const postH = postServicesWrap ? (postServicesWrap.offsetHeight || Math.round(h * 2.2)) : Math.round(h * 2.2);
-        const postTravel = Math.max(Math.round(h * 1.15), (postStartTop + postH) - h);
-        const deckScrollPx = Math.max(260, (visibleCount - 1) * 195 + (visibleCount === 1 ? 220 : 110));
-        const belowHeaderPx = deckScrollPx + postTravel;
-        const scrollBudget = Math.max(Math.round(h * 2.0), Math.round(belowHeaderPx / 0.74));
-
         mobileMetrics.riseEnd = 0.20;
-        mobileMetrics.headerEnd = 0.26;
-        mobileMetrics.deckEnd = clamp(0.26 + 0.74 * (deckScrollPx / belowHeaderPx), 0.34, 0.68);
-        mobileMetrics.cardW = cardW;
-        mobileMetrics.cardH = cardH;
-        mobileMetrics.tabH = tabH;
-        mobileMetrics.postTravel = postTravel;
+        mobileMetrics.headerEnd = 0.255;
+        mobileMetrics.reserveH = mobileMetrics.catFullH + mobileMetrics.hdrFullH;
+        whiteScrollTrack.style.paddingTop = `${mobileMetrics.reserveH}px`;
+
+        const trackHeight = whiteScrollTrack.offsetHeight || h;
+        const maxTrackTravel = Math.max(0, (headerSafeTop + trackHeight) - h);
+        const trackScrollSpan = 1 - mobileMetrics.riseEnd;
+        const scrollBudget = Math.max(Math.round(h * 1.8), Math.round(maxTrackTravel / trackScrollSpan));
 
         document.body.style.minHeight = '0px';
         document.body.style.height = `${h + scrollBudget}px`;
