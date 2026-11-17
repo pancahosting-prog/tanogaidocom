@@ -278,9 +278,10 @@
     document.querySelectorAll('[data-bag-count]').forEach((el) => {
       el.textContent = String(count);
     });
+    const isShopPage = document.body.classList.contains('is-shop-page');
     const mobileBar = document.getElementById('tg-mobile-bag-bar');
     if (mobileBar) {
-      mobileBar.classList.toggle('has-items', count > 0);
+      mobileBar.classList.toggle('has-items', isShopPage && count > 0);
       const summaryEl = mobileBar.querySelector('[data-mobile-bag-summary]');
       if (summaryEl) {
         summaryEl.textContent = `${count} ${count === 1 ? 'item' : 'items'} · $${subtotal}`;
@@ -312,7 +313,7 @@
       document.getElementById('tg-bag-backdrop').addEventListener('click', closeBag);
     }
 
-    if (!document.getElementById('tg-mobile-bag-bar') && !document.body.classList.contains('is-pdp-page')) {
+    if (!document.getElementById('tg-mobile-bag-bar') && document.body.classList.contains('is-shop-page')) {
       const mobileBarHtml = `
         <div class="tg-mobile-bag-bar" id="tg-mobile-bag-bar" role="button" tabindex="0" aria-label="View Shopping Bag">
           <span data-mobile-bag-summary>0 items · $0</span>
