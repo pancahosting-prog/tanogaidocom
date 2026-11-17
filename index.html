@@ -46,15 +46,20 @@
       overscroll-behavior-y: none;
     }
 
-    /* Fixed Scroll Animation Canvas */
-    #canvas {
+    /* Fixed Full-Bleed Autoplay Hero Background Video */
+    #hero-video {
       position: fixed;
       inset: 0;
       width: 100%;
       height: 100%;
+      object-fit: cover;
+      object-position: center;
       display: block;
       pointer-events: none;
       z-index: 1;
+      background-color: #0f172a;
+      transform-origin: center center;
+      will-change: transform;
     }
 
     /* Soft ambient vignette & left/top contrast scrim to keep typography crystal clear */
@@ -1462,8 +1467,18 @@
 </head>
 
 <body>
-  <!-- Fixed Scroll Animation Canvas -->
-  <canvas id="canvas"></canvas>
+  <!-- Fixed Full-Bleed Autoplay Hero Video -->
+  <video
+    id="hero-video"
+    src="https://res.cloudinary.com/jd7zbpnp/video/upload/v1794887053/FromKlickpin.com-Handmadesmallsewingprojectsforbeginnersmadetosparkideasinsecondsforeverydaytailoringj-pin-id-942307922042159661-ezgif.com-video-cutter.mp4"
+    autoplay
+    muted
+    loop
+    playsinline
+    webkit-playsinline
+    preload="auto"
+    aria-hidden="true"
+  ></video>
 
   <!-- Ambient Vignette Contrast -->
   <div class="viewport-overlay"></div>
@@ -2233,12 +2248,7 @@
         history.scrollRestoration = 'manual';
       }
 
-      const TOTAL_FRAMES = 300;
-      const FRAME_PREFIX = 'frames/ezgif-frame-';
-      const FRAME_EXT = '.jpg';
-
-      const canvas = document.getElementById('canvas');
-      const ctx = canvas.getContext('2d', { alpha: false });
+      const heroVideo = document.getElementById('hero-video');
 
       const navbarContainer = document.getElementById('navbar-container');
       const navbar = document.getElementById('main-navbar');
@@ -2314,6 +2324,7 @@
 
       function openSplash(options = {}) {
         const settleAtTop = options.settleAtTop !== false;
+        ensureHeroVideoPlayback();
         if (splashState !== 'closed') return;
         const now = performance.now();
         splashTarget = 1;
@@ -2488,18 +2499,35 @@
         }
       });
 
-      const images = new Array(TOTAL_FRAMES);
-      const loaded = new Uint8Array(TOTAL_FRAMES);
-
       let targetProgress = 0;
       let smoothedProgress = 0;
-      let targetFrame = 0;
-      let currentFrame = 0;
-      let lastRenderedFrame = -1;
       let lastTime = performance.now();
-      let isCanvasReady = false;
+      let isCoverVideoActive = true;
       let logoTargetMetrics = { x: 100, y: 43 };
       let headerDotMetrics = { x: 145, y: 43 };
+
+      function ensureHeroVideoPlayback() {
+        if (!heroVideo || !isCoverVideoActive) return;
+        heroVideo.muted = true;
+        heroVideo.defaultMuted = true;
+        heroVideo.loop = true;
+        heroVideo.playsInline = true;
+        if (heroVideo.paused) {
+          const playPromise = heroVideo.play();
+          if (playPromise && typeof playPromise.catch === 'function') {
+            playPromise.catch(() => {});
+          }
+        }
+      }
+
+      if (heroVideo) {
+        heroVideo.addEventListener('canplay', ensureHeroVideoPlayback);
+        heroVideo.addEventListener('loadeddata', ensureHeroVideoPlayback);
+        heroVideo.addEventListener('ended', () => {
+          heroVideo.currentTime = 0;
+          ensureHeroVideoPlayback();
+        });
+      }
 
       function measureLogoTarget() {
         if (!headerBrandLogo) return;
@@ -2518,64 +2546,6 @@
               y: dotRect.top + dotRect.height / 2
             };
           }
-        }
-      }
-
-      function getFramePath(index) {
-        const frameNum = String(index + 1).padStart(3, '0');
-        return `${FRAME_PREFIX}${frameNum}${FRAME_EXT}`;
-      }
-
-      function resizeCanvas() {
-        const dpr = Math.min(window.devicePixelRatio || 1, 2);
-        const { w, h } = getViewportSize();
-
-        canvas.width = Math.round(w * dpr);
-        canvas.height = Math.round(h * dpr);
-
-        ctx.imageSmoothingEnabled = true;
-        ctx.imageSmoothingQuality = 'high';
-
-        isCanvasReady = true;
-        measureLogoTarget();
-        renderBestFrame();
-      }
-
-      function getBestAvailableFrame(index) {
-        if (loaded[index]) return images[index];
-        for (let offset = 1; offset < TOTAL_FRAMES; offset++) {
-          const prev = index - offset;
-          if (prev >= 0 && loaded[prev]) return images[prev];
-          const next = index + offset;
-          if (next < TOTAL_FRAMES && loaded[next]) return images[next];
-        }
-        return null;
-      }
-
-      function drawFrame(img) {
-        if (!img || !img.complete || img.naturalWidth === 0) return;
-
-        const cw = canvas.width;
-        const ch = canvas.height;
-        const iw = img.naturalWidth;
-        const ih = img.naturalHeight;
-
-        const scale = Math.max(cw / iw, ch / ih);
-        const nw = Math.round(iw * scale);
-        const nh = Math.round(ih * scale);
-        const nx = Math.round((cw - nw) / 2);
-        const ny = Math.round((ch - nh) / 2);
-
-        ctx.drawImage(img, nx, ny, nw, nh);
-      }
-
-      function renderBestFrame() {
-        if (!isCanvasReady) return;
-        const frameIdx = Math.max(0, Math.min(TOTAL_FRAMES - 1, Math.round(currentFrame)));
-        const img = getBestAvailableFrame(frameIdx);
-        if (img) {
-          drawFrame(img);
-          lastRenderedFrame = frameIdx;
         }
       }
 
@@ -2758,11 +2728,17 @@
 
         const risePx = Math.max(0, (h - pad) - currentBottomY);
 
-        // Toggle animated background visibility strictly for top cover section only
+        // Toggle animated video background strictly for top cover section only
         const coverActive = tCurtainRise < 0.995;
-        if (canvas) {
-          canvas.style.display = coverActive ? 'block' : 'none';
-          canvas.style.transform = coverActive ? `translate3d(0, ${(-risePx * 0.08).toFixed(1)}px, 0) scale(1.06)` : 'none';
+        if (heroVideo) {
+          isCoverVideoActive = coverActive;
+          heroVideo.style.display = coverActive ? 'block' : 'none';
+          heroVideo.style.transform = coverActive ? `translate3d(0, ${(-risePx * 0.08).toFixed(1)}px, 0) scale(1.06)` : 'none';
+          if (coverActive) {
+            if (heroVideo.paused) ensureHeroVideoPlayback();
+          } else if (!heroVideo.paused) {
+            heroVideo.pause();
+          }
         }
         if (viewportOverlay) {
           viewportOverlay.style.display = coverActive ? 'block' : 'none';
@@ -3046,12 +3022,6 @@
         }
       }
 
-      function computeTargetFrame(progress) {
-        // Animate background Japan frames exclusively during the top Hero cover section (0 -> 0.25)
-        const pCover = clamp(progress / 0.25, 0, 1);
-        return pCover * (TOTAL_FRAMES - 1);
-      }
-
       function handleScrollTrigger() {
         const now = performance.now();
         const maxScroll = getMaxScroll();
@@ -3076,6 +3046,7 @@
 
       // Detect gentle initial wheel / touch nudge to open the initial splashscreen once
       window.addEventListener('wheel', (e) => {
+        ensureHeroVideoPlayback();
         if (splashState === 'closed' && e.deltaY > 4) {
           openSplash({ settleAtTop: true });
         }
@@ -3083,6 +3054,7 @@
 
       let touchStartY = null;
       window.addEventListener('touchstart', (e) => {
+        ensureHeroVideoPlayback();
         if (splashState === 'closed' && e.touches && e.touches.length === 1) {
           touchStartY = e.touches[0].clientY;
         }
@@ -3100,31 +3072,6 @@
       window.addEventListener('touchend', () => {
         touchStartY = null;
       }, { passive: true });
-
-      function preloadImages() {
-        const firstImg = new Image();
-        firstImg.src = getFramePath(0);
-        firstImg.onload = () => {
-          images[0] = firstImg;
-          loaded[0] = 1;
-          renderBestFrame();
-        };
-
-        for (let i = 1; i < TOTAL_FRAMES; i++) {
-          const img = new Image();
-          img.src = getFramePath(i);
-          const index = i;
-          img.onload = () => {
-            images[index] = img;
-            loaded[index] = 1;
-            const currentInt = Math.round(currentFrame);
-            if (currentInt === index && isCanvasReady) {
-              drawFrame(img);
-              lastRenderedFrame = index;
-            }
-          };
-        }
-      }
 
       function animate(now) {
         const dt = Math.min((now - lastTime) / 1000, 0.1);
@@ -3176,30 +3123,7 @@
           }
         }
 
-        targetFrame = computeTargetFrame(smoothedProgress);
-
-        if (isReducedMotion) {
-          currentFrame = targetFrame;
-        } else {
-          const frameDecay = 12;
-          const frameFactor = 1 - Math.exp(-frameDecay * dt);
-          currentFrame += (targetFrame - currentFrame) * frameFactor;
-          if (Math.abs(targetFrame - currentFrame) < 0.005) {
-            currentFrame = targetFrame;
-          }
-        }
-
         updateUIProgress(smoothedProgress, splashRaw);
-
-        const frameToRender = Math.max(0, Math.min(TOTAL_FRAMES - 1, Math.round(currentFrame)));
-
-        if (frameToRender !== lastRenderedFrame && isCanvasReady) {
-          const img = getBestAvailableFrame(frameToRender);
-          if (img) {
-            drawFrame(img);
-            lastRenderedFrame = frameToRender;
-          }
-        }
 
         requestAnimationFrame(animate);
       }
@@ -3208,7 +3132,7 @@
       document.addEventListener('scroll', handleScrollTrigger, { passive: true });
 
       function handleResize() {
-        resizeCanvas();
+        measureLogoTarget();
         lastFramePathState = '';
         targetProgress = getScrollProgress();
         updateUIProgress(smoothedProgress, splashRaw);
@@ -3220,6 +3144,7 @@
       }
 
       window.addEventListener('keydown', (e) => {
+        ensureHeroVideoPlayback();
         if (splashState === 'closed' && (e.key === 'ArrowDown' || e.key === 'PageDown' || e.key === ' ')) {
           e.preventDefault();
           openSplash({ settleAtTop: true });
@@ -3237,10 +3162,9 @@
       window.scrollTo(0, 0);
       targetProgress = 0;
       smoothedProgress = 0;
-      targetFrame = 0;
-      currentFrame = 0;
 
-      resizeCanvas();
+      measureLogoTarget();
+      ensureHeroVideoPlayback();
       if (document.fonts && document.fonts.ready) {
         document.fonts.ready.then(() => {
           measureLogoTarget();
@@ -3248,7 +3172,6 @@
           updateUIProgress(smoothedProgress, splashRaw);
         });
       }
-      preloadImages();
       updateUIProgress(smoothedProgress, splashRaw);
       requestAnimationFrame(animate);
     })();
