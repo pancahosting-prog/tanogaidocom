@@ -28,6 +28,7 @@ const server = http.createServer((req, res) => {
   if (reqPath === '/') reqPath = '/index.html';
   if (reqPath === '/shop' || reqPath === '/shop/') reqPath = '/shop.html';
   if (reqPath === '/product' || reqPath === '/product/') reqPath = '/product.html';
+  if (reqPath === '/about' || reqPath === '/about/') reqPath = '/about.html';
   const filePath = path.join(__dirname, reqPath);
 
   fs.stat(filePath, (err, stats) => {
