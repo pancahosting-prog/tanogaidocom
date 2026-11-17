@@ -9,6 +9,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
     rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/shop-shared.css">
   <style>
     *,
     *::before,
@@ -2033,7 +2034,7 @@
           <li><a href="#destinations" data-scroll-progress="0.26">Destinations</a></li>
           <li><a href="#tours" data-scroll-progress="0.26">Private Tours</a></li>
           <li><a href="#passes" data-scroll-progress="0.58">JR Pass</a></li>
-          <li><a href="#pricing" data-scroll-progress="0.90">Pricing</a></li>
+          <li><a href="shop.html">Shop</a></li>
           <li><a href="#guides" data-scroll-progress="0.26">Guides</a></li>
         </ul>
       </div>
@@ -2075,7 +2076,7 @@
         <li><a href="#destinations" class="mobile-nav-item" data-scroll-progress="0.26">Destinations</a></li>
         <li><a href="#tours" class="mobile-nav-item" data-scroll-progress="0.26">Private Tours</a></li>
         <li><a href="#passes" class="mobile-nav-item" data-scroll-progress="0.58">JR Pass</a></li>
-        <li><a href="#pricing" class="mobile-nav-item" data-scroll-progress="0.90">Pricing</a></li>
+        <li><a href="shop.html" class="mobile-nav-item">Shop</a></li>
         <li><a href="#guides" class="mobile-nav-item" data-scroll-progress="0.26">Guides</a></li>
       </ul>
       <div class="mobile-menu-footer">
@@ -2877,6 +2878,27 @@
         </div>
       </section>
 
+      <!-- 3.5. Featured Products (Identical Product Card UI to Shop Page) -->
+      <section class="products-featured-band reveal-item" id="featured-products-band">
+        <div class="page-container">
+          <div class="section-header-row">
+            <div>
+              <h2 class="section-heading-editorial">Featured Products</h2>
+              <p class="section-subtitle">Authentic tea craft, ceramics, and Japan travel gear sourced directly by our local concierge team.</p>
+            </div>
+            <div class="shop-header-actions">
+              <button type="button" class="bag-trigger-btn" data-open-bag aria-label="Open Shopping Bag">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+                <span>Bag (<span data-bag-count>0</span>)</span>
+              </button>
+              <a href="shop.html" class="section-link-cta">View All Shop <span>→</span></a>
+            </div>
+          </div>
+
+          <div class="products-grid" id="featured-products-grid"></div>
+        </div>
+      </section>
+
       <!-- 4. What Travelers Say -->
       <section class="reviews-band reveal-item" id="reviews-band">
         <div class="page-container">
@@ -2955,7 +2977,7 @@
                 <li><a href="#services" data-scroll-progress="0.26">Exclusive Services</a></li>
                 <li><a href="#trips" data-scroll-progress="0.62">Featured Trips</a></li>
                 <li><a href="#styles" data-scroll-progress="0.48">Travel Your Way</a></li>
-                <li><a href="#reviews" data-scroll-progress="0.78">Traveler Stories</a></li>
+                <li><a href="shop.html">Japan Goods Shop</a></li>
               </ul>
             </div>
             <div>
@@ -2992,6 +3014,7 @@
             <div class="footer-legal">
               <a href="#services" data-scroll-progress="0.26">Services</a>
               <a href="#trips" data-scroll-progress="0.62">Itineraries</a>
+              <a href="shop.html">Shop</a>
               <a href="https://wa.me/6281318939319" target="_blank" rel="noopener noreferrer">Contact Support</a>
             </div>
           </div>
@@ -3009,6 +3032,7 @@
     </div>
   </div>
 
+  <script src="assets/js/shop-store.js"></script>
   <script>
     (function () {
       if ('scrollRestoration' in history) {
@@ -4191,14 +4215,44 @@
         }
       });
 
-      // Always start fresh at top full-white splashscreen on load
-      window.scrollTo(0, 0);
-      targetProgress = 0;
-      smoothedProgress = 0;
+      const featuredProductsGrid = document.getElementById('featured-products-grid');
+      if (featuredProductsGrid && window.TanogaidoShop && Array.isArray(window.TANOGAIDO_PRODUCTS)) {
+        const featuredList = window.TANOGAIDO_PRODUCTS.filter((p) => p.featured).slice(0, 4);
+        window.TanogaidoShop.renderGrid(featuredProductsGrid, featuredList);
+      }
+
+      const HASH_PROGRESS = {
+        '#destinations': 0.26,
+        '#tours': 0.26,
+        '#services': 0.26,
+        '#guides': 0.26,
+        '#styles': 0.44,
+        '#passes': 0.58,
+        '#trips': 0.62,
+        '#featured-products-band': 0.72,
+        '#reviews': 0.84
+      };
+      const initialHash = window.location.hash;
 
       syncScrollBudget();
       measureLogoTarget();
       ensureHeroVideoPlayback();
+
+      if (initialHash && HASH_PROGRESS[initialHash] !== undefined) {
+        const maxScroll = getMaxScroll();
+        const prog = HASH_PROGRESS[initialHash];
+        splashState = 'open';
+        splashRaw = 1;
+        splashTarget = 1;
+        targetProgress = prog;
+        smoothedProgress = prog;
+        window.scrollTo(0, prog * maxScroll);
+      } else {
+        window.scrollTo(0, 0);
+        targetProgress = 0;
+        smoothedProgress = 0;
+      }
+
       if (document.fonts && document.fonts.ready) {
         document.fonts.ready.then(() => {
           syncScrollBudget();
@@ -4207,6 +4261,7 @@
           updateUIProgress(smoothedProgress, splashRaw);
         });
       }
+
       updateUIProgress(smoothedProgress, splashRaw);
       requestAnimationFrame(animate);
     })();
