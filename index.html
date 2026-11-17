@@ -1136,20 +1136,28 @@
       color: var(--primary-red);
     }
 
-    .wa-flip-cta {
+    .flip-back-actions {
+      display: flex;
+      align-items: center;
+      gap: 6px;
       width: 100%;
+      flex-shrink: 0;
+    }
+
+    .wa-flip-cta {
+      flex: 1;
       height: 33px;
       border-radius: 9999px;
       background: var(--primary-red);
       color: #ffffff;
       text-decoration: none;
-      font-size: 11.5px;
+      font-size: 11px;
       font-weight: 700;
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      gap: 6px;
-      padding: 0 12px;
+      gap: 5px;
+      padding: 0 10px;
       flex-shrink: 0;
       box-shadow: 0 8px 18px -6px rgba(220, 38, 38, 0.45);
       transition: background 0.2s ease, transform 0.2s ease;
@@ -1161,9 +1169,33 @@
     }
 
     .wa-flip-cta svg {
-      width: 13px;
-      height: 13px;
+      width: 12px;
+      height: 12px;
       flex-shrink: 0;
+    }
+
+    .detail-flip-cta {
+      height: 33px;
+      padding: 0 11px;
+      border-radius: 9999px;
+      border: 1px solid rgba(255, 255, 255, 0.24);
+      background: rgba(255, 255, 255, 0.08);
+      color: #f8fafc;
+      text-decoration: none;
+      font-size: 11px;
+      font-weight: 700;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      white-space: nowrap;
+      flex-shrink: 0;
+      transition: background 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+    }
+
+    .detail-flip-cta:hover {
+      background: rgba(255, 255, 255, 0.18);
+      border-color: rgba(255, 255, 255, 0.48);
+      transform: translateY(-1px);
     }
 
     /* 2. Travel Your Way Band (Soft Tinted Section matching Reference) */
@@ -2235,10 +2267,13 @@
                     <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span>On-site guide or cost-saving live mode</span></li>
                     <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span>Trusted by 1,200+ travelers in Japan</span></li>
                   </ul>
-                  <a href="https://wa.me/6281318939319?text=Hello%20Tanogaido,%20I%20would%20like%20to%20inquire%20about%20the%20Japan%20Tour%20Guide%20service." target="_blank" rel="noopener noreferrer" class="wa-flip-cta">
-                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.5 3.5A11.8 11.8 0 0 0 12 0C5.4 0 0 5.4 0 12c0 2.1.6 4.2 1.6 6L0 24l6.2-1.6A12 12 0 0 0 12 24c6.6 0 12-5.4 12-12 0-3.2-1.2-6.2-3.5-8.5zM12 21.8c-1.8 0-3.6-.5-5.1-1.4l-.4-.2-3.7 1 1-3.6-.2-.4A9.8 9.8 0 0 1 2.2 12c0-5.4 4.4-9.8 9.8-9.8 2.6 0 5.1 1 6.9 2.9A9.7 9.7 0 0 1 21.8 12c0 5.4-4.4 9.8-9.8 9.8zm5.4-7.4c-.3-.2-1.8-.9-2-.1-.3-.1-.5-.2-.7.2-.2.3-.8 1-.9 1.2-.2.2-.3.2-.6.1-.3-.2-1.3-.5-2.4-1.5-.9-.8-1.5-1.8-1.7-2.1-.2-.3 0-.5.1-.6l.5-.5.3-.5v-.5c-.1-.2-.7-1.6-.9-2.2-.3-.6-.5-.5-.7-.5h-.6c-.2 0-.6.1-.9.4-.3.3-1.1 1.1-1.1 2.7s1.1 3.1 1.3 3.3c.2.2 2.2 3.4 5.4 4.7.8.3 1.4.5 1.8.6.8.2 1.5.2 2 .1.6-.1 1.8-.7 2-1.4.3-.7.3-1.3.2-1.4-.1-.2-.3-.3-.6-.4z"/></svg>
-                    <span>Chat on WhatsApp</span>
-                  </a>
+                  <div class="flip-back-actions">
+                    <a href="services/japan-tour-guide.html" class="detail-flip-cta">Details &rarr;</a>
+                    <a href="https://wa.me/6281318939319?text=Hello%20Tanogaido,%20I%20would%20like%20to%20inquire%20about%20the%20Japan%20Tour%20Guide%20service." target="_blank" rel="noopener noreferrer" class="wa-flip-cta">
+                      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.5 3.5A11.8 11.8 0 0 0 12 0C5.4 0 0 5.4 0 12c0 2.1.6 4.2 1.6 6L0 24l6.2-1.6A12 12 0 0 0 12 24c6.6 0 12-5.4 12-12 0-3.2-1.2-6.2-3.5-8.5zM12 21.8c-1.8 0-3.6-.5-5.1-1.4l-.4-.2-3.7 1 1-3.6-.2-.4A9.8 9.8 0 0 1 2.2 12c0-5.4 4.4-9.8 9.8-9.8 2.6 0 5.1 1 6.9 2.9A9.7 9.7 0 0 1 21.8 12c0 5.4-4.4 9.8-9.8 9.8zm5.4-7.4c-.3-.2-1.8-.9-2-.1-.3-.1-.5-.2-.7.2-.2.3-.8 1-.9 1.2-.2.2-.3.2-.6.1-.3-.2-1.3-.5-2.4-1.5-.9-.8-1.5-1.8-1.7-2.1-.2-.3 0-.5.1-.6l.5-.5.3-.5v-.5c-.1-.2-.7-1.6-.9-2.2-.3-.6-.5-.5-.7-.5h-.6c-.2 0-.6.1-.9.4-.3.3-1.1 1.1-1.1 2.7s1.1 3.1 1.3 3.3c.2.2 2.2 3.4 5.4 4.7.8.3 1.4.5 1.8.6.8.2 1.5.2 2 .1.6-.1 1.8-.7 2-1.4.3-.7.3-1.3.2-1.4-.1-.2-.3-.3-.6-.4z"/></svg>
+                      <span>WhatsApp</span>
+                    </a>
+                  </div>
                 </div>
               </div>
             </article>
@@ -2284,10 +2319,13 @@
                     <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span>Sakura, autumn foliage &amp; winter departures</span></li>
                     <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span>Handpicked hotels &amp; experienced leaders</span></li>
                   </ul>
-                  <a href="https://wa.me/6281318939319?text=Hello%20Tanogaido,%20I%20would%20like%20to%20see%20available%20Japan%20Tour%20Packages." target="_blank" rel="noopener noreferrer" class="wa-flip-cta">
-                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.5 3.5A11.8 11.8 0 0 0 12 0C5.4 0 0 5.4 0 12c0 2.1.6 4.2 1.6 6L0 24l6.2-1.6A12 12 0 0 0 12 24c6.6 0 12-5.4 12-12 0-3.2-1.2-6.2-3.5-8.5zM12 21.8c-1.8 0-3.6-.5-5.1-1.4l-.4-.2-3.7 1 1-3.6-.2-.4A9.8 9.8 0 0 1 2.2 12c0-5.4 4.4-9.8 9.8-9.8 2.6 0 5.1 1 6.9 2.9A9.7 9.7 0 0 1 21.8 12c0 5.4-4.4 9.8-9.8 9.8zm5.4-7.4c-.3-.2-1.8-.9-2-.1-.3-.1-.5-.2-.7.2-.2.3-.8 1-.9 1.2-.2.2-.3.2-.6.1-.3-.2-1.3-.5-2.4-1.5-.9-.8-1.5-1.8-1.7-2.1-.2-.3 0-.5.1-.6l.5-.5.3-.5v-.5c-.1-.2-.7-1.6-.9-2.2-.3-.6-.5-.5-.7-.5h-.6c-.2 0-.6.1-.9.4-.3.3-1.1 1.1-1.1 2.7s1.1 3.1 1.3 3.3c.2.2 2.2 3.4 5.4 4.7.8.3 1.4.5 1.8.6.8.2 1.5.2 2 .1.6-.1 1.8-.7 2-1.4.3-.7.3-1.3.2-1.4-.1-.2-.3-.3-.6-.4z"/></svg>
-                    <span>Chat on WhatsApp</span>
-                  </a>
+                  <div class="flip-back-actions">
+                    <a href="services/japan-tour-packages.html" class="detail-flip-cta">Details &rarr;</a>
+                    <a href="https://wa.me/6281318939319?text=Hello%20Tanogaido,%20I%20would%20like%20to%20see%20available%20Japan%20Tour%20Packages." target="_blank" rel="noopener noreferrer" class="wa-flip-cta">
+                      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.5 3.5A11.8 11.8 0 0 0 12 0C5.4 0 0 5.4 0 12c0 2.1.6 4.2 1.6 6L0 24l6.2-1.6A12 12 0 0 0 12 24c6.6 0 12-5.4 12-12 0-3.2-1.2-6.2-3.5-8.5zM12 21.8c-1.8 0-3.6-.5-5.1-1.4l-.4-.2-3.7 1 1-3.6-.2-.4A9.8 9.8 0 0 1 2.2 12c0-5.4 4.4-9.8 9.8-9.8 2.6 0 5.1 1 6.9 2.9A9.7 9.7 0 0 1 21.8 12c0 5.4-4.4 9.8-9.8 9.8zm5.4-7.4c-.3-.2-1.8-.9-2-.1-.3-.1-.5-.2-.7.2-.2.3-.8 1-.9 1.2-.2.2-.3.2-.6.1-.3-.2-1.3-.5-2.4-1.5-.9-.8-1.5-1.8-1.7-2.1-.2-.3 0-.5.1-.6l.5-.5.3-.5v-.5c-.1-.2-.7-1.6-.9-2.2-.3-.6-.5-.5-.7-.5h-.6c-.2 0-.6.1-.9.4-.3.3-1.1 1.1-1.1 2.7s1.1 3.1 1.3 3.3c.2.2 2.2 3.4 5.4 4.7.8.3 1.4.5 1.8.6.8.2 1.5.2 2 .1.6-.1 1.8-.7 2-1.4.3-.7.3-1.3.2-1.4-.1-.2-.3-.3-.6-.4z"/></svg>
+                      <span>WhatsApp</span>
+                    </a>
+                  </div>
                 </div>
               </div>
             </article>
@@ -2333,10 +2371,13 @@
                     <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span>Child- and senior-friendly travel pacing</span></li>
                     <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span>Trusted by 650+ private &amp; VIP groups</span></li>
                   </ul>
-                  <a href="https://wa.me/6281318939319?text=Hello%20Tanogaido,%20I%20would%20like%20to%20plan%20a%20Private%20Japan%20Tour." target="_blank" rel="noopener noreferrer" class="wa-flip-cta">
-                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.5 3.5A11.8 11.8 0 0 0 12 0C5.4 0 0 5.4 0 12c0 2.1.6 4.2 1.6 6L0 24l6.2-1.6A12 12 0 0 0 12 24c6.6 0 12-5.4 12-12 0-3.2-1.2-6.2-3.5-8.5zM12 21.8c-1.8 0-3.6-.5-5.1-1.4l-.4-.2-3.7 1 1-3.6-.2-.4A9.8 9.8 0 0 1 2.2 12c0-5.4 4.4-9.8 9.8-9.8 2.6 0 5.1 1 6.9 2.9A9.7 9.7 0 0 1 21.8 12c0 5.4-4.4 9.8-9.8 9.8zm5.4-7.4c-.3-.2-1.8-.9-2-.1-.3-.1-.5-.2-.7.2-.2.3-.8 1-.9 1.2-.2.2-.3.2-.6.1-.3-.2-1.3-.5-2.4-1.5-.9-.8-1.5-1.8-1.7-2.1-.2-.3 0-.5.1-.6l.5-.5.3-.5v-.5c-.1-.2-.7-1.6-.9-2.2-.3-.6-.5-.5-.7-.5h-.6c-.2 0-.6.1-.9.4-.3.3-1.1 1.1-1.1 2.7s1.1 3.1 1.3 3.3c.2.2 2.2 3.4 5.4 4.7.8.3 1.4.5 1.8.6.8.2 1.5.2 2 .1.6-.1 1.8-.7 2-1.4.3-.7.3-1.3.2-1.4-.1-.2-.3-.3-.6-.4z"/></svg>
-                    <span>Chat on WhatsApp</span>
-                  </a>
+                  <div class="flip-back-actions">
+                    <a href="services/private-japan-tour.html" class="detail-flip-cta">Details &rarr;</a>
+                    <a href="https://wa.me/6281318939319?text=Hello%20Tanogaido,%20I%20would%20like%20to%20plan%20a%20Private%20Japan%20Tour." target="_blank" rel="noopener noreferrer" class="wa-flip-cta">
+                      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.5 3.5A11.8 11.8 0 0 0 12 0C5.4 0 0 5.4 0 12c0 2.1.6 4.2 1.6 6L0 24l6.2-1.6A12 12 0 0 0 12 24c6.6 0 12-5.4 12-12 0-3.2-1.2-6.2-3.5-8.5zM12 21.8c-1.8 0-3.6-.5-5.1-1.4l-.4-.2-3.7 1 1-3.6-.2-.4A9.8 9.8 0 0 1 2.2 12c0-5.4 4.4-9.8 9.8-9.8 2.6 0 5.1 1 6.9 2.9A9.7 9.7 0 0 1 21.8 12c0 5.4-4.4 9.8-9.8 9.8zm5.4-7.4c-.3-.2-1.8-.9-2-.1-.3-.1-.5-.2-.7.2-.2.3-.8 1-.9 1.2-.2.2-.3.2-.6.1-.3-.2-1.3-.5-2.4-1.5-.9-.8-1.5-1.8-1.7-2.1-.2-.3 0-.5.1-.6l.5-.5.3-.5v-.5c-.1-.2-.7-1.6-.9-2.2-.3-.6-.5-.5-.7-.5h-.6c-.2 0-.6.1-.9.4-.3.3-1.1 1.1-1.1 2.7s1.1 3.1 1.3 3.3c.2.2 2.2 3.4 5.4 4.7.8.3 1.4.5 1.8.6.8.2 1.5.2 2 .1.6-.1 1.8-.7 2-1.4.3-.7.3-1.3.2-1.4-.1-.2-.3-.3-.6-.4z"/></svg>
+                      <span>WhatsApp</span>
+                    </a>
+                  </div>
                 </div>
               </div>
             </article>
@@ -2382,10 +2423,13 @@
                     <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span>Tourism, family &amp; business visa support</span></li>
                     <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span>Trusted by 940+ approved applicants</span></li>
                   </ul>
-                  <a href="https://wa.me/6281318939319?text=Hello%20Tanogaido,%20I%20would%20like%20assistance%20with%20my%20Japan%20Visa%20application." target="_blank" rel="noopener noreferrer" class="wa-flip-cta">
-                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.5 3.5A11.8 11.8 0 0 0 12 0C5.4 0 0 5.4 0 12c0 2.1.6 4.2 1.6 6L0 24l6.2-1.6A12 12 0 0 0 12 24c6.6 0 12-5.4 12-12 0-3.2-1.2-6.2-3.5-8.5zM12 21.8c-1.8 0-3.6-.5-5.1-1.4l-.4-.2-3.7 1 1-3.6-.2-.4A9.8 9.8 0 0 1 2.2 12c0-5.4 4.4-9.8 9.8-9.8 2.6 0 5.1 1 6.9 2.9A9.7 9.7 0 0 1 21.8 12c0 5.4-4.4 9.8-9.8 9.8zm5.4-7.4c-.3-.2-1.8-.9-2-.1-.3-.1-.5-.2-.7.2-.2.3-.8 1-.9 1.2-.2.2-.3.2-.6.1-.3-.2-1.3-.5-2.4-1.5-.9-.8-1.5-1.8-1.7-2.1-.2-.3 0-.5.1-.6l.5-.5.3-.5v-.5c-.1-.2-.7-1.6-.9-2.2-.3-.6-.5-.5-.7-.5h-.6c-.2 0-.6.1-.9.4-.3.3-1.1 1.1-1.1 2.7s1.1 3.1 1.3 3.3c.2.2 2.2 3.4 5.4 4.7.8.3 1.4.5 1.8.6.8.2 1.5.2 2 .1.6-.1 1.8-.7 2-1.4.3-.7.3-1.3.2-1.4-.1-.2-.3-.3-.6-.4z"/></svg>
-                    <span>Chat on WhatsApp</span>
-                  </a>
+                  <div class="flip-back-actions">
+                    <a href="services/japan-visa-processing.html" class="detail-flip-cta">Details &rarr;</a>
+                    <a href="https://wa.me/6281318939319?text=Hello%20Tanogaido,%20I%20would%20like%20assistance%20with%20my%20Japan%20Visa%20application." target="_blank" rel="noopener noreferrer" class="wa-flip-cta">
+                      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.5 3.5A11.8 11.8 0 0 0 12 0C5.4 0 0 5.4 0 12c0 2.1.6 4.2 1.6 6L0 24l6.2-1.6A12 12 0 0 0 12 24c6.6 0 12-5.4 12-12 0-3.2-1.2-6.2-3.5-8.5zM12 21.8c-1.8 0-3.6-.5-5.1-1.4l-.4-.2-3.7 1 1-3.6-.2-.4A9.8 9.8 0 0 1 2.2 12c0-5.4 4.4-9.8 9.8-9.8 2.6 0 5.1 1 6.9 2.9A9.7 9.7 0 0 1 21.8 12c0 5.4-4.4 9.8-9.8 9.8zm5.4-7.4c-.3-.2-1.8-.9-2-.1-.3-.1-.5-.2-.7.2-.2.3-.8 1-.9 1.2-.2.2-.3.2-.6.1-.3-.2-1.3-.5-2.4-1.5-.9-.8-1.5-1.8-1.7-2.1-.2-.3 0-.5.1-.6l.5-.5.3-.5v-.5c-.1-.2-.7-1.6-.9-2.2-.3-.6-.5-.5-.7-.5h-.6c-.2 0-.6.1-.9.4-.3.3-1.1 1.1-1.1 2.7s1.1 3.1 1.3 3.3c.2.2 2.2 3.4 5.4 4.7.8.3 1.4.5 1.8.6.8.2 1.5.2 2 .1.6-.1 1.8-.7 2-1.4.3-.7.3-1.3.2-1.4-.1-.2-.3-.3-.6-.4z"/></svg>
+                      <span>WhatsApp</span>
+                    </a>
+                  </div>
                 </div>
               </div>
             </article>
@@ -2431,10 +2475,13 @@
                     <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span>Connect up to 5 devices securely</span></li>
                     <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span>Airport pickup or doorstep delivery</span></li>
                   </ul>
-                  <a href="https://wa.me/6281318939319?text=Hello%20Tanogaido,%20I%20would%20like%20to%20rent%20a%20Japan%20Pocket%20WiFi." target="_blank" rel="noopener noreferrer" class="wa-flip-cta">
-                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.5 3.5A11.8 11.8 0 0 0 12 0C5.4 0 0 5.4 0 12c0 2.1.6 4.2 1.6 6L0 24l6.2-1.6A12 12 0 0 0 12 24c6.6 0 12-5.4 12-12 0-3.2-1.2-6.2-3.5-8.5zM12 21.8c-1.8 0-3.6-.5-5.1-1.4l-.4-.2-3.7 1 1-3.6-.2-.4A9.8 9.8 0 0 1 2.2 12c0-5.4 4.4-9.8 9.8-9.8 2.6 0 5.1 1 6.9 2.9A9.7 9.7 0 0 1 21.8 12c0 5.4-4.4 9.8-9.8 9.8zm5.4-7.4c-.3-.2-1.8-.9-2-.1-.3-.1-.5-.2-.7.2-.2.3-.8 1-.9 1.2-.2.2-.3.2-.6.1-.3-.2-1.3-.5-2.4-1.5-.9-.8-1.5-1.8-1.7-2.1-.2-.3 0-.5.1-.6l.5-.5.3-.5v-.5c-.1-.2-.7-1.6-.9-2.2-.3-.6-.5-.5-.7-.5h-.6c-.2 0-.6.1-.9.4-.3.3-1.1 1.1-1.1 2.7s1.1 3.1 1.3 3.3c.2.2 2.2 3.4 5.4 4.7.8.3 1.4.5 1.8.6.8.2 1.5.2 2 .1.6-.1 1.8-.7 2-1.4.3-.7.3-1.3.2-1.4-.1-.2-.3-.3-.6-.4z"/></svg>
-                    <span>Chat on WhatsApp</span>
-                  </a>
+                  <div class="flip-back-actions">
+                    <a href="services/pocket-wifi-rental.html" class="detail-flip-cta">Details &rarr;</a>
+                    <a href="https://wa.me/6281318939319?text=Hello%20Tanogaido,%20I%20would%20like%20to%20rent%20a%20Japan%20Pocket%20WiFi." target="_blank" rel="noopener noreferrer" class="wa-flip-cta">
+                      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.5 3.5A11.8 11.8 0 0 0 12 0C5.4 0 0 5.4 0 12c0 2.1.6 4.2 1.6 6L0 24l6.2-1.6A12 12 0 0 0 12 24c6.6 0 12-5.4 12-12 0-3.2-1.2-6.2-3.5-8.5zM12 21.8c-1.8 0-3.6-.5-5.1-1.4l-.4-.2-3.7 1 1-3.6-.2-.4A9.8 9.8 0 0 1 2.2 12c0-5.4 4.4-9.8 9.8-9.8 2.6 0 5.1 1 6.9 2.9A9.7 9.7 0 0 1 21.8 12c0 5.4-4.4 9.8-9.8 9.8zm5.4-7.4c-.3-.2-1.8-.9-2-.1-.3-.1-.5-.2-.7.2-.2.3-.8 1-.9 1.2-.2.2-.3.2-.6.1-.3-.2-1.3-.5-2.4-1.5-.9-.8-1.5-1.8-1.7-2.1-.2-.3 0-.5.1-.6l.5-.5.3-.5v-.5c-.1-.2-.7-1.6-.9-2.2-.3-.6-.5-.5-.7-.5h-.6c-.2 0-.6.1-.9.4-.3.3-1.1 1.1-1.1 2.7s1.1 3.1 1.3 3.3c.2.2 2.2 3.4 5.4 4.7.8.3 1.4.5 1.8.6.8.2 1.5.2 2 .1.6-.1 1.8-.7 2-1.4.3-.7.3-1.3.2-1.4-.1-.2-.3-.3-.6-.4z"/></svg>
+                      <span>WhatsApp</span>
+                    </a>
+                  </div>
                 </div>
               </div>
             </article>
@@ -2480,10 +2527,13 @@
                     <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span>Alphard, HiAce Grand Cabin &amp; coach buses</span></li>
                     <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span>Includes licensed driver, fuel &amp; tolls</span></li>
                   </ul>
-                  <a href="https://wa.me/6281318939319?text=Hello%20Tanogaido,%20I%20would%20like%20to%20book%20a%20Car%20or%20Tour%20Bus%20Rental%20in%20Japan." target="_blank" rel="noopener noreferrer" class="wa-flip-cta">
-                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.5 3.5A11.8 11.8 0 0 0 12 0C5.4 0 0 5.4 0 12c0 2.1.6 4.2 1.6 6L0 24l6.2-1.6A12 12 0 0 0 12 24c6.6 0 12-5.4 12-12 0-3.2-1.2-6.2-3.5-8.5zM12 21.8c-1.8 0-3.6-.5-5.1-1.4l-.4-.2-3.7 1 1-3.6-.2-.4A9.8 9.8 0 0 1 2.2 12c0-5.4 4.4-9.8 9.8-9.8 2.6 0 5.1 1 6.9 2.9A9.7 9.7 0 0 1 21.8 12c0 5.4-4.4 9.8-9.8 9.8zm5.4-7.4c-.3-.2-1.8-.9-2-.1-.3-.1-.5-.2-.7.2-.2.3-.8 1-.9 1.2-.2.2-.3.2-.6.1-.3-.2-1.3-.5-2.4-1.5-.9-.8-1.5-1.8-1.7-2.1-.2-.3 0-.5.1-.6l.5-.5.3-.5v-.5c-.1-.2-.7-1.6-.9-2.2-.3-.6-.5-.5-.7-.5h-.6c-.2 0-.6.1-.9.4-.3.3-1.1 1.1-1.1 2.7s1.1 3.1 1.3 3.3c.2.2 2.2 3.4 5.4 4.7.8.3 1.4.5 1.8.6.8.2 1.5.2 2 .1.6-.1 1.8-.7 2-1.4.3-.7.3-1.3.2-1.4-.1-.2-.3-.3-.6-.4z"/></svg>
-                    <span>Chat on WhatsApp</span>
-                  </a>
+                  <div class="flip-back-actions">
+                    <a href="services/car-bus-rental.html" class="detail-flip-cta">Details &rarr;</a>
+                    <a href="https://wa.me/6281318939319?text=Hello%20Tanogaido,%20I%20would%20like%20to%20book%20a%20Car%20or%20Tour%20Bus%20Rental%20in%20Japan." target="_blank" rel="noopener noreferrer" class="wa-flip-cta">
+                      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.5 3.5A11.8 11.8 0 0 0 12 0C5.4 0 0 5.4 0 12c0 2.1.6 4.2 1.6 6L0 24l6.2-1.6A12 12 0 0 0 12 24c6.6 0 12-5.4 12-12 0-3.2-1.2-6.2-3.5-8.5zM12 21.8c-1.8 0-3.6-.5-5.1-1.4l-.4-.2-3.7 1 1-3.6-.2-.4A9.8 9.8 0 0 1 2.2 12c0-5.4 4.4-9.8 9.8-9.8 2.6 0 5.1 1 6.9 2.9A9.7 9.7 0 0 1 21.8 12c0 5.4-4.4 9.8-9.8 9.8zm5.4-7.4c-.3-.2-1.8-.9-2-.1-.3-.1-.5-.2-.7.2-.2.3-.8 1-.9 1.2-.2.2-.3.2-.6.1-.3-.2-1.3-.5-2.4-1.5-.9-.8-1.5-1.8-1.7-2.1-.2-.3 0-.5.1-.6l.5-.5.3-.5v-.5c-.1-.2-.7-1.6-.9-2.2-.3-.6-.5-.5-.7-.5h-.6c-.2 0-.6.1-.9.4-.3.3-1.1 1.1-1.1 2.7s1.1 3.1 1.3 3.3c.2.2 2.2 3.4 5.4 4.7.8.3 1.4.5 1.8.6.8.2 1.5.2 2 .1.6-.1 1.8-.7 2-1.4.3-.7.3-1.3.2-1.4-.1-.2-.3-.3-.6-.4z"/></svg>
+                      <span>WhatsApp</span>
+                    </a>
+                  </div>
                 </div>
               </div>
             </article>
@@ -2529,10 +2579,13 @@
                     <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span>Nationwide, Kansai &amp; Hokkaido passes</span></li>
                     <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span>Trusted by 890+ JR Pass holders</span></li>
                   </ul>
-                  <a href="https://wa.me/6281318939319?text=Hello%20Tanogaido,%20I%20would%20like%20to%20buy%20JR%20Pass%20tickets%20for%20Japan." target="_blank" rel="noopener noreferrer" class="wa-flip-cta">
-                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.5 3.5A11.8 11.8 0 0 0 12 0C5.4 0 0 5.4 0 12c0 2.1.6 4.2 1.6 6L0 24l6.2-1.6A12 12 0 0 0 12 24c6.6 0 12-5.4 12-12 0-3.2-1.2-6.2-3.5-8.5zM12 21.8c-1.8 0-3.6-.5-5.1-1.4l-.4-.2-3.7 1 1-3.6-.2-.4A9.8 9.8 0 0 1 2.2 12c0-5.4 4.4-9.8 9.8-9.8 2.6 0 5.1 1 6.9 2.9A9.7 9.7 0 0 1 21.8 12c0 5.4-4.4 9.8-9.8 9.8zm5.4-7.4c-.3-.2-1.8-.9-2-.1-.3-.1-.5-.2-.7.2-.2.3-.8 1-.9 1.2-.2.2-.3.2-.6.1-.3-.2-1.3-.5-2.4-1.5-.9-.8-1.5-1.8-1.7-2.1-.2-.3 0-.5.1-.6l.5-.5.3-.5v-.5c-.1-.2-.7-1.6-.9-2.2-.3-.6-.5-.5-.7-.5h-.6c-.2 0-.6.1-.9.4-.3.3-1.1 1.1-1.1 2.7s1.1 3.1 1.3 3.3c.2.2 2.2 3.4 5.4 4.7.8.3 1.4.5 1.8.6.8.2 1.5.2 2 .1.6-.1 1.8-.7 2-1.4.3-.7.3-1.3.2-1.4-.1-.2-.3-.3-.6-.4z"/></svg>
-                    <span>Chat on WhatsApp</span>
-                  </a>
+                  <div class="flip-back-actions">
+                    <a href="services/jr-pass-tickets.html" class="detail-flip-cta">Details &rarr;</a>
+                    <a href="https://wa.me/6281318939319?text=Hello%20Tanogaido,%20I%20would%20like%20to%20buy%20JR%20Pass%20tickets%20for%20Japan." target="_blank" rel="noopener noreferrer" class="wa-flip-cta">
+                      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.5 3.5A11.8 11.8 0 0 0 12 0C5.4 0 0 5.4 0 12c0 2.1.6 4.2 1.6 6L0 24l6.2-1.6A12 12 0 0 0 12 24c6.6 0 12-5.4 12-12 0-3.2-1.2-6.2-3.5-8.5zM12 21.8c-1.8 0-3.6-.5-5.1-1.4l-.4-.2-3.7 1 1-3.6-.2-.4A9.8 9.8 0 0 1 2.2 12c0-5.4 4.4-9.8 9.8-9.8 2.6 0 5.1 1 6.9 2.9A9.7 9.7 0 0 1 21.8 12c0 5.4-4.4 9.8-9.8 9.8zm5.4-7.4c-.3-.2-1.8-.9-2-.1-.3-.1-.5-.2-.7.2-.2.3-.8 1-.9 1.2-.2.2-.3.2-.6.1-.3-.2-1.3-.5-2.4-1.5-.9-.8-1.5-1.8-1.7-2.1-.2-.3 0-.5.1-.6l.5-.5.3-.5v-.5c-.1-.2-.7-1.6-.9-2.2-.3-.6-.5-.5-.7-.5h-.6c-.2 0-.6.1-.9.4-.3.3-1.1 1.1-1.1 2.7s1.1 3.1 1.3 3.3c.2.2 2.2 3.4 5.4 4.7.8.3 1.4.5 1.8.6.8.2 1.5.2 2 .1.6-.1 1.8-.7 2-1.4.3-.7.3-1.3.2-1.4-.1-.2-.3-.3-.6-.4z"/></svg>
+                      <span>WhatsApp</span>
+                    </a>
+                  </div>
                 </div>
               </div>
             </article>
@@ -2578,10 +2631,13 @@
                     <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span>Nintendo World, Shibuya Sky &amp; teamLab</span></li>
                     <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span>Instant QR e-tickets to skip queues</span></li>
                   </ul>
-                  <a href="https://wa.me/6281318939319?text=Hello%20Tanogaido,%20I%20would%20like%20to%20order%20Japan%20Theme%20Park%20tickets." target="_blank" rel="noopener noreferrer" class="wa-flip-cta">
-                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.5 3.5A11.8 11.8 0 0 0 12 0C5.4 0 0 5.4 0 12c0 2.1.6 4.2 1.6 6L0 24l6.2-1.6A12 12 0 0 0 12 24c6.6 0 12-5.4 12-12 0-3.2-1.2-6.2-3.5-8.5zM12 21.8c-1.8 0-3.6-.5-5.1-1.4l-.4-.2-3.7 1 1-3.6-.2-.4A9.8 9.8 0 0 1 2.2 12c0-5.4 4.4-9.8 9.8-9.8 2.6 0 5.1 1 6.9 2.9A9.7 9.7 0 0 1 21.8 12c0 5.4-4.4 9.8-9.8 9.8zm5.4-7.4c-.3-.2-1.8-.9-2-.1-.3-.1-.5-.2-.7.2-.2.3-.8 1-.9 1.2-.2.2-.3.2-.6.1-.3-.2-1.3-.5-2.4-1.5-.9-.8-1.5-1.8-1.7-2.1-.2-.3 0-.5.1-.6l.5-.5.3-.5v-.5c-.1-.2-.7-1.6-.9-2.2-.3-.6-.5-.5-.7-.5h-.6c-.2 0-.6.1-.9.4-.3.3-1.1 1.1-1.1 2.7s1.1 3.1 1.3 3.3c.2.2 2.2 3.4 5.4 4.7.8.3 1.4.5 1.8.6.8.2 1.5.2 2 .1.6-.1 1.8-.7 2-1.4.3-.7.3-1.3.2-1.4-.1-.2-.3-.3-.6-.4z"/></svg>
-                    <span>Chat on WhatsApp</span>
-                  </a>
+                  <div class="flip-back-actions">
+                    <a href="services/attraction-theme-park-tickets.html" class="detail-flip-cta">Details &rarr;</a>
+                    <a href="https://wa.me/6281318939319?text=Hello%20Tanogaido,%20I%20would%20like%20to%20order%20Japan%20Theme%20Park%20tickets." target="_blank" rel="noopener noreferrer" class="wa-flip-cta">
+                      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.5 3.5A11.8 11.8 0 0 0 12 0C5.4 0 0 5.4 0 12c0 2.1.6 4.2 1.6 6L0 24l6.2-1.6A12 12 0 0 0 12 24c6.6 0 12-5.4 12-12 0-3.2-1.2-6.2-3.5-8.5zM12 21.8c-1.8 0-3.6-.5-5.1-1.4l-.4-.2-3.7 1 1-3.6-.2-.4A9.8 9.8 0 0 1 2.2 12c0-5.4 4.4-9.8 9.8-9.8 2.6 0 5.1 1 6.9 2.9A9.7 9.7 0 0 1 21.8 12c0 5.4-4.4 9.8-9.8 9.8zm5.4-7.4c-.3-.2-1.8-.9-2-.1-.3-.1-.5-.2-.7.2-.2.3-.8 1-.9 1.2-.2.2-.3.2-.6.1-.3-.2-1.3-.5-2.4-1.5-.9-.8-1.5-1.8-1.7-2.1-.2-.3 0-.5.1-.6l.5-.5.3-.5v-.5c-.1-.2-.7-1.6-.9-2.2-.3-.6-.5-.5-.7-.5h-.6c-.2 0-.6.1-.9.4-.3.3-1.1 1.1-1.1 2.7s1.1 3.1 1.3 3.3c.2.2 2.2 3.4 5.4 4.7.8.3 1.4.5 1.8.6.8.2 1.5.2 2 .1.6-.1 1.8-.7 2-1.4.3-.7.3-1.3.2-1.4-.1-.2-.3-.3-.6-.4z"/></svg>
+                      <span>WhatsApp</span>
+                    </a>
+                  </div>
                 </div>
               </div>
             </article>
@@ -2627,10 +2683,13 @@
                     <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span>Matcha, skincare &amp; Pokémon Center</span></li>
                     <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span>100% genuine store receipts included</span></li>
                   </ul>
-                  <a href="https://wa.me/6281318939319?text=Hello%20Tanogaido,%20I%20would%20like%20to%20request%20your%20Japan%20Personal%20Shopper%20service." target="_blank" rel="noopener noreferrer" class="wa-flip-cta">
-                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.5 3.5A11.8 11.8 0 0 0 12 0C5.4 0 0 5.4 0 12c0 2.1.6 4.2 1.6 6L0 24l6.2-1.6A12 12 0 0 0 12 24c6.6 0 12-5.4 12-12 0-3.2-1.2-6.2-3.5-8.5zM12 21.8c-1.8 0-3.6-.5-5.1-1.4l-.4-.2-3.7 1 1-3.6-.2-.4A9.8 9.8 0 0 1 2.2 12c0-5.4 4.4-9.8 9.8-9.8 2.6 0 5.1 1 6.9 2.9A9.7 9.7 0 0 1 21.8 12c0 5.4-4.4 9.8-9.8 9.8zm5.4-7.4c-.3-.2-1.8-.9-2-.1-.3-.1-.5-.2-.7.2-.2.3-.8 1-.9 1.2-.2.2-.3.2-.6.1-.3-.2-1.3-.5-2.4-1.5-.9-.8-1.5-1.8-1.7-2.1-.2-.3 0-.5.1-.6l.5-.5.3-.5v-.5c-.1-.2-.7-1.6-.9-2.2-.3-.6-.5-.5-.7-.5h-.6c-.2 0-.6.1-.9.4-.3.3-1.1 1.1-1.1 2.7s1.1 3.1 1.3 3.3c.2.2 2.2 3.4 5.4 4.7.8.3 1.4.5 1.8.6.8.2 1.5.2 2 .1.6-.1 1.8-.7 2-1.4.3-.7.3-1.3.2-1.4-.1-.2-.3-.3-.6-.4z"/></svg>
-                    <span>Chat on WhatsApp</span>
-                  </a>
+                  <div class="flip-back-actions">
+                    <a href="services/japan-personal-shopper.html" class="detail-flip-cta">Details &rarr;</a>
+                    <a href="https://wa.me/6281318939319?text=Hello%20Tanogaido,%20I%20would%20like%20to%20request%20your%20Japan%20Personal%20Shopper%20service." target="_blank" rel="noopener noreferrer" class="wa-flip-cta">
+                      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.5 3.5A11.8 11.8 0 0 0 12 0C5.4 0 0 5.4 0 12c0 2.1.6 4.2 1.6 6L0 24l6.2-1.6A12 12 0 0 0 12 24c6.6 0 12-5.4 12-12 0-3.2-1.2-6.2-3.5-8.5zM12 21.8c-1.8 0-3.6-.5-5.1-1.4l-.4-.2-3.7 1 1-3.6-.2-.4A9.8 9.8 0 0 1 2.2 12c0-5.4 4.4-9.8 9.8-9.8 2.6 0 5.1 1 6.9 2.9A9.7 9.7 0 0 1 21.8 12c0 5.4-4.4 9.8-9.8 9.8zm5.4-7.4c-.3-.2-1.8-.9-2-.1-.3-.1-.5-.2-.7.2-.2.3-.8 1-.9 1.2-.2.2-.3.2-.6.1-.3-.2-1.3-.5-2.4-1.5-.9-.8-1.5-1.8-1.7-2.1-.2-.3 0-.5.1-.6l.5-.5.3-.5v-.5c-.1-.2-.7-1.6-.9-2.2-.3-.6-.5-.5-.7-.5h-.6c-.2 0-.6.1-.9.4-.3.3-1.1 1.1-1.1 2.7s1.1 3.1 1.3 3.3c.2.2 2.2 3.4 5.4 4.7.8.3 1.4.5 1.8.6.8.2 1.5.2 2 .1.6-.1 1.8-.7 2-1.4.3-.7.3-1.3.2-1.4-.1-.2-.3-.3-.6-.4z"/></svg>
+                      <span>WhatsApp</span>
+                    </a>
+                  </div>
                 </div>
               </div>
             </article>
@@ -2676,10 +2735,13 @@
                     <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span>Pickup, safe repacking &amp; customs clearance</span></li>
                     <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span>Transparent per-kg shipping rates</span></li>
                   </ul>
-                  <a href="https://wa.me/6281318939319?text=Hello%20Tanogaido,%20I%20would%20like%20a%20quote%20for%20Japan%20Cargo%20and%20Import%20shipping." target="_blank" rel="noopener noreferrer" class="wa-flip-cta">
-                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.5 3.5A11.8 11.8 0 0 0 12 0C5.4 0 0 5.4 0 12c0 2.1.6 4.2 1.6 6L0 24l6.2-1.6A12 12 0 0 0 12 24c6.6 0 12-5.4 12-12 0-3.2-1.2-6.2-3.5-8.5zM12 21.8c-1.8 0-3.6-.5-5.1-1.4l-.4-.2-3.7 1 1-3.6-.2-.4A9.8 9.8 0 0 1 2.2 12c0-5.4 4.4-9.8 9.8-9.8 2.6 0 5.1 1 6.9 2.9A9.7 9.7 0 0 1 21.8 12c0 5.4-4.4 9.8-9.8 9.8zm5.4-7.4c-.3-.2-1.8-.9-2-.1-.3-.1-.5-.2-.7.2-.2.3-.8 1-.9 1.2-.2.2-.3.2-.6.1-.3-.2-1.3-.5-2.4-1.5-.9-.8-1.5-1.8-1.7-2.1-.2-.3 0-.5.1-.6l.5-.5.3-.5v-.5c-.1-.2-.7-1.6-.9-2.2-.3-.6-.5-.5-.7-.5h-.6c-.2 0-.6.1-.9.4-.3.3-1.1 1.1-1.1 2.7s1.1 3.1 1.3 3.3c.2.2 2.2 3.4 5.4 4.7.8.3 1.4.5 1.8.6.8.2 1.5.2 2 .1.6-.1 1.8-.7 2-1.4.3-.7.3-1.3.2-1.4-.1-.2-.3-.3-.6-.4z"/></svg>
-                    <span>Chat on WhatsApp</span>
-                  </a>
+                  <div class="flip-back-actions">
+                    <a href="services/japan-import-service.html" class="detail-flip-cta">Details &rarr;</a>
+                    <a href="https://wa.me/6281318939319?text=Hello%20Tanogaido,%20I%20would%20like%20a%20quote%20for%20Japan%20Cargo%20and%20Import%20shipping." target="_blank" rel="noopener noreferrer" class="wa-flip-cta">
+                      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.5 3.5A11.8 11.8 0 0 0 12 0C5.4 0 0 5.4 0 12c0 2.1.6 4.2 1.6 6L0 24l6.2-1.6A12 12 0 0 0 12 24c6.6 0 12-5.4 12-12 0-3.2-1.2-6.2-3.5-8.5zM12 21.8c-1.8 0-3.6-.5-5.1-1.4l-.4-.2-3.7 1 1-3.6-.2-.4A9.8 9.8 0 0 1 2.2 12c0-5.4 4.4-9.8 9.8-9.8 2.6 0 5.1 1 6.9 2.9A9.7 9.7 0 0 1 21.8 12c0 5.4-4.4 9.8-9.8 9.8zm5.4-7.4c-.3-.2-1.8-.9-2-.1-.3-.1-.5-.2-.7.2-.2.3-.8 1-.9 1.2-.2.2-.3.2-.6.1-.3-.2-1.3-.5-2.4-1.5-.9-.8-1.5-1.8-1.7-2.1-.2-.3 0-.5.1-.6l.5-.5.3-.5v-.5c-.1-.2-.7-1.6-.9-2.2-.3-.6-.5-.5-.7-.5h-.6c-.2 0-.6.1-.9.4-.3.3-1.1 1.1-1.1 2.7s1.1 3.1 1.3 3.3c.2.2 2.2 3.4 5.4 4.7.8.3 1.4.5 1.8.6.8.2 1.5.2 2 .1.6-.1 1.8-.7 2-1.4.3-.7.3-1.3.2-1.4-.1-.2-.3-.3-.6-.4z"/></svg>
+                      <span>WhatsApp</span>
+                    </a>
+                  </div>
                 </div>
               </div>
             </article>
@@ -2725,10 +2787,13 @@
                     <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span>Kimono wardrobe &amp; hair or hijab styling</span></li>
                     <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span>High-res gallery + editorial color edit</span></li>
                   </ul>
-                  <a href="https://wa.me/6281318939319?text=Hello%20Tanogaido,%20I%20would%20like%20to%20inquire%20about%20a%20Japan%20Prewedding%20Shoot." target="_blank" rel="noopener noreferrer" class="wa-flip-cta">
-                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.5 3.5A11.8 11.8 0 0 0 12 0C5.4 0 0 5.4 0 12c0 2.1.6 4.2 1.6 6L0 24l6.2-1.6A12 12 0 0 0 12 24c6.6 0 12-5.4 12-12 0-3.2-1.2-6.2-3.5-8.5zM12 21.8c-1.8 0-3.6-.5-5.1-1.4l-.4-.2-3.7 1 1-3.6-.2-.4A9.8 9.8 0 0 1 2.2 12c0-5.4 4.4-9.8 9.8-9.8 2.6 0 5.1 1 6.9 2.9A9.7 9.7 0 0 1 21.8 12c0 5.4-4.4 9.8-9.8 9.8zm5.4-7.4c-.3-.2-1.8-.9-2-.1-.3-.1-.5-.2-.7.2-.2.3-.8 1-.9 1.2-.2.2-.3.2-.6.1-.3-.2-1.3-.5-2.4-1.5-.9-.8-1.5-1.8-1.7-2.1-.2-.3 0-.5.1-.6l.5-.5.3-.5v-.5c-.1-.2-.7-1.6-.9-2.2-.3-.6-.5-.5-.7-.5h-.6c-.2 0-.6.1-.9.4-.3.3-1.1 1.1-1.1 2.7s1.1 3.1 1.3 3.3c.2.2 2.2 3.4 5.4 4.7.8.3 1.4.5 1.8.6.8.2 1.5.2 2 .1.6-.1 1.8-.7 2-1.4.3-.7.3-1.3.2-1.4-.1-.2-.3-.3-.6-.4z"/></svg>
-                    <span>Chat on WhatsApp</span>
-                  </a>
+                  <div class="flip-back-actions">
+                    <a href="services/japan-prewedding.html" class="detail-flip-cta">Details &rarr;</a>
+                    <a href="https://wa.me/6281318939319?text=Hello%20Tanogaido,%20I%20would%20like%20to%20inquire%20about%20a%20Japan%20Prewedding%20Shoot." target="_blank" rel="noopener noreferrer" class="wa-flip-cta">
+                      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.5 3.5A11.8 11.8 0 0 0 12 0C5.4 0 0 5.4 0 12c0 2.1.6 4.2 1.6 6L0 24l6.2-1.6A12 12 0 0 0 12 24c6.6 0 12-5.4 12-12 0-3.2-1.2-6.2-3.5-8.5zM12 21.8c-1.8 0-3.6-.5-5.1-1.4l-.4-.2-3.7 1 1-3.6-.2-.4A9.8 9.8 0 0 1 2.2 12c0-5.4 4.4-9.8 9.8-9.8 2.6 0 5.1 1 6.9 2.9A9.7 9.7 0 0 1 21.8 12c0 5.4-4.4 9.8-9.8 9.8zm5.4-7.4c-.3-.2-1.8-.9-2-.1-.3-.1-.5-.2-.7.2-.2.3-.8 1-.9 1.2-.2.2-.3.2-.6.1-.3-.2-1.3-.5-2.4-1.5-.9-.8-1.5-1.8-1.7-2.1-.2-.3 0-.5.1-.6l.5-.5.3-.5v-.5c-.1-.2-.7-1.6-.9-2.2-.3-.6-.5-.5-.7-.5h-.6c-.2 0-.6.1-.9.4-.3.3-1.1 1.1-1.1 2.7s1.1 3.1 1.3 3.3c.2.2 2.2 3.4 5.4 4.7.8.3 1.4.5 1.8.6.8.2 1.5.2 2 .1.6-.1 1.8-.7 2-1.4.3-.7.3-1.3.2-1.4-.1-.2-.3-.3-.6-.4z"/></svg>
+                      <span>WhatsApp</span>
+                    </a>
+                  </div>
                 </div>
               </div>
             </article>
@@ -2774,10 +2839,13 @@
                     <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span>Business contracts &amp; legal paperwork</span></li>
                     <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span>Fast turnaround with strict privacy</span></li>
                   </ul>
-                  <a href="https://wa.me/6281318939319?text=Hello%20Tanogaido,%20I%20would%20like%20to%20request%20Japanese%20Document%20Translation." target="_blank" rel="noopener noreferrer" class="wa-flip-cta">
-                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.5 3.5A11.8 11.8 0 0 0 12 0C5.4 0 0 5.4 0 12c0 2.1.6 4.2 1.6 6L0 24l6.2-1.6A12 12 0 0 0 12 24c6.6 0 12-5.4 12-12 0-3.2-1.2-6.2-3.5-8.5zM12 21.8c-1.8 0-3.6-.5-5.1-1.4l-.4-.2-3.7 1 1-3.6-.2-.4A9.8 9.8 0 0 1 2.2 12c0-5.4 4.4-9.8 9.8-9.8 2.6 0 5.1 1 6.9 2.9A9.7 9.7 0 0 1 21.8 12c0 5.4-4.4 9.8-9.8 9.8zm5.4-7.4c-.3-.2-1.8-.9-2-.1-.3-.1-.5-.2-.7.2-.2.3-.8 1-.9 1.2-.2.2-.3.2-.6.1-.3-.2-1.3-.5-2.4-1.5-.9-.8-1.5-1.8-1.7-2.1-.2-.3 0-.5.1-.6l.5-.5.3-.5v-.5c-.1-.2-.7-1.6-.9-2.2-.3-.6-.5-.5-.7-.5h-.6c-.2 0-.6.1-.9.4-.3.3-1.1 1.1-1.1 2.7s1.1 3.1 1.3 3.3c.2.2 2.2 3.4 5.4 4.7.8.3 1.4.5 1.8.6.8.2 1.5.2 2 .1.6-.1 1.8-.7 2-1.4.3-.7.3-1.3.2-1.4-.1-.2-.3-.3-.6-.4z"/></svg>
-                    <span>Chat on WhatsApp</span>
-                  </a>
+                  <div class="flip-back-actions">
+                    <a href="services/document-translation.html" class="detail-flip-cta">Details &rarr;</a>
+                    <a href="https://wa.me/6281318939319?text=Hello%20Tanogaido,%20I%20would%20like%20to%20request%20Japanese%20Document%20Translation." target="_blank" rel="noopener noreferrer" class="wa-flip-cta">
+                      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.5 3.5A11.8 11.8 0 0 0 12 0C5.4 0 0 5.4 0 12c0 2.1.6 4.2 1.6 6L0 24l6.2-1.6A12 12 0 0 0 12 24c6.6 0 12-5.4 12-12 0-3.2-1.2-6.2-3.5-8.5zM12 21.8c-1.8 0-3.6-.5-5.1-1.4l-.4-.2-3.7 1 1-3.6-.2-.4A9.8 9.8 0 0 1 2.2 12c0-5.4 4.4-9.8 9.8-9.8 2.6 0 5.1 1 6.9 2.9A9.7 9.7 0 0 1 21.8 12c0 5.4-4.4 9.8-9.8 9.8zm5.4-7.4c-.3-.2-1.8-.9-2-.1-.3-.1-.5-.2-.7.2-.2.3-.8 1-.9 1.2-.2.2-.3.2-.6.1-.3-.2-1.3-.5-2.4-1.5-.9-.8-1.5-1.8-1.7-2.1-.2-.3 0-.5.1-.6l.5-.5.3-.5v-.5c-.1-.2-.7-1.6-.9-2.2-.3-.6-.5-.5-.7-.5h-.6c-.2 0-.6.1-.9.4-.3.3-1.1 1.1-1.1 2.7s1.1 3.1 1.3 3.3c.2.2 2.2 3.4 5.4 4.7.8.3 1.4.5 1.8.6.8.2 1.5.2 2 .1.6-.1 1.8-.7 2-1.4.3-.7.3-1.3.2-1.4-.1-.2-.3-.3-.6-.4z"/></svg>
+                      <span>WhatsApp</span>
+                    </a>
+                  </div>
                 </div>
               </div>
             </article>
@@ -3009,19 +3077,21 @@
             <div>
               <h3 class="footer-col-title">Services</h3>
               <ul class="footer-links">
-                <li><a href="https://wa.me/6281318939319?text=Hello%20Tanogaido,%20I%20would%20like%20a%20Japan%20Tour%20Guide." target="_blank" rel="noopener noreferrer">Japan Tour Guide</a></li>
-                <li><a href="https://wa.me/6281318939319?text=Hello%20Tanogaido,%20I%20need%20a%20Private%20Japan%20Tour." target="_blank" rel="noopener noreferrer">Private Japan Tour</a></li>
-                <li><a href="https://wa.me/6281318939319?text=Hello%20Tanogaido,%20I%20would%20like%20JR%20Pass%20tickets." target="_blank" rel="noopener noreferrer">JR Pass Tickets</a></li>
-                <li><a href="https://wa.me/6281318939319?text=Hello%20Tanogaido,%20I%20need%20Japan%20Visa%20Assistance." target="_blank" rel="noopener noreferrer">Visa &amp; Pocket WiFi</a></li>
+                <li><a href="services/japan-tour-guide.html">Japan Tour Guide</a></li>
+                <li><a href="services/private-japan-tour.html">Private Japan Tour</a></li>
+                <li><a href="services/jr-pass-tickets.html">JR Pass Tickets</a></li>
+                <li><a href="services/japan-visa-processing.html">Japan Visa Processing</a></li>
+                <li><a href="services/pocket-wifi-rental.html">Pocket WiFi Rental</a></li>
               </ul>
             </div>
             <div>
               <h3 class="footer-col-title">Support</h3>
               <ul class="footer-links">
+                <li><a href="services.html">All 20 Services</a></li>
+                <li><a href="services/japan-import-service.html">Cargo &amp; Import</a></li>
+                <li><a href="services/document-translation.html">Document Translation</a></li>
+                <li><a href="services/attraction-theme-park-tickets.html">Theme Park Tickets</a></li>
                 <li><a href="https://wa.me/6281318939319?text=Hello%20Tanogaido,%20I%20would%20like%20a%20free%20Japan%20trip%20consultation." target="_blank" rel="noopener noreferrer">WhatsApp Concierge</a></li>
-                <li><a href="https://wa.me/6281318939319?text=Hello%20Tanogaido,%20I%20need%20Japan%20Cargo%20%26%20Import%20rates." target="_blank" rel="noopener noreferrer">Cargo &amp; Import</a></li>
-                <li><a href="https://wa.me/6281318939319?text=Hello%20Tanogaido,%20I%20need%20Document%20Translation." target="_blank" rel="noopener noreferrer">Document Translation</a></li>
-                <li><a href="https://wa.me/6281318939319?text=Hello%20Tanogaido,%20I%20would%20like%20Japan%20Theme%20Park%20tickets." target="_blank" rel="noopener noreferrer">Theme Park Tickets</a></li>
               </ul>
             </div>
             <div>

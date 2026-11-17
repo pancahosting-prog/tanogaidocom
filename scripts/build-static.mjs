@@ -10,7 +10,7 @@ const distDir = path.join(rootDir, 'dist');
 fs.rmSync(distDir, { recursive: true, force: true });
 fs.mkdirSync(distDir, { recursive: true });
 
-const staticFiles = ['index.html', 'services.html', 'shop.html', 'product.html', 'about.html', 'tilt-stack-sample.html'];
+const staticFiles = ['index.html', 'services.html', 'shop.html', 'product.html', 'about.html', 'tilt-stack-sample.html', 'sitemap.xml', 'robots.txt'];
 for (const file of staticFiles) {
   const src = path.join(rootDir, file);
   if (fs.existsSync(src)) {
@@ -18,7 +18,7 @@ for (const file of staticFiles) {
   }
 }
 
-const staticDirs = ['frames', 'assets'];
+const staticDirs = ['frames', 'assets', 'services'];
 for (const dir of staticDirs) {
   const src = path.join(rootDir, dir);
   if (fs.existsSync(src)) {

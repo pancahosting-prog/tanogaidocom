@@ -20,16 +20,25 @@ const MIME = {
   '.png': 'image/png',
   '.svg': 'image/svg+xml',
   '.ico': 'image/x-icon',
-  '.webp': 'image/webp'
+  '.webp': 'image/webp',
+  '.xml': 'application/xml; charset=utf-8',
+  '.txt': 'text/plain; charset=utf-8'
 };
 
 const server = http.createServer((req, res) => {
-  let reqPath = req.url.split('?')[0];
+  let reqPath = decodeURIComponent(req.url.split('?')[0]);
   if (reqPath === '/') reqPath = '/index.html';
-  if (reqPath === '/shop' || reqPath === '/shop/') reqPath = '/shop.html';
-  if (reqPath === '/product' || reqPath === '/product/') reqPath = '/product.html';
-  if (reqPath === '/about' || reqPath === '/about/') reqPath = '/about.html';
-  if (reqPath === '/services' || reqPath === '/services/') reqPath = '/services.html';
+  else if (reqPath === '/shop' || reqPath === '/shop/') reqPath = '/shop.html';
+  else if (reqPath === '/product' || reqPath === '/product/') reqPath = '/product.html';
+  else if (reqPath === '/about' || reqPath === '/about/') reqPath = '/about.html';
+  else if (reqPath === '/services' || reqPath === '/services/') reqPath = '/services.html';
+  else if (!path.extname(reqPath)) {
+    const cleanPath = reqPath.endsWith('/') ? reqPath.slice(0, -1) : reqPath;
+    const candidateHtml = path.join(__dirname, `${cleanPath}.html`);
+    if (fs.existsSync(candidateHtml) && fs.statSync(candidateHtml).isFile()) {
+      reqPath = `${cleanPath}.html`;
+    }
+  }
   const filePath = path.join(__dirname, reqPath);
 
   fs.stat(filePath, (err, stats) => {

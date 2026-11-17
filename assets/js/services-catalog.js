@@ -351,12 +351,18 @@
     return `https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(text)}`;
   }
 
+  function getRootPrefix() {
+    if (typeof window === 'undefined' || !window.location) return '';
+    return /\/services(\/|$)/.test(window.location.pathname) ? '../' : '';
+  }
+
   function renderDesktopDropdown(container) {
     if (!container) return;
+    const prefix = getRootPrefix();
     const itemsHtml = SERVICES.map((s) => {
       const iconSvg = SERVICE_ICONS[s.id] || DEFAULT_ICON;
       return `
-        <a href="services.html#service-${s.id}" class="nav-svc-item">
+        <a href="${prefix}services/${s.id}.html" class="nav-svc-item">
           <span class="nav-svc-icon" aria-hidden="true">${iconSvg}</span>
           <span class="nav-svc-label">${s.title}</span>
         </a>
@@ -364,7 +370,7 @@
     }).join('');
 
     const allItemHtml = `
-      <a href="services.html" class="nav-svc-item nav-svc-item-all">
+      <a href="${prefix}services.html" class="nav-svc-item nav-svc-item-all">
         <span class="nav-svc-icon" aria-hidden="true">${ALL_SERVICES_ICON}</span>
         <span class="nav-svc-label">All Services &rarr;</span>
       </a>
@@ -382,15 +388,16 @@
 
   function renderMobileServicesList(container) {
     if (!container) return;
+    const prefix = getRootPrefix();
     const linksHtml = SERVICES.map((s) => (
-      `<a href="services.html#service-${s.id}">${s.title}</a>`
+      `<a href="${prefix}services/${s.id}.html">${s.title}</a>`
     )).join('');
 
     container.innerHTML = `
       <div class="mobile-services-sublist-inner">
         <div class="mobile-services-scroll">
           ${linksHtml}
-          <a href="services.html" class="mobile-services-all-link">All Services &rarr;</a>
+          <a href="${prefix}services.html" class="mobile-services-all-link">All Services &rarr;</a>
         </div>
       </div>
     `;
