@@ -529,15 +529,18 @@ body {
   position: relative;
   z-index: 2;
   width: 100%;
+  min-width: 0;
   padding: clamp(32px, 5vw, 60px) clamp(26px, 5vw, 64px);
   display: grid;
-  grid-template-columns: 1.25fr 0.75fr;
+  grid-template-columns: minmax(0, 1.25fr) minmax(0, 0.75fr);
   gap: clamp(24px, 4vw, 52px);
   align-items: end;
 }
 
 .svc-hero-copy {
   max-width: 620px;
+  min-width: 0;
+  width: 100%;
 }
 
 .eyebrow-row {
@@ -546,6 +549,8 @@ body {
   gap: 14px;
   margin-bottom: 14px;
   max-width: 440px;
+  width: 100%;
+  min-width: 0;
 }
 
 .eyebrow {
@@ -554,30 +559,33 @@ body {
   letter-spacing: 2px;
   text-transform: uppercase;
   color: #cbd5e1;
-  white-space: nowrap;
+  white-space: normal;
+  line-height: 1.35;
 }
 
 .eyebrow-line {
   flex: 1;
   height: 1px;
   background: rgba(203, 213, 225, 0.45);
-  min-width: 48px;
+  min-width: 24px;
 }
 
 .svc-hero-title {
-  font-size: clamp(32px, 4.1vw, 52px);
+  font-size: clamp(30px, 4.1vw, 52px);
   font-weight: 800;
   line-height: 1.07;
   letter-spacing: -1.4px;
   color: #ffffff;
   margin-bottom: 16px;
   text-wrap: balance;
+  overflow-wrap: break-word;
+  word-break: break-word;
   text-shadow: 0 2px 20px rgba(0, 0, 0, 0.35);
 }
 
 .svc-hero-title .line-red {
   color: var(--primary-red);
-  display: inline-block;
+  display: inline;
 }
 
 .svc-hero-desc {
@@ -587,6 +595,7 @@ body {
   margin-bottom: 26px;
   max-width: 520px;
   font-weight: 500;
+  overflow-wrap: break-word;
 }
 
 .svc-hero-cta-row {
@@ -594,6 +603,7 @@ body {
   align-items: center;
   flex-wrap: wrap;
   gap: 14px;
+  max-width: 100%;
 }
 
 .svc-hero-secondary-link {
@@ -622,6 +632,8 @@ body {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 10px;
+  min-width: 0;
+  width: 100%;
 }
 
 .svc-stat-glass {
@@ -629,6 +641,7 @@ body {
   border: 1px solid rgba(255, 255, 255, 0.75);
   border-radius: 16px;
   padding: 15px 14px;
+  min-width: 0;
   box-shadow: 0 12px 28px -12px rgba(15, 23, 42, 0.35);
 }
 
@@ -1314,7 +1327,7 @@ body {
 @media (max-width: 1100px) {
   .svc-hero-inner,
   .svc-details-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
     gap: 24px;
   }
   .svc-highlights-grid,
@@ -1362,18 +1375,54 @@ body {
   .svc-detail-main {
     padding-top: 60px;
   }
+  .page-container {
+    padding: 0 16px;
+  }
   .svc-hero-band {
     padding: 12px 0 28px 0;
   }
   .svc-hero-frame {
+    min-height: 0;
     border-radius: 18px;
+  }
+  .svc-hero-inner {
+    grid-template-columns: minmax(0, 1fr);
+    padding: 24px 18px;
+    gap: 20px;
+  }
+  .svc-hero-copy {
+    max-width: 100%;
+  }
+  .eyebrow-row {
+    max-width: 100%;
+    gap: 10px;
+    margin-bottom: 10px;
+  }
+  .eyebrow {
+    font-size: 9.5px;
+    letter-spacing: 1.2px;
+  }
+  .eyebrow-line {
+    min-width: 16px;
+  }
+  .svc-hero-title {
+    font-size: clamp(25px, 6.8vw, 33px);
+    letter-spacing: -0.6px;
+    line-height: 1.12;
+    margin-bottom: 12px;
+  }
+  .svc-hero-desc {
+    font-size: 13.5px;
+    line-height: 1.55;
+    margin-bottom: 18px;
+    max-width: 100%;
   }
   .svc-hero-stats,
   .svc-highlights-grid,
   .svc-steps-grid,
   .svc-faq-list,
   .svc-related-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
   }
   .section-header-row {
     flex-direction: column;
