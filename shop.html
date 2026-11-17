@@ -309,7 +309,7 @@
       padding-bottom: 6px;
       opacity: 0;
       transform: translateY(-6px);
-      transition: opacity 0.35s ease, transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+      transition: opacity 0.24s ease, transform 0.30s cubic-bezier(0.22, 1, 0.36, 1);
     }
 
     .mobile-menu-overlay.content-visible .mobile-menu-header {
@@ -347,8 +347,8 @@
 
     .mobile-nav-list li {
       opacity: 0;
-      transform: translateY(18px);
-      transition: opacity 0.38s cubic-bezier(0.22, 1, 0.36, 1), transform 0.52s cubic-bezier(0.22, 1, 0.36, 1);
+      transform: translateY(14px);
+      transition: opacity 0.26s cubic-bezier(0.22, 1, 0.36, 1), transform 0.34s cubic-bezier(0.22, 1, 0.36, 1);
     }
 
     .mobile-menu-overlay.content-visible .mobile-nav-list li {
@@ -356,11 +356,11 @@
       transform: translateY(0);
     }
 
-    .mobile-menu-overlay.content-visible .mobile-nav-list li:nth-child(1) { transition-delay: 0.04s; }
-    .mobile-menu-overlay.content-visible .mobile-nav-list li:nth-child(2) { transition-delay: 0.08s; }
-    .mobile-menu-overlay.content-visible .mobile-nav-list li:nth-child(3) { transition-delay: 0.12s; }
-    .mobile-menu-overlay.content-visible .mobile-nav-list li:nth-child(4) { transition-delay: 0.16s; }
-    .mobile-menu-overlay.content-visible .mobile-nav-list li:nth-child(5) { transition-delay: 0.20s; }
+    .mobile-menu-overlay.content-visible .mobile-nav-list li:nth-child(1) { transition-delay: 0.02s; }
+    .mobile-menu-overlay.content-visible .mobile-nav-list li:nth-child(2) { transition-delay: 0.05s; }
+    .mobile-menu-overlay.content-visible .mobile-nav-list li:nth-child(3) { transition-delay: 0.08s; }
+    .mobile-menu-overlay.content-visible .mobile-nav-list li:nth-child(4) { transition-delay: 0.11s; }
+    .mobile-menu-overlay.content-visible .mobile-nav-list li:nth-child(5) { transition-delay: 0.14s; }
 
     .mobile-nav-list a {
       text-decoration: none;
@@ -387,13 +387,21 @@
       padding-top: 14px;
       border-top: 1px solid #f1f5f9;
       opacity: 0;
-      transform: translateY(14px);
-      transition: opacity 0.38s cubic-bezier(0.22, 1, 0.36, 1) 0.18s, transform 0.52s cubic-bezier(0.22, 1, 0.36, 1) 0.18s;
+      transform: translateY(10px);
+      transition: opacity 0.26s cubic-bezier(0.22, 1, 0.36, 1) 0.12s, transform 0.34s cubic-bezier(0.22, 1, 0.36, 1) 0.12s;
     }
 
     .mobile-menu-overlay.content-visible .mobile-menu-footer {
       opacity: 1;
       transform: translateY(0);
+    }
+
+    .mobile-menu-overlay.is-closing .mobile-menu-header,
+    .mobile-menu-overlay.is-closing .mobile-nav-list li,
+    .mobile-menu-overlay.is-closing .mobile-menu-footer {
+      opacity: 0;
+      transition: opacity 0.11s ease, transform 0.12s ease !important;
+      transition-delay: 0s !important;
     }
 
     .hero-cta-btn {
@@ -1010,17 +1018,56 @@
       }
       .shop-main {
         padding-top: 60px;
+        padding-bottom: 64px;
       }
       .shop-toolbar-band {
         top: 60px;
       }
       .shop-hero-band {
-        padding: 24px 0 30px 0;
+        padding: 16px 0 22px 0;
+      }
+      .shop-hero-grid {
+        gap: 16px;
+      }
+      .shop-hero-media {
+        order: -1;
+        aspect-ratio: 16 / 9;
+        border-radius: 18px;
+      }
+      .shop-hero-title {
+        font-size: 28px;
+        margin-bottom: 10px;
+      }
+      .shop-hero-desc {
+        font-size: 13px;
+        margin-bottom: 16px;
+      }
+      .shop-toolbar-inner {
+        gap: 8px;
+      }
+      .shop-cat-tabs {
+        padding: 10px 0 2px 0;
+        gap: 8px;
+      }
+      .shop-cat-tab {
+        padding: 7px 14px;
+        border-radius: 9999px;
+        background: #f8fafc;
+        border: 1px solid #e6eaf0;
+        font-size: 11.5px;
+      }
+      .shop-cat-tab.active {
+        background: var(--primary-red);
+        border-color: var(--primary-red);
+        color: #ffffff;
+      }
+      .shop-cat-tab::after {
+        display: none;
       }
       .shop-controls-right {
         width: 100%;
         justify-content: space-between;
-        padding-top: 2px;
+        padding: 4px 0 10px 0;
       }
       .shop-search-input {
         flex: 1;
@@ -1337,9 +1384,12 @@
       function renderMobileFluid(tRaw) {
         if (!mobileMenuModal || !mobileMenuFluidSvg || !mobileMenuFluidPath) return;
         const isVisible = tRaw > 0.002;
+        const isClosing = menuTarget === 0 && tRaw > 0.002;
+
         mobileMenuModal.classList.toggle('is-animating', isVisible);
         mobileMenuModal.classList.toggle('active', menuTarget === 1);
-        mobileMenuModal.classList.toggle('content-visible', tRaw >= 0.34);
+        mobileMenuModal.classList.toggle('is-closing', isClosing);
+        mobileMenuModal.classList.toggle('content-visible', menuTarget === 1 && tRaw >= 0.78);
 
         if (!isVisible) {
           if (lastMenuKey !== 'closed') {
@@ -1349,14 +1399,15 @@
           return;
         }
 
+        const svgT = menuTarget === 0 ? clamp(tRaw / 0.80, 0, 1) : tRaw;
         const w = window.innerWidth || 375;
         const h = window.innerHeight || 667;
-        const key = `${w}x${h}:${tRaw >= 0.999 ? 1 : tRaw.toFixed(4)}`;
+        const key = `${w}x${h}:${svgT >= 0.999 ? 1 : svgT.toFixed(4)}`;
         if (key === lastMenuKey) return;
         lastMenuKey = key;
 
         mobileMenuFluidSvg.setAttribute('viewBox', `0 0 ${w} ${h}`);
-        if (tRaw >= 0.999) {
+        if (svgT >= 0.999) {
           mobileMenuFluidPath.setAttribute('d', `M -4 -4 H ${w + 4} V ${h + 4} H -4 Z`);
           return;
         }
@@ -1367,9 +1418,9 @@
         const x2 = Math.max(pad, R - wingW);
         const yW = w <= 860 ? 56 : 72;
 
-        const eW = easeInOutQuart(clamp(tRaw / 0.88, 0, 1));
-        const eH = easeInOutQuart(clamp(tRaw / 0.84, 0, 1));
-        const eC = easeInOutCubic(clamp((tRaw - 0.12) / 0.88, 0, 1));
+        const eW = easeInOutQuart(clamp(svgT / 0.88, 0, 1));
+        const eH = easeInOutQuart(clamp(svgT / 0.84, 0, 1));
+        const eC = easeInOutCubic(clamp((svgT - 0.12) / 0.88, 0, 1));
 
         const xTop = lerp(x2, -32, eW);
         const yRight = lerp(yW, h + 32, eH);
@@ -1390,9 +1441,9 @@
         if (isReducedMotion) {
           menuRaw = menuTarget;
         } else if (menuRaw < menuTarget) {
-          menuRaw = Math.min(1, menuRaw + dt / 0.68);
+          menuRaw = Math.min(1, menuRaw + dt / 0.62);
         } else if (menuRaw > menuTarget) {
-          menuRaw = Math.max(0, menuRaw - dt / 0.52);
+          menuRaw = Math.max(0, menuRaw - dt / 0.56);
         }
         renderMobileFluid(menuRaw);
         if (menuRaw !== menuTarget) {

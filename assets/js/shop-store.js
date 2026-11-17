@@ -12,16 +12,25 @@
       categoryLabel: 'Tea Craft',
       category: 'tea',
       status: 'Limited Harvest',
+      rating: '4.9',
+      reviewCount: 42,
       price: 48,
       priceJpy: '¥7,200',
       image: 'assets/products/uji-matcha.jpg',
+      gallery: [
+        { src: 'assets/products/uji-matcha.jpg', label: 'Studio Set' },
+        { src: 'assets/products/shop-hero.jpg', label: 'Table Collection' }
+      ],
       shortDesc: 'First-harvest stone-milled ceremonial matcha in matte crimson lacquer canister with 80-prong bamboo whisk.',
+      craftStory: 'Shade-grown for twenty-four days along the Uji River mist slopes, these tender first-flush leaves are granite stone-milled in small batches for natural umami sweetness and vivid emerald crema.',
       variants: ['40g Canister + Whisk', '80g Refill Pouch'],
       specs: [
-        'Single-cultivar Samidori leaves from Uji, Kyoto',
-        'Airtight matte lacquer tin preserves vivid aroma',
-        'Ships in protective gift sleeve from Kyoto'
+        'Single-cultivar Samidori leaves harvested in Uji, Kyoto',
+        'Airtight matte crimson lacquer tin preserves vivid aroma',
+        'Paired with hand-carved 80-prong Takayama bamboo whisk',
+        'Ships sealed in protective paulownia & cotton sleeve'
       ],
+      shippingNote: 'Dispatched from Kyoto/Tokyo within 48 hours · Cold-chain sealed pack',
       featured: true
     },
     {
@@ -31,16 +40,25 @@
       categoryLabel: 'Ceramics',
       category: 'tea',
       status: 'Hand-Thrown',
+      rating: '4.9',
+      reviewCount: 38,
       price: 64,
       priceJpy: '¥9,600',
       image: 'assets/products/kyoto-tumbler.jpg',
+      gallery: [
+        { src: 'assets/products/kyoto-tumbler.jpg', label: 'Front Profile' },
+        { src: 'assets/products/shop-hero.jpg', label: 'Atelier Pairing' }
+      ],
       shortDesc: 'Wheel-thrown speckled stoneware tea cup finished with warm vermilion rim by fifth-generation Kyoto potters.',
+      craftStory: 'Each tumbler is shaped by hand on a potter’s wheel in Higashiyama using iron-speckled Shigaraki clay, then dipped in warm milk-white ash glaze with a fine vermilion kiln-fired rim.',
       variants: ['Speckled Warm White', 'Moss Ash Glaze'],
       specs: [
-        'Handcrafted in Higashiyama kiln workshop',
-        '240ml capacity · Comfortably insulates warm brews',
-        'Signed artisan paulownia wood presentation box'
+        'Handcrafted in Higashiyama family kiln workshop, Kyoto',
+        '240ml balanced capacity · Double-walled tactile base',
+        'Signed artisan paulownia wood presentation box included',
+        'Lead-free natural ash glaze · Subtle unique speckles'
       ],
+      shippingNote: 'Double-boxed in custom impact-cushioned Kyoto crate',
       featured: true
     },
     {
@@ -50,16 +68,25 @@
       categoryLabel: 'Travel Goods',
       category: 'travel',
       status: 'In Stock',
+      rating: '5.0',
+      reviewCount: 54,
       price: 92,
       priceJpy: '¥13,800',
       image: 'assets/products/hakone-folio.jpg',
+      gallery: [
+        { src: 'assets/products/hakone-folio.jpg', label: 'Travel Set' },
+        { src: 'assets/products/shop-hero.jpg', label: 'Detail Scene' }
+      ],
       shortDesc: 'Full-grain charcoal calfskin passport sleeve and luggage tag featuring hand-inlaid Hakone geometric wood marquetry.',
+      craftStory: 'Combining supple vegetable-tanned charcoal leather with Edo-era Yosegi-zaiku parquetry crafted from natural walnut, cherry, and magnolia woods in Hakone.',
       variants: ['Charcoal + Yosegi Set', 'Passport Folio Only'],
       specs: [
-        'Dedicated JR Rail Pass, Suica & boarding card slots',
-        'Traditional Edo wood marquetry inlay from Kanagawa',
-        'Solid brushed brass luggage tag buckle'
+        'Dedicated JR Rail Pass, Suica & boarding card sleeves',
+        'Authentic hand-inlaid Hakone geometric wood marquetry',
+        'Solid brushed brass buckle & privacy-flap luggage tag',
+        'Slim silhouette tailored cleanly for coat or sling pockets'
       ],
+      shippingNote: 'Ready for Tokyo hotel desk drop or international express',
       featured: true
     },
     {
@@ -69,16 +96,25 @@
       categoryLabel: 'Rail Gear',
       category: 'travel',
       status: '500ml Light',
+      rating: '4.8',
+      reviewCount: 61,
       price: 58,
       priceJpy: '¥8,700',
       image: 'assets/products/fuji-bottle.jpg',
+      gallery: [
+        { src: 'assets/products/fuji-bottle.jpg', label: 'Crimson Matte' },
+        { src: 'assets/products/shop-hero.jpg', label: 'Collection View' }
+      ],
       shortDesc: 'Featherweight double-wall insulated bottle finished in matte Tanogaido crimson engineered for Shinkansen day trips.',
+      craftStory: 'Precision-spun from Japanese aerospace-grade titanium in Niigata for zero metallic aftertaste and ultra-low 195g carry weight across long temple walks.',
       variants: ['500ml Crimson Matte', '350ml Brushed Silver'],
       specs: [
-        '18 hours hot / 24 hours cold vacuum insulation',
-        'Ultra-lightweight at 195g for effortless walking tours',
-        'Fits standard Shinkansen seat cup holders'
+        '18 hours piping hot / 24 hours crisp cold vacuum seal',
+        'Ultra-lightweight 195g body for all-day Tokyo walking',
+        'Sized for standard Tokaido Shinkansen cup holders',
+        'Scratch-resistant matte powder coat finish'
       ],
+      shippingNote: 'Ships worldwide via insured DHL air parcel',
       featured: true
     },
     {
@@ -88,16 +124,25 @@
       categoryLabel: 'Fragrance',
       category: 'home',
       status: '100ml Glass',
+      rating: '4.9',
+      reviewCount: 29,
       price: 42,
       priceJpy: '¥6,300',
       image: 'assets/products/hinoki-mist.jpg',
+      gallery: [
+        { src: 'assets/products/hinoki-mist.jpg', label: '100ml Apothecary' },
+        { src: 'assets/products/shop-hero.jpg', label: 'Tabletop Scene' }
+      ],
       shortDesc: 'Essential oil botanical spray blending aromatic Japanese cypress timber with cold-pressed Kochi yuzu peel.',
+      craftStory: 'Steam-distilled from sustainably pruned northern Kyoto hinoki cypress groves and layered with bright winter yuzu zest for an unmistakable onsen sanctuary atmosphere.',
       variants: ['100ml Smoked Amber', '200ml Refill Bottle'],
       specs: [
-        '100% steam-distilled Kyoto temple cypress oil',
-        'UV-shielded frosted amber apothecary glass',
+        '100% pure steam-distilled Kyoto cypress wood essential oil',
+        'UV-shielded frosted amber apothecary spray bottle',
+        'Notes: Rain-soaked cedarwood, sun-warmed hinoki, yuzu zest',
         'Zero synthetic parabens or artificial fixatives'
       ],
+      shippingNote: 'Sealed leak-proof air freight packaging',
       featured: false
     },
     {
@@ -107,16 +152,25 @@
       categoryLabel: 'Glassware',
       category: 'craft',
       status: 'Signed Edition',
+      rating: '5.0',
+      reviewCount: 19,
       price: 118,
       priceJpy: '¥17,700',
       image: 'assets/products/edo-glass.jpg',
+      gallery: [
+        { src: 'assets/products/edo-glass.jpg', label: 'Carafe & Cup' },
+        { src: 'assets/products/shop-hero.jpg', label: 'Atelier Pairing' }
+      ],
       shortDesc: 'Mouth-blown lead crystal carafe and tasting cup hand-faceted with crisp Edo diamond geometric cuts.',
+      craftStory: 'Master cutters in Sumida ward incise razor-crisp Yarai diamond patterns through deep ruby-cased crystal glass so ambient light refracts like lanterns along the Sumida River.',
       variants: ['Carafe + 1 Ochoko Cup', 'Gift Set + 2 Cups'],
       specs: [
-        'Hand-cut crystal crafted in Sumida, Tokyo',
-        'Signature deep ruby overlay with clear interior facets',
-        'Packed in cushioned wooden display crate'
+        'Mouth-blown and hand-faceted in Sumida ward, Tokyo',
+        'Signature deep ruby crystal overlay with clear facets',
+        'Presented in cushioned paulownia heirloom storage box',
+        'Includes signed Tokyo artisan certificate of origin'
       ],
+      shippingNote: 'Museum-grade foam-suspended wooden box delivery',
       featured: false
     },
     {
@@ -126,16 +180,25 @@
       categoryLabel: 'Textile',
       category: 'craft',
       status: '100% Cotton',
+      rating: '4.8',
+      reviewCount: 34,
       price: 54,
       priceJpy: '¥8,100',
       image: 'assets/products/imabari-towel.jpg',
+      gallery: [
+        { src: 'assets/products/imabari-towel.jpg', label: 'Waffle Duo' },
+        { src: 'assets/products/shop-hero.jpg', label: 'Collection View' }
+      ],
       shortDesc: 'Breathable honeycomb-weave waffle cotton towels certified by the Shikoku Imabari Towel Guild.',
+      craftStory: 'Woven with mineral-soft Mount Ishizuchi snowmelt spring water in Ehime Prefecture, delivering Cloud-soft loft that packs flat inside carry-on luggage.',
       variants: ['Off-White & Charcoal Duo', 'Crimson & Chalk Duo'],
       specs: [
         'Pure long-staple unbleached organic Japanese cotton',
-        'Ultra-compact waffle weave dries quickly overnight',
-        'Certified 5-second water absorption standard'
+        'Ultra-compact waffle weave dries rapidly overnight',
+        'Certified official Imabari 5-second absorbency mark',
+        'Set includes 1 bath travel sheet + 1 hand towel'
       ],
+      shippingNote: 'Ready to ship globally within 48 hours',
       featured: false
     },
     {
@@ -145,16 +208,25 @@
       categoryLabel: 'Connectivity',
       category: 'travel',
       status: '7-Day Pass',
+      rating: '4.9',
+      reviewCount: 118,
       price: 38,
       priceJpy: '¥5,700',
       image: 'assets/products/pocket-wifi.jpg',
+      gallery: [
+        { src: 'assets/products/pocket-wifi.jpg', label: 'Device & Pouch' },
+        { src: 'assets/products/shop-hero.jpg', label: 'Travel Setup' }
+      ],
       shortDesc: 'Pocket-sized unlimited data hotspot ready at Haneda, Narita, or Kansai airport arrival counters.',
+      craftStory: 'Zero throttling and multi-carrier switching across Docomo and SoftBank towers ensure uninterrupted Google Maps, Shinkansen seat booking, and crystal-clear video calls from Hokkaido to Okinawa.',
       variants: ['7-Day Unlimited Pass', '14-Day Unlimited Pass'],
       specs: [
-        'Connect up to 5 smartphones or laptops simultaneously',
-        'True unlimited 4G/5G coverage on SoftBank & Docomo',
-        'Includes canvas travel pouch & braided USB-C cable'
+        'Connect up to 5 smartphones, tablets, or laptops',
+        'True unlimited 4G/5G coverage across Japan mountains & rail',
+        '14-hour battery endurance + braided USB-C cable included',
+        'Pre-paid airport return envelope & Tokyo hotel pickup'
       ],
+      shippingNote: 'Airport counter pickup (HND/NRT/KIX) or Tokyo hotel drop',
       featured: false
     }
   ];
@@ -172,23 +244,19 @@
     try {
       localStorage.setItem(key, JSON.stringify(val));
     } catch {
-      // Ignore private browsing quota errors
+      // Ignore storage errors
     }
   }
 
   let bag = readStorage(STORAGE_BAG_KEY, []);
   let favs = readStorage(STORAGE_FAV_KEY, []);
-  let activeQuickViewId = null;
-  let activeVariant = '';
-  let activeQty = 1;
 
   function findProduct(id) {
-    return PRODUCTS.find((p) => p.id === id) || null;
+    return PRODUCTS.find((p) => p.id === id) || PRODUCTS[0];
   }
 
-  function saveBag() {
-    writeStorage(STORAGE_BAG_KEY, bag);
-    syncAllBagCounts();
+  function getProductUrl(id) {
+    return `product.html?id=${encodeURIComponent(id)}`;
   }
 
   function getBagTotalCount() {
@@ -199,130 +267,61 @@
     return bag.reduce((sum, item) => sum + item.price * item.qty, 0);
   }
 
+  function saveBag() {
+    writeStorage(STORAGE_BAG_KEY, bag);
+    syncAllBagCounts();
+  }
+
   function syncAllBagCounts() {
     const count = getBagTotalCount();
+    const subtotal = getBagSubtotal();
     document.querySelectorAll('[data-bag-count]').forEach((el) => {
       el.textContent = String(count);
     });
+    const mobileBar = document.getElementById('tg-mobile-bag-bar');
+    if (mobileBar) {
+      mobileBar.classList.toggle('has-items', count > 0);
+      const summaryEl = mobileBar.querySelector('[data-mobile-bag-summary]');
+      if (summaryEl) {
+        summaryEl.textContent = `${count} ${count === 1 ? 'item' : 'items'} · $${subtotal}`;
+      }
+    }
   }
 
   function ensureSharedModals() {
-    if (document.getElementById('tg-qv-backdrop')) return;
-
-    const modalHtml = `
-      <div class="tg-qv-backdrop" id="tg-qv-backdrop" role="dialog" aria-modal="true" aria-labelledby="tg-qv-title">
-        <div class="tg-qv-modal">
-          <button class="tg-qv-close" id="tg-qv-close" type="button" aria-label="Close quick view">&times;</button>
-          <div class="tg-qv-media">
-            <img id="tg-qv-img" src="" alt="">
+    if (!document.getElementById('tg-bag-backdrop')) {
+      const bagHtml = `
+        <div class="tg-bag-backdrop" id="tg-bag-backdrop"></div>
+        <aside class="tg-bag-drawer" id="tg-bag-drawer" aria-label="Shopping Bag">
+          <div class="tg-bag-header">
+            <h3 class="tg-bag-title">Shopping Bag (<span data-bag-count>0</span>)</h3>
+            <button class="tg-qv-close" id="tg-bag-close" type="button" aria-label="Close bag">&times;</button>
           </div>
-          <div class="tg-qv-content">
-            <span class="tg-qv-kicker" id="tg-qv-kicker"></span>
-            <h3 class="tg-qv-title" id="tg-qv-title"></h3>
-            <div class="tg-qv-price" id="tg-qv-price"></div>
-            <p class="tg-qv-desc" id="tg-qv-desc"></p>
-            <div class="tg-qv-variants" id="tg-qv-variants"></div>
-            <ul class="tg-qv-specs" id="tg-qv-specs"></ul>
-            <div class="tg-qv-actions">
-              <div class="tg-qty-stepper">
-                <button type="button" id="tg-qv-minus" aria-label="Decrease quantity">-</button>
-                <span id="tg-qv-qty">1</span>
-                <button type="button" id="tg-qv-plus" aria-label="Increase quantity">+</button>
-              </div>
-              <button type="button" class="tg-qv-add-btn" id="tg-qv-add-btn">Add to Bag</button>
+          <div class="tg-bag-shipping-bar">
+            <span id="tg-bag-ship-text">Free Express Air Shipping from Tokyo on orders over $150</span>
+            <div class="tg-bag-progress-track">
+              <div class="tg-bag-progress-fill" id="tg-bag-progress-fill"></div>
             </div>
-            <a href="#" target="_blank" rel="noopener noreferrer" class="tg-qv-wa-link" id="tg-qv-wa-link">
-              Ask Concierge About This Piece &rarr;
-            </a>
           </div>
+          <div class="tg-bag-body" id="tg-bag-body"></div>
+          <div class="tg-bag-footer" id="tg-bag-footer"></div>
+        </aside>
+      `;
+      document.body.insertAdjacentHTML('beforeend', bagHtml);
+      document.getElementById('tg-bag-close').addEventListener('click', closeBag);
+      document.getElementById('tg-bag-backdrop').addEventListener('click', closeBag);
+    }
+
+    if (!document.getElementById('tg-mobile-bag-bar') && !document.body.classList.contains('is-pdp-page')) {
+      const mobileBarHtml = `
+        <div class="tg-mobile-bag-bar" id="tg-mobile-bag-bar" role="button" tabindex="0" aria-label="View Shopping Bag">
+          <span data-mobile-bag-summary>0 items · $0</span>
+          <button type="button" class="tg-mobile-bag-bar-cta">View Bag &rarr;</button>
         </div>
-      </div>
-
-      <div class="tg-bag-backdrop" id="tg-bag-backdrop"></div>
-      <aside class="tg-bag-drawer" id="tg-bag-drawer" aria-label="Shopping Bag">
-        <div class="tg-bag-header">
-          <h3 class="tg-bag-title">Shopping Bag (<span data-bag-count>0</span>)</h3>
-          <button class="tg-qv-close" id="tg-bag-close" type="button" style="position:static;" aria-label="Close bag">&times;</button>
-        </div>
-        <div class="tg-bag-shipping-bar">
-          <span id="tg-bag-ship-text">Free Express Air Shipping from Tokyo on orders over $150</span>
-          <div class="tg-bag-progress-track">
-            <div class="tg-bag-progress-fill" id="tg-bag-progress-fill"></div>
-          </div>
-        </div>
-        <div class="tg-bag-body" id="tg-bag-body"></div>
-        <div class="tg-bag-footer" id="tg-bag-footer"></div>
-      </aside>
-    `;
-    document.body.insertAdjacentHTML('beforeend', modalHtml);
-
-    document.getElementById('tg-qv-close').addEventListener('click', closeQuickView);
-    document.getElementById('tg-qv-backdrop').addEventListener('click', (e) => {
-      if (e.target.id === 'tg-qv-backdrop') closeQuickView();
-    });
-    document.getElementById('tg-qv-minus').addEventListener('click', () => {
-      if (activeQty > 1) {
-        activeQty -= 1;
-        document.getElementById('tg-qv-qty').textContent = String(activeQty);
-      }
-    });
-    document.getElementById('tg-qv-plus').addEventListener('click', () => {
-      activeQty += 1;
-      document.getElementById('tg-qv-qty').textContent = String(activeQty);
-    });
-    document.getElementById('tg-qv-add-btn').addEventListener('click', () => {
-      if (!activeQuickViewId) return;
-      addToBag(activeQuickViewId, activeVariant, activeQty);
-      closeQuickView();
-      openBag();
-    });
-
-    document.getElementById('tg-bag-close').addEventListener('click', closeBag);
-    document.getElementById('tg-bag-backdrop').addEventListener('click', closeBag);
-  }
-
-  function openQuickView(productId) {
-    const p = findProduct(productId);
-    if (!p) return;
-    ensureSharedModals();
-
-    activeQuickViewId = p.id;
-    activeVariant = p.variants[0] || '';
-    activeQty = 1;
-
-    document.getElementById('tg-qv-img').src = p.image;
-    document.getElementById('tg-qv-img').alt = p.title;
-    document.getElementById('tg-qv-kicker').textContent = `${p.origin} · ${p.categoryLabel} · ${p.status}`;
-    document.getElementById('tg-qv-title').textContent = p.title;
-    document.getElementById('tg-qv-price').innerHTML = `$${p.price}<span>${p.priceJpy}</span>`;
-    document.getElementById('tg-qv-desc').textContent = p.shortDesc;
-    document.getElementById('tg-qv-qty').textContent = '1';
-
-    const variantsEl = document.getElementById('tg-qv-variants');
-    variantsEl.innerHTML = p.variants
-      .map((v, i) => `<button type="button" class="tg-qv-variant-btn ${i === 0 ? 'active' : ''}" data-variant="${v}">${v}</button>`)
-      .join('');
-    variantsEl.querySelectorAll('.tg-qv-variant-btn').forEach((btn) => {
-      btn.addEventListener('click', () => {
-        activeVariant = btn.getAttribute('data-variant') || '';
-        variantsEl.querySelectorAll('.tg-qv-variant-btn').forEach((b) => b.classList.toggle('active', b === btn));
-      });
-    });
-
-    const specsEl = document.getElementById('tg-qv-specs');
-    specsEl.innerHTML = p.specs
-      .map((s) => `<li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span>${s}</span></li>`)
-      .join('');
-
-    const waText = encodeURIComponent(`Hello Tanogaido Shop, I would like to ask about "${p.title}" ($${p.price}).`);
-    document.getElementById('tg-qv-wa-link').href = `https://wa.me/${WA_NUMBER}?text=${waText}`;
-
-    document.getElementById('tg-qv-backdrop').classList.add('open');
-  }
-
-  function closeQuickView() {
-    const el = document.getElementById('tg-qv-backdrop');
-    if (el) el.classList.remove('open');
+      `;
+      document.body.insertAdjacentHTML('beforeend', mobileBarHtml);
+      document.getElementById('tg-mobile-bag-bar').addEventListener('click', openBag);
+    }
   }
 
   function addToBag(productId, variant, qty = 1) {
@@ -344,6 +343,23 @@
     }
     saveBag();
     renderBag();
+  }
+
+  function isFavorite(id) {
+    return favs.includes(id);
+  }
+
+  function toggleFavorite(id) {
+    if (favs.includes(id)) {
+      favs = favs.filter((f) => f !== id);
+    } else {
+      favs.push(id);
+    }
+    writeStorage(STORAGE_FAV_KEY, favs);
+    document.querySelectorAll(`[data-fav-id="${id}"]`).forEach((btn) => {
+      btn.classList.toggle('saved', favs.includes(id));
+    });
+    return favs.includes(id);
   }
 
   function renderBag(orderConfirmedCode = null) {
@@ -389,10 +405,10 @@
     bodyEl.innerHTML = bag
       .map((item, idx) => `
         <div class="tg-bag-item">
-          <img class="tg-bag-item-img" src="${item.image}" alt="${item.title}">
+          <a href="${getProductUrl(item.id)}"><img class="tg-bag-item-img" src="${item.image}" alt="${item.title}"></a>
           <div class="tg-bag-item-info">
             <div class="tg-bag-item-top">
-              <span class="tg-bag-item-name">${item.title}</span>
+              <a href="${getProductUrl(item.id)}" class="tg-bag-item-name">${item.title}</a>
               <button type="button" class="tg-bag-item-remove" data-remove-idx="${idx}">Remove</button>
             </div>
             <span class="tg-bag-item-variant">${item.variant}</span>
@@ -479,29 +495,34 @@
   }
 
   function buildProductCardHTML(p) {
-    const isSaved = favs.includes(p.id);
+    const isSaved = isFavorite(p.id);
+    const url = getProductUrl(p.id);
     return `
       <article class="product-card" data-product-id="${p.id}">
-        <div class="product-img-wrap" data-qv-trigger="${p.id}">
-          <img src="${p.image}" alt="${p.title}" loading="lazy">
+        <div class="product-img-wrap">
+          <a href="${url}" class="product-card-img-link" aria-label="View ${p.title}">
+            <img src="${p.image}" alt="${p.title}" loading="lazy">
+          </a>
           <button type="button" class="product-fav-btn ${isSaved ? 'saved' : ''}" data-fav-id="${p.id}" aria-label="Save ${p.title}">
             <svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
           </button>
-          <span class="product-quick-hint">Quick View</span>
+          <span class="product-quick-hint">View Product</span>
         </div>
         <div class="product-body">
           <div class="product-meta-row">
             <span class="product-kicker">${p.origin} · ${p.categoryLabel}</span>
             <span class="product-status-note">${p.status}</span>
           </div>
-          <h3 class="product-title" data-qv-trigger="${p.id}">${p.title}</h3>
+          <a href="${url}" class="product-title-link">
+            <h3 class="product-title">${p.title}</h3>
+          </a>
           <p class="product-sub">${p.shortDesc}</p>
           <div class="product-footer">
             <div class="product-price-wrap">
               <span class="product-price">$${p.price}</span>
               <span class="product-price-jpy">${p.priceJpy}</span>
             </div>
-            <button type="button" class="product-add-btn" data-add-id="${p.id}">Add to Bag</button>
+            <button type="button" class="product-add-btn" data-add-id="${p.id}">+ Bag</button>
           </div>
         </div>
       </article>
@@ -509,35 +530,26 @@
   }
 
   function bindProductCardEvents(container) {
-    container.querySelectorAll('[data-qv-trigger]').forEach((el) => {
-      el.addEventListener('click', () => {
-        openQuickView(el.getAttribute('data-qv-trigger'));
-      });
-    });
-
     container.querySelectorAll('[data-fav-id]').forEach((btn) => {
       btn.addEventListener('click', (e) => {
+        e.preventDefault();
         e.stopPropagation();
         const id = btn.getAttribute('data-fav-id');
-        if (favs.includes(id)) {
-          favs = favs.filter((f) => f !== id);
-        } else {
-          favs.push(id);
-        }
-        writeStorage(STORAGE_FAV_KEY, favs);
-        btn.classList.toggle('saved', favs.includes(id));
+        toggleFavorite(id);
       });
     });
 
     container.querySelectorAll('[data-add-id]').forEach((btn) => {
-      btn.addEventListener('click', () => {
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
         const id = btn.getAttribute('data-add-id');
         addToBag(id, null, 1);
         btn.classList.add('is-added');
         btn.textContent = 'Added';
         setTimeout(() => {
           btn.classList.remove('is-added');
-          btn.textContent = 'Add to Bag';
+          btn.textContent = '+ Bag';
         }, 1150);
       });
     });
@@ -554,6 +566,7 @@
   }
 
   document.addEventListener('DOMContentLoaded', () => {
+    ensureSharedModals();
     syncAllBagCounts();
     document.querySelectorAll('[data-open-bag]').forEach((btn) => {
       btn.addEventListener('click', openBag);
@@ -562,11 +575,14 @@
 
   window.TANOGAIDO_PRODUCTS = PRODUCTS;
   window.TanogaidoShop = {
+    findProduct,
+    getProductUrl,
     renderGrid,
     openBag,
     closeBag,
-    openQuickView,
     addToBag,
+    isFavorite,
+    toggleFavorite,
     syncAllBagCounts
   };
 })();
