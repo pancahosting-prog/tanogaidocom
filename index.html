@@ -10,6 +10,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
     rel="stylesheet">
   <link rel="stylesheet" href="assets/css/shop-shared.css">
+  <link rel="stylesheet" href="assets/css/services-nav.css">
   <style>
     *,
     *::before,
@@ -1358,7 +1359,7 @@
     /* 4. What Travelers Say (3 Horizontal Testimonial Cards) */
     .reviews-band {
       background: #ffffff;
-      padding: 8px 0 68px 0;
+      padding: 58px 0 68px 0;
     }
 
     .carousel-controls {
@@ -1977,7 +1978,7 @@
         gap: 16px;
       }
       .reviews-band {
-        padding: 6px 0 46px 0;
+        padding: 44px 0 54px 0;
       }
       .newsletter-scenic-edge {
         display: none;
@@ -2039,8 +2040,14 @@
       </div>
       <div class="nav-center-zone" id="nav-center-zone">
         <ul class="nav-links">
+          <li class="nav-item-has-dropdown">
+            <a href="services.html" class="nav-services-trigger">
+              <span>Services</span>
+              <svg class="nav-services-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+            </a>
+            <div class="nav-services-dropdown" data-services-dropdown></div>
+          </li>
           <li><a href="#destinations" data-scroll-progress="0.26">Destinations</a></li>
-          <li><a href="#tours" data-scroll-progress="0.26">Private Tours</a></li>
           <li><a href="#passes" data-scroll-progress="0.58">JR Pass</a></li>
           <li><a href="shop.html">Shop</a></li>
           <li><a href="about.html">About</a></li>
@@ -2081,8 +2088,19 @@
         </button>
       </div>
       <ul class="mobile-nav-list">
+        <li>
+          <div class="mobile-services-group mobile-nav-item">
+            <div class="mobile-services-row">
+              <a href="services.html">Services</a>
+              <button type="button" class="mobile-services-toggle" data-mobile-services-toggle aria-expanded="false">
+                <span>All 20</span>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><polyline points="6 9 12 15 18 9"/></svg>
+              </button>
+            </div>
+            <div class="mobile-services-sublist" data-mobile-services-list></div>
+          </div>
+        </li>
         <li><a href="#destinations" class="mobile-nav-item" data-scroll-progress="0.26">Destinations</a></li>
-        <li><a href="#tours" class="mobile-nav-item" data-scroll-progress="0.26">Private Tours</a></li>
         <li><a href="#passes" class="mobile-nav-item" data-scroll-progress="0.58">JR Pass</a></li>
         <li><a href="shop.html" class="mobile-nav-item">Shop</a></li>
         <li><a href="about.html" class="mobile-nav-item">About</a></li>
@@ -2173,7 +2191,7 @@
               <h2 class="section-heading-editorial">Exclusive Services</h2>
               <p class="section-subtitle">Find every Japan travel essential right here — curated tours, transport, passes, and concierge care.</p>
             </div>
-            <a href="#services" class="section-link-cta" id="reset-filter-link">View All Services <span>→</span></a>
+            <a href="services.html" class="section-link-cta">View All Services <span>→</span></a>
           </header>
 
           <div class="services-grid" id="services-grid">
@@ -3043,6 +3061,7 @@
   </div>
 
   <script src="assets/js/shop-store.js"></script>
+  <script src="assets/js/services-catalog.js"></script>
   <script>
     (function () {
       if ('scrollRestoration' in history) {
@@ -3325,12 +3344,10 @@
         openMenuBtn.addEventListener('click', openMobileMenu);
         closeMenuBtn.addEventListener('click', closeMobileMenu);
         mobileMenuModal.addEventListener('click', (e) => {
-          if (e.target === mobileMenuModal) {
+          if (e.target.closest('[data-mobile-services-toggle]')) return;
+          if (e.target === mobileMenuModal || e.target.closest('.mobile-nav-list a, .mobile-menu-footer a')) {
             closeMobileMenu();
           }
-        });
-        mobileNavItems.forEach((item) => {
-          item.addEventListener('click', closeMobileMenu);
         });
       }
 
@@ -3418,7 +3435,6 @@
 
       // Category Filter Strip
       const categoryTabs = document.querySelectorAll('.category-tab');
-      const resetFilterLink = document.getElementById('reset-filter-link');
 
       function applyCategoryFilter(cat) {
         categoryTabs.forEach((tab) => {
@@ -3452,14 +3468,6 @@
           applyCategoryFilter(tab.getAttribute('data-cat') || 'all');
         });
       });
-
-      if (resetFilterLink) {
-        resetFilterLink.addEventListener('click', (e) => {
-          e.preventDefault();
-          applyCategoryFilter('all');
-          scrollToProgress(getViewportSize().w <= 860 ? mobileMetrics.headerEnd : 0.26);
-        });
-      }
 
       // What Travelers Say Carousel (2 Pages x 3 Verified Testimonials)
       const reviewsGrid = document.getElementById('reviews-grid');

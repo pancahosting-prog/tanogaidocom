@@ -1,0 +1,1639 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Our Services — Tanogaido Complete Japan &amp; Visa Concierge</title>
+  <meta name="description" content="Explore all 20 Tanogaido services: private tours, online & 9-day Tokyo guides, Japan Golf Tours, JR Pass, theme park tickets, Visa processing (Japan, China, South Korea, Europe), Pocket WiFi, property & collectibles tours, and cargo.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/services-nav.css">
+  <style>
+    *,
+    *::before,
+    *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    }
+
+    :root {
+      --primary-red: #dc2626;
+      --primary-red-hover: #b91c1c;
+      --text-dark: #11141c;
+      --text-muted: #59677b;
+      --text-eyebrow: #7c8ba1;
+    }
+
+    html {
+      background-color: #ffffff;
+      color: var(--text-dark);
+      scroll-behavior: smooth;
+      overflow-x: clip;
+    }
+
+    body {
+      background-color: #ffffff;
+      color: var(--text-dark);
+      overflow-x: clip;
+      position: relative;
+    }
+
+    /* Identical Fixed Top Header */
+    .navbar-container {
+      position: fixed;
+      top: 14px;
+      left: 14px;
+      right: 14px;
+      height: 58px;
+      display: flex;
+      justify-content: center;
+      z-index: 100;
+      pointer-events: none;
+    }
+
+    .navbar-container.unified::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 76px;
+      background: #ffffff;
+      border-bottom: 1px solid rgba(15, 23, 42, 0.07);
+      z-index: -1;
+      pointer-events: none;
+    }
+
+    .navbar {
+      pointer-events: none;
+      width: 100%;
+      height: 100%;
+      display: grid;
+      grid-template-columns: clamp(190px, 21vw, 260px) 1fr clamp(205px, 21vw, 256px);
+      align-items: center;
+    }
+
+    .nav-brand-zone {
+      pointer-events: auto;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      padding: 0 26px;
+    }
+
+    .brand-logo {
+      display: inline-flex;
+      align-items: center;
+      font-weight: 800;
+      font-size: 21px;
+      letter-spacing: -0.5px;
+      color: #0f172a;
+      text-decoration: none;
+      user-select: none;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    .brand-logo .dot {
+      color: var(--primary-red);
+    }
+
+    .nav-center-zone {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+      padding: 0 20px;
+    }
+
+    .nav-links {
+      pointer-events: auto;
+      display: flex;
+      align-items: center;
+      gap: 28px;
+      list-style: none;
+      padding: 8px 20px;
+      border-radius: 9999px;
+    }
+
+    .nav-links a {
+      text-decoration: none;
+      font-size: 13.5px;
+      font-weight: 600;
+      color: #11141c;
+      white-space: nowrap;
+      flex-shrink: 0;
+      position: relative;
+      transition: color 0.2s ease;
+    }
+
+    .nav-links > li > a::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      bottom: -4px;
+      width: 100%;
+      height: 1.5px;
+      background: var(--primary-red);
+      transform: scaleX(0);
+      transform-origin: center;
+      transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .nav-links > li > a:hover,
+    .nav-links > li > a.nav-active {
+      color: var(--primary-red);
+    }
+
+    .nav-links > li > a:hover::after,
+    .nav-links > li > a.nav-active::after {
+      transform: scaleX(1);
+    }
+
+    .nav-actions {
+      pointer-events: auto;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      padding: 0 18px;
+      gap: 6px;
+    }
+
+    .header-cta-group {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      flex-shrink: 0;
+    }
+
+    .btn-explore {
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 600;
+      background: #ffffff;
+      color: #11141b;
+      border: 1px solid #e2e8f0;
+      height: 40px;
+      padding: 0 20px;
+      border-radius: 9999px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      white-space: nowrap;
+      box-shadow: 0 6px 16px -4px rgba(15, 23, 42, 0.12);
+      transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), background 0.2s ease, border-color 0.2s ease;
+    }
+
+    .btn-explore:hover {
+      transform: translateY(-1px);
+      background: #f8fafc;
+      border-color: #cbd5e1;
+    }
+
+    .btn-explore-circle {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: var(--primary-red);
+      color: #ffffff;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      text-decoration: none;
+      flex-shrink: 0;
+      box-shadow: 0 6px 16px -4px rgba(220, 38, 38, 0.34);
+      transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), background 0.2s ease;
+    }
+
+    .btn-explore-circle:hover {
+      transform: translateY(-1px) scale(1.04);
+      background: var(--primary-red-hover);
+    }
+
+    .btn-explore-circle svg {
+      width: 15px;
+      height: 15px;
+    }
+
+    .btn-mobile-menu {
+      display: none;
+      background: transparent;
+      color: #11141b;
+      border: none;
+      height: 36px;
+      padding: 4px 6px;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      align-items: center;
+      gap: 7px;
+    }
+
+    .btn-mobile-menu svg {
+      width: 16px;
+      height: 16px;
+      stroke: #11141b;
+    }
+
+    /* Synchronized Fluid Mobile Drawer Menu */
+    .mobile-menu-overlay {
+      position: fixed;
+      inset: 0;
+      width: 100vw;
+      height: 100vh;
+      height: 100dvh;
+      background: transparent;
+      z-index: 220;
+      visibility: hidden;
+      pointer-events: none;
+      display: flex;
+      justify-content: stretch;
+      align-items: stretch;
+    }
+
+    .mobile-menu-overlay.is-animating {
+      visibility: visible;
+    }
+
+    .mobile-menu-overlay.active {
+      visibility: visible;
+      pointer-events: auto;
+    }
+
+    .mobile-menu-fluid-svg {
+      position: fixed;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 0;
+      display: block;
+    }
+
+    .mobile-menu-card {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      height: 100%;
+      padding: 8px 20px 36px 22px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 20px;
+      overflow-y: auto;
+    }
+
+    .mobile-menu-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid #f1f5f9;
+      min-height: 48px;
+      padding-bottom: 6px;
+      opacity: 0;
+      transform: translateY(-6px);
+      transition: opacity 0.24s ease, transform 0.30s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    .mobile-menu-overlay.content-visible .mobile-menu-header {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .mobile-menu-overlay.is-closing .mobile-menu-header {
+      opacity: 0;
+      transform: translateY(-6px);
+      transition: opacity 0.1s ease, transform 0.1s ease;
+    }
+
+    .btn-close-menu {
+      height: 36px;
+      padding: 4px 6px;
+      border-radius: 0;
+      background: transparent;
+      border: none;
+      color: #11141b;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .mobile-nav-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      margin: auto 0;
+      padding: 16px 0;
+    }
+
+    .mobile-nav-list > li {
+      border-bottom: 1px solid #f1f5f9;
+      padding-bottom: 12px;
+    }
+
+    .mobile-nav-list > li:last-child {
+      border-bottom: none;
+    }
+
+    .mobile-nav-list > li a {
+      text-decoration: none;
+      font-size: 24px;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+      color: #11141c;
+      display: block;
+    }
+
+    .mobile-nav-list > li a:hover,
+    .mobile-nav-list > li a.nav-active {
+      color: var(--primary-red);
+    }
+
+    .mobile-nav-item {
+      opacity: 0;
+      transform: translateY(10px);
+      transition: opacity 0.26s ease, transform 0.32s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    .mobile-menu-overlay.content-visible .mobile-nav-item {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .mobile-menu-overlay.content-visible .mobile-nav-list li:nth-child(1) .mobile-nav-item { transition-delay: 0.02s; }
+    .mobile-menu-overlay.content-visible .mobile-nav-list li:nth-child(2) .mobile-nav-item { transition-delay: 0.05s; }
+    .mobile-menu-overlay.content-visible .mobile-nav-list li:nth-child(3) .mobile-nav-item { transition-delay: 0.08s; }
+    .mobile-menu-overlay.content-visible .mobile-nav-list li:nth-child(4) .mobile-nav-item { transition-delay: 0.11s; }
+    .mobile-menu-overlay.content-visible .mobile-nav-list li:nth-child(5) .mobile-nav-item { transition-delay: 0.14s; }
+
+    .mobile-menu-overlay.is-closing .mobile-nav-item {
+      opacity: 0;
+      transform: translateY(6px);
+      transition: opacity 0.08s ease, transform 0.08s ease;
+      transition-delay: 0s !important;
+    }
+
+    .mobile-menu-footer {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      opacity: 0;
+      transform: translateY(8px);
+      transition: opacity 0.24s ease 0.08s, transform 0.28s cubic-bezier(0.22, 1, 0.36, 1) 0.08s;
+    }
+
+    .mobile-menu-overlay.content-visible .mobile-menu-footer {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .mobile-menu-overlay.is-closing .mobile-menu-footer {
+      opacity: 0;
+      transform: translateY(6px);
+      transition: opacity 0.08s ease, transform 0.08s ease;
+      transition-delay: 0s !important;
+    }
+
+    .hero-cta-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
+      height: 48px;
+      padding: 5px 5px 5px 22px;
+      border-radius: 9999px;
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      color: #11141c;
+      font-size: 13.5px;
+      font-weight: 700;
+      text-decoration: none;
+      box-shadow: 0 12px 28px -8px rgba(15, 23, 42, 0.16);
+      transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .hero-cta-btn:hover {
+      transform: translateY(-2px);
+    }
+
+    .hero-cta-circle {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: var(--primary-red);
+      color: #ffffff;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .hero-cta-circle svg {
+      width: 15px;
+      height: 15px;
+    }
+
+    /* Page Container */
+    .services-main {
+      padding-top: 76px;
+    }
+
+    .page-container {
+      width: 100%;
+      max-width: 1320px;
+      margin: 0 auto;
+      padding: 0 clamp(18px, 4vw, 48px);
+    }
+
+    .eyebrow-row {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 10px;
+    }
+
+    .eyebrow {
+      font-size: 10.5px;
+      font-weight: 800;
+      letter-spacing: 1.8px;
+      text-transform: uppercase;
+      color: var(--primary-red);
+    }
+
+    .eyebrow-line {
+      width: 44px;
+      height: 1px;
+      background: rgba(220, 38, 38, 0.35);
+    }
+
+    /* 1. Editorial Hero Banner */
+    .services-hero-band {
+      background: #ffffff;
+      padding: clamp(32px, 5vw, 56px) 0 clamp(30px, 4vw, 44px) 0;
+      border-bottom: 1px solid #eaedf2;
+    }
+
+    .services-hero-grid {
+      display: grid;
+      grid-template-columns: 1.25fr 0.75fr;
+      gap: clamp(24px, 4vw, 48px);
+      align-items: end;
+    }
+
+    .services-hero-title {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: clamp(34px, 4.4vw, 54px);
+      font-weight: 700;
+      line-height: 1.08;
+      letter-spacing: -0.9px;
+      color: #11141c;
+      margin-bottom: 14px;
+    }
+
+    .services-hero-title span {
+      color: var(--primary-red);
+    }
+
+    .services-hero-desc {
+      font-size: 15px;
+      line-height: 1.65;
+      color: #475569;
+      max-width: 660px;
+    }
+
+    .services-hero-stats {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .hero-stat-box {
+      background: #f8fafc;
+      border: 1px solid #eaedf2;
+      border-radius: 14px;
+      padding: 14px 14px;
+    }
+
+    .hero-stat-val {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--primary-red);
+      line-height: 1.1;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .hero-stat-label {
+      font-size: 11px;
+      font-weight: 600;
+      color: #475569;
+      margin-top: 4px;
+      line-height: 1.3;
+    }
+
+    /* 2. Sticky Filter Toolbar */
+    .services-toolbar-band {
+      position: sticky;
+      top: 76px;
+      z-index: 70;
+      background: rgba(255, 255, 255, 0.96);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border-bottom: 1px solid #eaedf2;
+      padding: 14px 0;
+    }
+
+    .services-toolbar-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+
+    .svc-filter-tabs {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      overflow-x: auto;
+      scrollbar-width: none;
+      max-width: 100%;
+      padding-bottom: 2px;
+    }
+
+    .svc-filter-tabs::-webkit-scrollbar {
+      display: none;
+    }
+
+    .svc-filter-tab {
+      border: 1px solid #e2e8f0;
+      background: #ffffff;
+      color: #334155;
+      border-radius: 9999px;
+      height: 36px;
+      padding: 0 15px;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      white-space: nowrap;
+      flex-shrink: 0;
+      transition: background 0.18s ease, color 0.18s ease, border-color 0.18s ease;
+    }
+
+    .svc-filter-tab:hover {
+      border-color: var(--primary-red);
+      color: var(--primary-red);
+    }
+
+    .svc-filter-tab.active {
+      background: var(--primary-red);
+      border-color: var(--primary-red);
+      color: #ffffff;
+    }
+
+    .svc-search-wrap {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .svc-search-input {
+      width: 240px;
+      height: 36px;
+      border-radius: 9999px;
+      border: 1px solid #dce2ea;
+      background: #f8fafc;
+      padding: 0 14px;
+      font-size: 12.5px;
+      color: #11141c;
+      outline: none;
+      transition: border-color 0.2s ease, background 0.2s ease;
+    }
+
+    .svc-search-input:focus {
+      border-color: var(--primary-red);
+      background: #ffffff;
+    }
+
+    .svc-count-pill {
+      font-size: 11.5px;
+      font-weight: 700;
+      color: #64748b;
+      white-space: nowrap;
+      font-variant-numeric: tabular-nums;
+    }
+
+    /* 3. Services Catalog Grid */
+    .services-catalog-band {
+      background: #f4f6f9;
+      padding: 40px 0 68px 0;
+    }
+
+    .services-full-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 22px;
+    }
+
+    .full-service-card {
+      background: #ffffff;
+      border: 1px solid #e6eaf0;
+      border-radius: 20px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 10px 26px -14px rgba(15, 23, 42, 0.10);
+      transition: transform 0.22s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.22s ease, border-color 0.22s ease;
+      scroll-margin-top: 152px;
+    }
+
+    .full-service-card:hover {
+      transform: translateY(-3px);
+      border-color: rgba(220, 38, 38, 0.28);
+      box-shadow: 0 20px 38px -16px rgba(15, 23, 42, 0.16);
+    }
+
+    .full-service-card.is-highlighted {
+      border-color: var(--primary-red);
+      box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.18), 0 20px 38px -16px rgba(15, 23, 42, 0.20);
+    }
+
+    .full-service-media {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 16 / 10;
+      background: #f1f5f9;
+      overflow: hidden;
+    }
+
+    .full-service-media img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    .full-service-card:hover .full-service-media img {
+      transform: scale(1.045);
+    }
+
+    .full-service-cat-tag {
+      position: absolute;
+      left: 14px;
+      top: 14px;
+      background: rgba(17, 20, 28, 0.84);
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+      color: #ffffff;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.8px;
+      text-transform: uppercase;
+      padding: 5px 10px;
+      border-radius: 9999px;
+    }
+
+    .full-service-body {
+      padding: 20px 20px 22px 20px;
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+    }
+
+    .full-service-kicker {
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: var(--primary-red);
+      margin-bottom: 5px;
+    }
+
+    .full-service-title {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 21px;
+      font-weight: 700;
+      line-height: 1.22;
+      letter-spacing: -0.35px;
+      color: #11141c;
+      margin-bottom: 8px;
+    }
+
+    .full-service-desc {
+      font-size: 13px;
+      line-height: 1.56;
+      color: #59677b;
+      margin-bottom: 14px;
+    }
+
+    .full-service-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+      margin-bottom: 18px;
+      padding-top: 12px;
+      border-top: 1px solid #f1f5f9;
+    }
+
+    .full-service-list li {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      font-size: 12px;
+      line-height: 1.45;
+      color: #334155;
+      font-weight: 500;
+    }
+
+    .full-service-list svg {
+      width: 14px;
+      height: 14px;
+      color: var(--primary-red);
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    .full-service-cta {
+      margin-top: auto;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      height: 40px;
+      padding: 0 18px;
+      border-radius: 9999px;
+      border: 1px solid #e2e8f0;
+      background: #ffffff;
+      color: #11141c;
+      font-size: 12.5px;
+      font-weight: 700;
+      text-decoration: none;
+      transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .full-service-cta:hover {
+      background: var(--primary-red);
+      border-color: var(--primary-red);
+      color: #ffffff;
+      box-shadow: 0 10px 22px -8px rgba(220, 38, 38, 0.45);
+    }
+
+    .full-service-cta svg {
+      width: 14px;
+      height: 14px;
+    }
+
+    /* 4. Custom Request Banner */
+    .concierge-banner-band {
+      background: #ffffff;
+      padding: 58px 0;
+    }
+
+    .concierge-banner-card {
+      position: relative;
+      border-radius: 24px;
+      overflow: hidden;
+      background: linear-gradient(120deg, #11141c 0%, #1e293b 58%, #3f1215 100%);
+      padding: clamp(28px, 4.5vw, 48px);
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 28px;
+      flex-wrap: wrap;
+      box-shadow: 0 24px 48px -22px rgba(15, 23, 42, 0.35);
+    }
+
+    .concierge-banner-card h2 {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: clamp(24px, 2.8vw, 34px);
+      font-weight: 700;
+      line-height: 1.15;
+      margin: 6px 0 8px 0;
+    }
+
+    .concierge-banner-card p {
+      font-size: 14px;
+      line-height: 1.6;
+      color: #cbd5e1;
+      max-width: 560px;
+    }
+
+    /* 5. Newsletter & Footer (Identical to Home Page) */
+    .newsletter-band {
+      position: relative;
+      background: #f3f5f8;
+      border-top: 1px solid #eaedf2;
+      border-bottom: 1px solid #eaedf2;
+      padding: 44px 0;
+      overflow: hidden;
+    }
+
+    .newsletter-scenic-edge {
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 24%;
+      min-width: 190px;
+      background: url('assets/fuji-climb.jpg') center/cover no-repeat;
+      pointer-events: none;
+      clip-path: polygon(0 0, 100% 0, 74% 100%, 0 100%);
+    }
+
+    .newsletter-scenic-edge::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(90deg, rgba(243, 245, 248, 0.08) 0%, rgba(243, 245, 248, 0.85) 85%, #f3f5f8 100%);
+    }
+
+    .newsletter-inner {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 28px;
+      padding-left: clamp(20px, 16vw, 210px);
+    }
+
+    .newsletter-eyebrow {
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: 1.4px;
+      text-transform: uppercase;
+      color: var(--primary-red);
+      margin-bottom: 5px;
+      display: block;
+    }
+
+    .newsletter-heading {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: clamp(22px, 2.2vw, 29px);
+      font-weight: 700;
+      color: #11141c;
+      margin: 0 0 5px 0;
+      line-height: 1.2;
+    }
+
+    .newsletter-sub {
+      font-size: 12.5px;
+      color: #59677b;
+      margin: 0;
+    }
+
+    .newsletter-form-wrap {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 7px;
+      flex-shrink: 0;
+    }
+
+    .newsletter-form {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .newsletter-input {
+      width: 255px;
+      height: 42px;
+      border-radius: 8px;
+      border: 1px solid #dce2ea;
+      background: #ffffff;
+      padding: 0 14px;
+      font-size: 12.5px;
+      color: #11141c;
+      outline: none;
+    }
+
+    .newsletter-input:focus {
+      border-color: var(--primary-red);
+    }
+
+    .newsletter-submit {
+      height: 42px;
+      padding: 0 22px;
+      border: none;
+      border-radius: 8px;
+      background: var(--primary-red);
+      color: #ffffff;
+      font-size: 12.5px;
+      font-weight: 700;
+      cursor: pointer;
+      white-space: nowrap;
+      box-shadow: 0 8px 18px -6px rgba(220, 38, 38, 0.45);
+    }
+
+    .newsletter-submit:hover {
+      background: var(--primary-red-hover);
+    }
+
+    .newsletter-note {
+      font-size: 10.5px;
+      color: #64748b;
+      margin: 0;
+    }
+
+    .newsletter-note.is-success {
+      color: var(--primary-red);
+      font-weight: 600;
+    }
+
+    .site-footer {
+      background: #ffffff;
+      padding: 50px 0 28px 0;
+    }
+
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 1.5fr 1fr 1fr 1fr 1fr;
+      gap: 28px;
+      padding-bottom: 34px;
+      border-bottom: 1px solid #eaedf2;
+    }
+
+    .footer-brand {
+      display: inline-flex;
+      align-items: center;
+      font-size: 20px;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      color: #0f172a;
+      text-decoration: none;
+      margin-bottom: 8px;
+    }
+
+    .footer-brand .dot {
+      color: var(--primary-red);
+    }
+
+    .footer-tagline {
+      font-size: 12px;
+      line-height: 1.55;
+      color: #64748b;
+      max-width: 240px;
+    }
+
+    .footer-col-title {
+      font-size: 12px;
+      font-weight: 700;
+      color: #11141c;
+      margin: 0 0 12px 0;
+    }
+
+    .footer-links {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .footer-links a {
+      text-decoration: none;
+      font-size: 12px;
+      color: #64748b;
+      transition: color 0.2s ease;
+    }
+
+    .footer-links a:hover {
+      color: var(--primary-red);
+    }
+
+    .footer-socials {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-top: 4px;
+    }
+
+    .footer-socials a {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      border: 1px solid #e2e8f0;
+      color: #334155;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      text-decoration: none;
+      transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+    }
+
+    .footer-socials a:hover {
+      background: var(--primary-red);
+      border-color: var(--primary-red);
+      color: #ffffff;
+    }
+
+    .footer-socials svg {
+      width: 14px;
+      height: 14px;
+    }
+
+    .footer-bottom {
+      padding-top: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+      font-size: 11.5px;
+      color: #64748b;
+    }
+
+    .footer-legal {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+    }
+
+    .footer-legal a {
+      color: #64748b;
+      text-decoration: none;
+    }
+
+    .footer-legal a:hover {
+      color: var(--primary-red);
+    }
+
+    @media (max-width: 1100px) {
+      .services-full-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+      .services-hero-grid {
+        grid-template-columns: 1fr;
+        gap: 22px;
+      }
+      .footer-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 860px) {
+      .navbar-container {
+        top: 8px;
+        left: 8px;
+        right: 8px;
+        height: 48px;
+      }
+      .navbar-container.unified::before {
+        height: 60px;
+      }
+      .navbar {
+        grid-template-columns: 136px 1fr 136px;
+      }
+      .nav-brand-zone {
+        padding: 0 14px;
+      }
+      .brand-logo {
+        font-size: 18px;
+      }
+      .nav-center-zone,
+      .header-cta-group {
+        display: none;
+      }
+      .nav-actions {
+        grid-column: 3;
+        padding: 0 12px;
+      }
+      .btn-mobile-menu {
+        display: inline-flex;
+      }
+      .services-main {
+        padding-top: 60px;
+      }
+      .services-toolbar-band {
+        top: 60px;
+        padding: 10px 0;
+      }
+      .svc-search-wrap {
+        width: 100%;
+        justify-content: space-between;
+      }
+      .svc-search-input {
+        flex: 1;
+        width: auto;
+      }
+      .services-full-grid {
+        grid-template-columns: 1fr;
+        gap: 16px;
+      }
+      .newsletter-scenic-edge {
+        display: none;
+      }
+      .newsletter-inner {
+        padding-left: 0;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 18px;
+      }
+      .newsletter-form-wrap,
+      .newsletter-form {
+        width: 100%;
+        align-items: flex-start;
+      }
+      .newsletter-input {
+        flex: 1;
+        width: auto;
+      }
+      .footer-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Identical Fixed Header Navigation -->
+  <div class="navbar-container unified" id="navbar-container">
+    <nav class="navbar" id="main-navbar">
+      <div class="nav-brand-zone">
+        <a href="index.html" class="brand-logo">tanogaido<span class="dot">.</span></a>
+      </div>
+      <div class="nav-center-zone">
+        <ul class="nav-links">
+          <li class="nav-item-has-dropdown">
+            <a href="services.html" class="nav-services-trigger nav-active" aria-current="page">
+              <span>Services</span>
+              <svg class="nav-services-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+            </a>
+            <div class="nav-services-dropdown" data-services-dropdown></div>
+          </li>
+          <li><a href="index.html#destinations">Destinations</a></li>
+          <li><a href="index.html#passes">JR Pass</a></li>
+          <li><a href="shop.html">Shop</a></li>
+          <li><a href="about.html">About</a></li>
+        </ul>
+      </div>
+      <div class="nav-actions">
+        <div class="header-cta-group">
+          <a href="https://wa.me/6281318939319?text=Hello%20Tanogaido,%20I%20would%20like%20to%20consult%20about%20your%20Japan%20services." target="_blank" rel="noopener noreferrer" class="btn-explore">Consult Now</a>
+          <a href="https://wa.me/6281318939319?text=Hello%20Tanogaido,%20I%20would%20like%20to%20consult%20about%20your%20Japan%20services." target="_blank" rel="noopener noreferrer" class="btn-explore-circle" aria-label="Chat on WhatsApp">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M7 17L17 7M17 7H8M17 7V16" />
+            </svg>
+          </a>
+        </div>
+        <button class="btn-mobile-menu" id="open-menu-btn" aria-label="Open Navigation Menu">
+          <svg fill="none" viewBox="0 0 24 24" stroke-width="2.5">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+          </svg>
+          <span>Menu</span>
+        </button>
+      </div>
+    </nav>
+  </div>
+
+  <!-- Identical Synchronized Fluid Mobile Drawer Menu -->
+  <div class="mobile-menu-overlay" id="mobile-menu-modal">
+    <svg class="mobile-menu-fluid-svg" id="mobile-menu-fluid-svg" preserveAspectRatio="none" aria-hidden="true">
+      <path id="mobile-menu-fluid-path" d="M0 0 H0 V0 H0 Z" fill="#ffffff" />
+    </svg>
+    <div class="mobile-menu-card">
+      <div class="mobile-menu-header">
+        <a href="index.html" class="brand-logo mobile-nav-item">tanogaido<span class="dot">.</span></a>
+        <button class="btn-close-menu" id="close-menu-btn" aria-label="Close menu">
+          <span>Close</span>
+          <span style="font-size:16px;line-height:1;">&times;</span>
+        </button>
+      </div>
+      <ul class="mobile-nav-list">
+        <li>
+          <div class="mobile-services-group is-expanded mobile-nav-item">
+            <div class="mobile-services-row">
+              <a href="services.html" class="nav-active">Services</a>
+              <button type="button" class="mobile-services-toggle" data-mobile-services-toggle aria-expanded="true">
+                <span>All 20</span>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><polyline points="6 9 12 15 18 9"/></svg>
+              </button>
+            </div>
+            <div class="mobile-services-sublist" data-mobile-services-list></div>
+          </div>
+        </li>
+        <li><a href="index.html#destinations" class="mobile-nav-item">Destinations</a></li>
+        <li><a href="index.html#passes" class="mobile-nav-item">JR Pass</a></li>
+        <li><a href="shop.html" class="mobile-nav-item">Shop</a></li>
+        <li><a href="about.html" class="mobile-nav-item">About</a></li>
+      </ul>
+      <div class="mobile-menu-footer">
+        <a href="https://wa.me/6281318939319?text=Hello%20Tanogaido,%20I%20would%20like%20assistance%20with%20your%20Japan%20services." target="_blank" rel="noopener noreferrer" class="hero-cta-btn mobile-nav-item" style="width: 100%; justify-content: space-between;">
+          <span>Consult via WhatsApp</span>
+          <span class="hero-cta-circle" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M7 17L17 7M17 7H8M17 7V16" />
+            </svg>
+          </span>
+        </a>
+        <p style="font-size: 11.5px; color: #64748b; text-align: center;">PT. Tanogaido Fantasi Pratama · Connecting Indonesia and Japan since 2007</p>
+      </div>
+    </div>
+  </div>
+
+  <main class="services-main">
+    <!-- 1. Editorial Hero Header -->
+    <section class="services-hero-band">
+      <div class="page-container">
+        <div class="services-hero-grid">
+          <div>
+            <div class="eyebrow-row">
+              <span class="eyebrow">OUR SERVICES</span>
+              <span class="eyebrow-line" aria-hidden="true"></span>
+            </div>
+            <h1 class="services-hero-title">Complete Japan &amp; Global <span>Travel Solutions.</span></h1>
+            <p class="services-hero-desc">
+              From on-site private tour guides, 9-day Tokyo itineraries, and Japan Golf Tours to multi-country Visa processing, JR Pass, Pocket WiFi, property surveys, collectibles hunting, and cargo import — handled by one trusted concierge since 2007.
+            </p>
+          </div>
+
+          <div class="services-hero-stats">
+            <div class="hero-stat-box">
+              <div class="hero-stat-val">20</div>
+              <div class="hero-stat-label">Specialized Concierge Services</div>
+            </div>
+            <div class="hero-stat-box">
+              <div class="hero-stat-val">4</div>
+              <div class="hero-stat-label">Visa Regions Covered</div>
+            </div>
+            <div class="hero-stat-box">
+              <div class="hero-stat-val">24/7</div>
+              <div class="hero-stat-label">Bilingual Support Team</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2. Sticky Filter & Search Toolbar -->
+    <div class="services-toolbar-band">
+      <div class="page-container">
+        <div class="services-toolbar-inner">
+          <div class="svc-filter-tabs" role="tablist" aria-label="Service Categories">
+            <button type="button" class="svc-filter-tab active" data-svc-cat="all" role="tab" aria-selected="true">All Services (20)</button>
+            <button type="button" class="svc-filter-tab" data-svc-cat="tours" role="tab" aria-selected="false">Tours &amp; Guides</button>
+            <button type="button" class="svc-filter-tab" data-svc-cat="visa" role="tab" aria-selected="false">Visa Concierge</button>
+            <button type="button" class="svc-filter-tab" data-svc-cat="transport" role="tab" aria-selected="false">Transport &amp; Passes</button>
+            <button type="button" class="svc-filter-tab" data-svc-cat="specialty" role="tab" aria-selected="false">Specialty &amp; Golf</button>
+            <button type="button" class="svc-filter-tab" data-svc-cat="essentials" role="tab" aria-selected="false">Shopping &amp; Essentials</button>
+          </div>
+          <div class="svc-search-wrap">
+            <input type="search" class="svc-search-input" id="svc-search" placeholder="Search golf, visa, guide, JR pass..." aria-label="Search services">
+            <span class="svc-count-pill" id="svc-count-pill">20 Services</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3. All 20 Services Catalog Grid -->
+    <section class="services-catalog-band">
+      <div class="page-container">
+        <div class="services-full-grid" id="services-catalog-grid"></div>
+      </div>
+    </section>
+
+    <!-- 4. Custom Itinerary & Corporate Concierge Banner -->
+    <section class="concierge-banner-band">
+      <div class="page-container">
+        <div class="concierge-banner-card">
+          <div>
+            <span class="eyebrow" style="color:#fca5a5;">BESPOKE CONCIERGE DESK</span>
+            <h2>Need a Combined Multi-Service Plan?</h2>
+            <p>Bundle Private Tour Guides, Japan Golf rounds, Visa processing, green-plate Alphard charters, and Pocket WiFi in one seamless invoice handled by PT. Tanogaido Fantasi Pratama.</p>
+          </div>
+          <a href="https://wa.me/6281318939319?text=Hello%20Tanogaido,%20I%20would%20like%20to%20request%20a%20combined%20service%20package." target="_blank" rel="noopener noreferrer" class="hero-cta-btn">
+            <span>Request Custom Quote</span>
+            <span class="hero-cta-circle" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M7 17L17 7M17 7H8M17 7V16" />
+              </svg>
+            </span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- 5. Newsletter Band (Identical to Home Page) -->
+    <section class="newsletter-band" id="newsletter-band">
+      <div class="newsletter-scenic-edge" aria-hidden="true"></div>
+      <div class="page-container">
+        <div class="newsletter-inner">
+          <div>
+            <span class="newsletter-eyebrow">STAY INSPIRED</span>
+            <h2 class="newsletter-heading">Get Travel Inspiration in Your Inbox</h2>
+            <p class="newsletter-sub">Exclusive seasonal tour dates, JR Pass guides, and curated Japan offers — straight to you.</p>
+          </div>
+          <div class="newsletter-form-wrap">
+            <form class="newsletter-form" id="newsletter-form">
+              <input class="newsletter-input" id="newsletter-email" type="email" required placeholder="Enter your email address" aria-label="Email address">
+              <button class="newsletter-submit" type="submit">Subscribe</button>
+            </form>
+            <p class="newsletter-note" id="newsletter-note">We respect your privacy. Unsubscribe anytime.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 6. Identical Multi-Column Footer -->
+    <footer class="site-footer" id="site-footer">
+      <div class="page-container">
+        <div class="footer-grid">
+          <div>
+            <a href="index.html" class="footer-brand brand-logo">tanogaido<span class="dot">.</span></a>
+            <p class="footer-tagline">PT. Tanogaido Fantasi Pratama — Your Gateway to Japan since 2007.</p>
+          </div>
+          <div>
+            <h3 class="footer-col-title">Explore</h3>
+            <ul class="footer-links">
+              <li><a href="services.html">Our Services</a></li>
+              <li><a href="index.html#trips">Featured Trips</a></li>
+              <li><a href="shop.html">Japan Goods Shop</a></li>
+              <li><a href="about.html">About Us</a></li>
+            </ul>
+          </div>
+          <div>
+            <h3 class="footer-col-title">Services</h3>
+            <ul class="footer-links">
+              <li><a href="services.html#service-japan-tour-guide">Japan Tour Guide</a></li>
+              <li><a href="services.html#service-japan-golf-tour">Japan Golf Tour</a></li>
+              <li><a href="services.html#service-japan-visa-processing">Visa Processing</a></li>
+              <li><a href="services.html#service-jr-pass-tickets">JR Pass &amp; Tickets</a></li>
+            </ul>
+          </div>
+          <div>
+            <h3 class="footer-col-title">Support</h3>
+            <ul class="footer-links">
+              <li><a href="https://wa.me/6281318939319?text=Hello%20Tanogaido,%20I%20would%20like%20a%20free%20Japan%20trip%20consultation." target="_blank" rel="noopener noreferrer">WhatsApp Concierge</a></li>
+              <li><a href="services.html#service-japan-import-service">Cargo &amp; Import</a></li>
+              <li><a href="services.html#service-document-translation">Document Translation</a></li>
+              <li><a href="services.html#service-japan-property-survey">Property Survey Tour</a></li>
+            </ul>
+          </div>
+          <div>
+            <h3 class="footer-col-title">Follow Us</h3>
+            <div class="footer-socials">
+              <a href="https://instagram.com/tanogaido" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1"/></svg></a>
+              <a href="https://facebook.com/tanogaido" target="_blank" rel="noopener noreferrer" aria-label="Facebook"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg></a>
+              <a href="https://youtube.com/@tanogaido" target="_blank" rel="noopener noreferrer" aria-label="YouTube"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33A2.78 2.78 0 0 0 3.4 19c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.25 29 29 0 0 0-.46-5.33z"/><polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02"/></svg></a>
+              <a href="https://wa.me/6281318939319" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg></a>
+            </div>
+          </div>
+        </div>
+
+        <div class="footer-bottom">
+          <span>&copy; 2026 PT. Tanogaido Fantasi Pratama. All rights reserved.</span>
+          <div class="footer-legal">
+            <a href="services.html">Our Services</a>
+            <a href="shop.html">Shop</a>
+            <a href="about.html">About Us</a>
+            <a href="about.html#contact">Contact</a>
+          </div>
+        </div>
+      </div>
+    </footer>
+  </main>
+
+  <script src="assets/js/services-catalog.js"></script>
+  <script>
+    (function () {
+      // 1. Synchronized Fluid Mobile Drawer Menu
+      const openMenuBtn = document.getElementById('open-menu-btn');
+      const closeMenuBtn = document.getElementById('close-menu-btn');
+      const mobileMenuModal = document.getElementById('mobile-menu-modal');
+      const mobileMenuFluidSvg = document.getElementById('mobile-menu-fluid-svg');
+      const mobileMenuFluidPath = document.getElementById('mobile-menu-fluid-path');
+      const isReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      let menuTarget = 0;
+      let menuRaw = 0;
+      let lastMenuKey = '';
+      let lastTick = performance.now();
+
+      const clamp = (v, min, max) => Math.min(Math.max(v, min), max);
+      const lerp = (a, b, t) => a + (b - a) * t;
+      const easeInOutCubic = (t) => t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+      const easeInOutQuart = (t) => t < 0.5 ? 8 * t * t * t * t : 1 - Math.pow(-2 * t + 2, 4) / 2;
+
+      function renderMobileFluid(tRaw) {
+        if (!mobileMenuModal || !mobileMenuFluidSvg || !mobileMenuFluidPath) return;
+        const isVisible = tRaw > 0.002;
+        const isClosing = menuTarget === 0 && tRaw > 0.002;
+        mobileMenuModal.classList.toggle('is-animating', isVisible);
+        mobileMenuModal.classList.toggle('is-closing', isClosing);
+        mobileMenuModal.classList.toggle('active', menuTarget === 1 && tRaw > 0.85);
+        mobileMenuModal.classList.toggle('content-visible', menuTarget === 1 && tRaw >= 0.78);
+
+        if (!isVisible) {
+          if (lastMenuKey !== 'hidden') {
+            mobileMenuFluidPath.setAttribute('d', 'M0 0 H0 V0 H0 Z');
+            lastMenuKey = 'hidden';
+          }
+          return;
+        }
+
+        const vw = Math.max(window.innerWidth, 320);
+        const vh = Math.max(window.innerHeight, 480);
+        const key = `${vw}x${vh}:${tRaw.toFixed(3)}`;
+        if (key === lastMenuKey) return;
+        lastMenuKey = key;
+
+        mobileMenuFluidSvg.setAttribute('viewBox', `0 0 ${vw} ${vh}`);
+        const t = easeInOutCubic(clamp(tRaw, 0, 1));
+        const tSlow = easeInOutQuart(clamp(tRaw, 0, 1));
+
+        const startRightX = vw - 8;
+        const startLeftX = vw - 144;
+        const startH = 52;
+        const wingWidth = Math.min(vw + 40, lerp(startRightX - startLeftX, vw + 40, Math.pow(t, 0.85)));
+        const rightX = Math.round(lerp(startRightX, vw + 16, t));
+        const leftX = Math.round(rightX - wingWidth);
+        const bottomY = Math.round(lerp(startH + 8, vh + 24, tSlow));
+        const bellyDip = Math.round(Math.sin(t * Math.PI) * 56);
+        const bottomEdgeY = Math.min(vh + 40, bottomY + bellyDip);
+        const rCorner = Math.round(lerp(24, 0, clamp((t - 0.58) / 0.42, 0, 1)));
+        const cLeftX = Math.round(lerp(leftX + wingWidth * 0.28, -20, t));
+        const cLeftY = Math.round(Math.min(vh + 30, bottomY + bellyDip * 0.55));
+        const cRightX = Math.round(lerp(leftX + wingWidth * 0.75, vw * 0.58, t));
+
+        const d = t >= 0.995
+          ? `M-8 -8 H${vw + 16} V${vh + 16} H-8 Z`
+          : `M${leftX} 0 H${rightX} V${Math.max(24, bottomY - rCorner)} Q${rightX} ${bottomY} ${rightX - rCorner} ${bottomY} C${cRightX} ${bottomEdgeY} ${cLeftX} ${cLeftY} ${leftX} ${Math.max(12, bottomY - rCorner * 1.4)} Z`;
+        mobileMenuFluidPath.setAttribute('d', d);
+      }
+
+      function setMobileMenu(open) {
+        menuTarget = open ? 1 : 0;
+        if (open) {
+          mobileMenuModal.classList.remove('is-closing');
+        } else {
+          mobileMenuModal.classList.remove('content-visible');
+          mobileMenuModal.classList.add('is-closing');
+        }
+        if (isReducedMotion) {
+          menuRaw = menuTarget;
+          renderMobileFluid(menuRaw);
+        }
+      }
+
+      if (openMenuBtn) openMenuBtn.addEventListener('click', () => setMobileMenu(true));
+      if (closeMenuBtn) closeMenuBtn.addEventListener('click', () => setMobileMenu(false));
+      if (mobileMenuModal) {
+        mobileMenuModal.addEventListener('click', (e) => {
+          if (e.target.closest('[data-mobile-services-toggle]')) return;
+          if (e.target === mobileMenuModal || e.target.closest('.mobile-nav-list a, .mobile-menu-footer a')) {
+            setMobileMenu(false);
+          }
+        });
+      }
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') setMobileMenu(false);
+      });
+
+      function tick(now) {
+        const dt = clamp((now - lastTick) / 1000, 0.001, 0.05);
+        lastTick = now;
+        const speed = menuTarget === 1 ? 3.2 : 3.9;
+        if (Math.abs(menuRaw - menuTarget) > 0.001) {
+          menuRaw = menuRaw < menuTarget
+            ? Math.min(menuTarget, menuRaw + dt * speed)
+            : Math.max(menuTarget, menuRaw - dt * speed);
+          renderMobileFluid(menuRaw);
+        }
+        requestAnimationFrame(tick);
+      }
+      requestAnimationFrame(tick);
+
+      // 2. Render & Filter All 20 Services
+      const grid = document.getElementById('services-catalog-grid');
+      const countPill = document.getElementById('svc-count-pill');
+      const searchInput = document.getElementById('svc-search');
+      const catTabs = document.querySelectorAll('.svc-filter-tab');
+      const SERVICES = window.TANOGAIDO_SERVICES || [];
+      let activeCat = 'all';
+      let query = '';
+
+      function renderCatalog() {
+        const filtered = SERVICES.filter((s) => {
+          const catOk = activeCat === 'all' || s.category === activeCat;
+          if (!catOk) return false;
+          if (!query) return true;
+          const haystack = `${s.title} ${s.categoryLabel} ${s.kicker} ${s.shortDesc} ${s.features.join(' ')}`.toLowerCase();
+          return haystack.includes(query);
+        });
+
+        countPill.textContent = `${filtered.length} ${filtered.length === 1 ? 'Service' : 'Services'}`;
+
+        if (!filtered.length) {
+          grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:48px 16px;color:#64748b;font-size:14px;">No services match that search keyword. Try clearing your filter or contacting WhatsApp Concierge directly.</div>`;
+          return;
+        }
+
+        grid.innerHTML = filtered.map((s) => {
+          const featsHtml = s.features.map((f) => `
+            <li>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              <span>${f}</span>
+            </li>
+          `).join('');
+          const waLink = window.TanogaidoServices.getWhatsAppUrl(s.waText);
+          return `
+            <article class="full-service-card" id="service-${s.id}" data-category="${s.category}">
+              <div class="full-service-media">
+                <img src="${s.image}" alt="${s.title}" loading="lazy">
+                <span class="full-service-cat-tag">${s.categoryLabel}</span>
+              </div>
+              <div class="full-service-body">
+                <span class="full-service-kicker">${s.kicker}</span>
+                <h2 class="full-service-title">${s.title}</h2>
+                <p class="full-service-desc">${s.shortDesc}</p>
+                <ul class="full-service-list">${featsHtml}</ul>
+                <a href="${waLink}" target="_blank" rel="noopener noreferrer" class="full-service-cta">
+                  <span>Book or Inquire via WhatsApp</span>
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+                </a>
+              </div>
+            </article>
+          `;
+        }).join('');
+      }
+
+      function highlightHashTarget() {
+        const hash = window.location.hash;
+        if (!hash || !hash.startsWith('#service-')) return;
+        const target = document.querySelector(hash);
+        if (!target) return;
+        target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        target.classList.add('is-highlighted');
+        setTimeout(() => target.classList.remove('is-highlighted'), 2400);
+      }
+
+      catTabs.forEach((tab) => {
+        tab.addEventListener('click', () => {
+          activeCat = tab.getAttribute('data-svc-cat') || 'all';
+          catTabs.forEach((t) => {
+            const match = t === tab;
+            t.classList.toggle('active', match);
+            t.setAttribute('aria-selected', match ? 'true' : 'false');
+          });
+          renderCatalog();
+        });
+      });
+
+      if (searchInput) {
+        searchInput.addEventListener('input', () => {
+          query = searchInput.value.trim().toLowerCase();
+          renderCatalog();
+        });
+      }
+
+      renderCatalog();
+      requestAnimationFrame(highlightHashTarget);
+      window.addEventListener('hashchange', () => {
+        if (activeCat !== 'all' || query) {
+          activeCat = 'all';
+          query = '';
+          if (searchInput) searchInput.value = '';
+          catTabs.forEach((t) => {
+            const isAll = t.getAttribute('data-svc-cat') === 'all';
+            t.classList.toggle('active', isAll);
+            t.setAttribute('aria-selected', isAll ? 'true' : 'false');
+          });
+          renderCatalog();
+        }
+        highlightHashTarget();
+      });
+
+      // 3. Newsletter Form
+      const nForm = document.getElementById('newsletter-form');
+      const nEmail = document.getElementById('newsletter-email');
+      const nNote = document.getElementById('newsletter-note');
+      if (nForm && nEmail && nNote) {
+        nForm.addEventListener('submit', (e) => {
+          e.preventDefault();
+          if (!nEmail.value.trim() || !nEmail.checkValidity()) {
+            nEmail.focus();
+            return;
+          }
+          nNote.textContent = 'Thank you! Seasonal Japan guides & service updates are on the way.';
+          nNote.classList.add('is-success');
+          nEmail.value = '';
+        });
+      }
+    })();
+  </script>
+</body>
+
+</html>
