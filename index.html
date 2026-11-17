@@ -324,69 +324,80 @@
       transform: translate(1px, -1px);
     }
 
-    /* Mobile Menu Toggle Button (Visible only on mobile) */
+    /* Mobile Menu Toggle Button (Clean borderless label inside right header wing) */
     .btn-mobile-menu {
       display: none;
-      background: #ffffff;
+      background: transparent;
       color: #11141b;
-      border: 1px solid #e2e8f0;
-      border-radius: 9999px;
+      border: none;
+      border-radius: 0;
       height: 36px;
-      padding: 0 14px;
-      font-size: 12.5px;
+      padding: 4px 6px;
+      font-size: 13px;
       font-weight: 700;
       cursor: pointer;
       align-items: center;
       gap: 7px;
-      box-shadow: 0 4px 12px rgba(15, 23, 42, 0.12);
-      transition: transform 0.2s ease, background 0.2s ease, border-color 0.2s ease;
+      box-shadow: none;
+      transition: opacity 0.2s ease, transform 0.2s ease;
     }
 
     .btn-mobile-menu:hover {
-      background: #f8fafc;
-      border-color: #cbd5e1;
+      opacity: 0.72;
     }
 
     .btn-mobile-menu svg {
-      width: 15px;
-      height: 15px;
+      width: 16px;
+      height: 16px;
       stroke: #11141b;
     }
 
-    /* Fluid Fullscreen Mobile Menu (Expands organically from right header curve) */
+    /* Fluid Fullscreen Mobile Menu (Flows organically directly from right header curve) */
     .mobile-menu-overlay {
       position: fixed;
       inset: 0;
       width: 100vw;
       height: 100vh;
       height: 100dvh;
-      background: #ffffff;
+      background: transparent;
       z-index: 220;
+      visibility: hidden;
       pointer-events: none;
       display: flex;
       justify-content: stretch;
       align-items: stretch;
       padding: 0;
-      opacity: 0;
-      clip-path: circle(0px at var(--menu-origin-x, calc(100% - 64px)) var(--menu-origin-y, 32px));
-      transition: clip-path 0.62s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.28s ease;
-      will-change: clip-path, opacity;
+    }
+
+    .mobile-menu-overlay.is-animating {
+      visibility: visible;
     }
 
     .mobile-menu-overlay.active {
-      opacity: 1;
+      visibility: visible;
       pointer-events: auto;
-      clip-path: circle(155vmax at var(--menu-origin-x, calc(100% - 64px)) var(--menu-origin-y, 32px));
+    }
+
+    .mobile-menu-fluid-svg {
+      position: fixed;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 0;
+      display: block;
     }
 
     .mobile-menu-card {
+      position: relative;
+      z-index: 1;
       background: transparent;
       border: none;
       border-radius: 0;
       width: 100%;
       height: 100%;
       max-width: none;
-      padding: 14px 24px 36px 24px;
+      padding: 8px 20px 36px 22px;
       box-shadow: none;
       display: flex;
       flex-direction: column;
@@ -400,29 +411,43 @@
       align-items: center;
       justify-content: space-between;
       border-bottom: 1px solid #f1f5f9;
-      padding-bottom: 14px;
       min-height: 48px;
+      padding-bottom: 6px;
+      opacity: 0;
+      transform: translateY(-6px);
+      transition: opacity 0.35s ease, transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    .mobile-menu-overlay.content-visible .mobile-menu-header {
+      opacity: 1;
+      transform: translateY(0);
     }
 
     .mobile-menu-header .brand-logo {
       opacity: 1;
+      font-size: 18px;
     }
 
     .btn-close-menu {
-      background: #ffffff;
-      border: 1px solid #e2e8f0;
+      background: transparent;
+      border: none;
       height: 36px;
-      padding: 0 14px;
-      border-radius: 9999px;
+      padding: 4px 6px;
+      border-radius: 0;
       cursor: pointer;
       display: inline-flex;
       align-items: center;
       justify-content: center;
       gap: 6px;
-      font-size: 12.5px;
+      font-size: 13px;
       font-weight: 700;
       color: #11141b;
-      box-shadow: 0 4px 12px rgba(15, 23, 42, 0.08);
+      box-shadow: none;
+      transition: opacity 0.2s ease;
+    }
+
+    .btn-close-menu:hover {
+      opacity: 0.72;
     }
 
     .mobile-nav-list {
@@ -436,20 +461,20 @@
 
     .mobile-nav-list li {
       opacity: 0;
-      transform: translateY(14px);
-      transition: opacity 0.35s ease, transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+      transform: translateY(18px);
+      transition: opacity 0.38s cubic-bezier(0.22, 1, 0.36, 1), transform 0.52s cubic-bezier(0.22, 1, 0.36, 1);
     }
 
-    .mobile-menu-overlay.active .mobile-nav-list li {
+    .mobile-menu-overlay.content-visible .mobile-nav-list li {
       opacity: 1;
       transform: translateY(0);
     }
 
-    .mobile-menu-overlay.active .mobile-nav-list li:nth-child(1) { transition-delay: 0.10s; }
-    .mobile-menu-overlay.active .mobile-nav-list li:nth-child(2) { transition-delay: 0.14s; }
-    .mobile-menu-overlay.active .mobile-nav-list li:nth-child(3) { transition-delay: 0.18s; }
-    .mobile-menu-overlay.active .mobile-nav-list li:nth-child(4) { transition-delay: 0.22s; }
-    .mobile-menu-overlay.active .mobile-nav-list li:nth-child(5) { transition-delay: 0.26s; }
+    .mobile-menu-overlay.content-visible .mobile-nav-list li:nth-child(1) { transition-delay: 0.04s; }
+    .mobile-menu-overlay.content-visible .mobile-nav-list li:nth-child(2) { transition-delay: 0.08s; }
+    .mobile-menu-overlay.content-visible .mobile-nav-list li:nth-child(3) { transition-delay: 0.12s; }
+    .mobile-menu-overlay.content-visible .mobile-nav-list li:nth-child(4) { transition-delay: 0.16s; }
+    .mobile-menu-overlay.content-visible .mobile-nav-list li:nth-child(5) { transition-delay: 0.20s; }
 
     .mobile-nav-list a {
       text-decoration: none;
@@ -476,11 +501,11 @@
       padding-top: 14px;
       border-top: 1px solid #f1f5f9;
       opacity: 0;
-      transform: translateY(12px);
-      transition: opacity 0.35s ease 0.24s, transform 0.45s cubic-bezier(0.22, 1, 0.36, 1) 0.24s;
+      transform: translateY(14px);
+      transition: opacity 0.38s cubic-bezier(0.22, 1, 0.36, 1) 0.18s, transform 0.52s cubic-bezier(0.22, 1, 0.36, 1) 0.18s;
     }
 
-    .mobile-menu-overlay.active .mobile-menu-footer {
+    .mobile-menu-overlay.content-visible .mobile-menu-footer {
       opacity: 1;
       transform: translateY(0);
     }
@@ -2033,8 +2058,11 @@
     </nav>
   </div>
 
-  <!-- Mobile Drawer Menu Modal -->
+  <!-- Mobile Drawer Menu Overlay (Seamless fluid SVG from right header curve) -->
   <div class="mobile-menu-overlay" id="mobile-menu-modal">
+    <svg class="mobile-menu-fluid-svg" id="mobile-menu-fluid-svg" preserveAspectRatio="none" aria-hidden="true">
+      <path id="mobile-menu-fluid-path" d="M0 0 H0 V0 H0 Z" fill="#ffffff" />
+    </svg>
     <div class="mobile-menu-card">
       <div class="mobile-menu-header">
         <a href="#" class="brand-logo mobile-nav-item">tanogaido<span class="dot">.</span></a>
@@ -3171,41 +3199,100 @@
         return 1 - Math.pow(1 - t, 3);
       }
 
-      // Fluid Fullscreen Mobile Menu Logic (Expands from right header curve)
+      function easeInOutQuart(t) {
+        return t < 0.5 ? 8 * t * t * t * t : 1 - Math.pow(-2 * t + 2, 4) / 2;
+      }
+
+      // Fluid Fullscreen Mobile Menu Logic (Expands directly from right header wing curve via RAF SVG)
       const openMenuBtn = document.getElementById('open-menu-btn');
       const closeMenuBtn = document.getElementById('close-menu-btn');
       const mobileMenuModal = document.getElementById('mobile-menu-modal');
+      const mobileMenuFluidSvg = document.getElementById('mobile-menu-fluid-svg');
+      const mobileMenuFluidPath = document.getElementById('mobile-menu-fluid-path');
       const mobileNavItems = document.querySelectorAll('.mobile-nav-item');
 
-      function updateFluidMenuOrigin() {
-        if (!mobileMenuModal || !openMenuBtn) return;
-        const rect = openMenuBtn.getBoundingClientRect();
-        if (rect.width > 0 && rect.height > 0) {
-          mobileMenuModal.style.setProperty('--menu-origin-x', `${(rect.left + rect.width / 2).toFixed(1)}px`);
-          mobileMenuModal.style.setProperty('--menu-origin-y', `${(rect.top + rect.height / 2).toFixed(1)}px`);
+      let menuTarget = 0;
+      let menuRaw = 0;
+      let lastMenuStateKey = '';
+
+      function renderMobileMenuFluid(tRaw) {
+        if (!mobileMenuModal || !mobileMenuFluidSvg || !mobileMenuFluidPath) return;
+
+        const isVisible = tRaw > 0.002;
+        mobileMenuModal.classList.toggle('is-animating', isVisible);
+        mobileMenuModal.classList.toggle('active', menuTarget === 1);
+        mobileMenuModal.classList.toggle('content-visible', tRaw >= 0.34);
+
+        if (!isVisible) {
+          if (lastMenuStateKey !== 'closed') {
+            mobileMenuFluidPath.setAttribute('d', 'M0 0 H0 V0 H0 Z');
+            lastMenuStateKey = 'closed';
+          }
+          return;
+        }
+
+        const { w, h } = getViewportSize();
+        const key = `${w}x${h}:${tRaw >= 0.999 ? 1 : tRaw.toFixed(4)}`;
+        if (key === lastMenuStateKey) return;
+        lastMenuStateKey = key;
+
+        mobileMenuFluidSvg.setAttribute('viewBox', `0 0 ${w} ${h}`);
+
+        if (tRaw >= 0.999) {
+          mobileMenuFluidPath.setAttribute('d', `M -4 -4 H ${w + 4} V ${h + 4} H -4 Z`);
+          return;
+        }
+
+        const pad = 8;
+        const R = Math.max(pad, w - pad);
+        const wingW = w <= 860 ? 136 : 220;
+        const x2 = Math.max(pad, R - wingW);
+        const yW = w <= 860 ? 56 : 72;
+
+        const eW = easeInOutQuart(clamp(tRaw / 0.88, 0, 1));
+        const eH = easeInOutQuart(clamp(tRaw / 0.84, 0, 1));
+        const eC = easeInOutCubic(clamp((tRaw - 0.12) / 0.88, 0, 1));
+
+        const xTop = lerp(x2, -32, eW);
+        const yRight = lerp(yW, h + 32, eH);
+        const ctrlBottomX = lerp(x2 + 16, -64, eW);
+        const ctrlLeftY = lerp(yW, h + 32, eC);
+
+        const d =
+          `M ${xTop.toFixed(1)} -4 ` +
+          `H ${w + 4} ` +
+          `V ${yRight.toFixed(1)} ` +
+          `C ${ctrlBottomX.toFixed(1)} ${yRight.toFixed(1)}, ${xTop.toFixed(1)} ${ctrlLeftY.toFixed(1)}, ${xTop.toFixed(1)} -4 Z`;
+
+        mobileMenuFluidPath.setAttribute('d', d);
+      }
+
+      function openMobileMenu() {
+        menuTarget = 1;
+        if (isReducedMotion) {
+          menuRaw = 1;
+          renderMobileMenuFluid(menuRaw);
+        }
+      }
+
+      function closeMobileMenu() {
+        menuTarget = 0;
+        if (isReducedMotion) {
+          menuRaw = 0;
+          renderMobileMenuFluid(menuRaw);
         }
       }
 
       if (openMenuBtn && closeMenuBtn && mobileMenuModal) {
-        openMenuBtn.addEventListener('click', () => {
-          updateFluidMenuOrigin();
-          mobileMenuModal.classList.add('active');
-        });
-        closeMenuBtn.addEventListener('click', () => {
-          updateFluidMenuOrigin();
-          mobileMenuModal.classList.remove('active');
-        });
+        openMenuBtn.addEventListener('click', openMobileMenu);
+        closeMenuBtn.addEventListener('click', closeMobileMenu);
         mobileMenuModal.addEventListener('click', (e) => {
           if (e.target === mobileMenuModal) {
-            updateFluidMenuOrigin();
-            mobileMenuModal.classList.remove('active');
+            closeMobileMenu();
           }
         });
-        mobileNavItems.forEach(item => {
-          item.addEventListener('click', () => {
-            updateFluidMenuOrigin();
-            mobileMenuModal.classList.remove('active');
-          });
+        mobileNavItems.forEach((item) => {
+          item.addEventListener('click', closeMobileMenu);
         });
       }
 
@@ -3993,6 +4080,16 @@
             smoothedProgress = targetProgress;
           }
         }
+
+        // Smoothly drive fluid mobile menu expansion directly from right header wing
+        if (isReducedMotion) {
+          menuRaw = menuTarget;
+        } else if (menuRaw < menuTarget) {
+          menuRaw = Math.min(1, menuRaw + dt / 0.68);
+        } else if (menuRaw > menuTarget) {
+          menuRaw = Math.max(0, menuRaw - dt / 0.52);
+        }
+        renderMobileMenuFluid(menuRaw);
 
         updateUIProgress(smoothedProgress, splashRaw);
 
