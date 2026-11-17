@@ -627,170 +627,417 @@
       margin: 0;
     }
 
-    /* Architectural 2-Column Hairline Grid */
+    /* 4-Column Editorial Portrait Flip Cards (Matches Reference Design) */
     .services-grid {
       width: 100%;
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 20px;
+      padding-top: 28px;
     }
 
-    .services-grid-row {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      border-bottom: 1px solid rgba(15, 23, 42, 0.11);
-    }
-
-    .service-cell {
-      display: grid;
-      grid-template-columns: minmax(0, 1fr) clamp(175px, 16.5vw, 240px);
-      gap: 24px;
-      align-items: stretch;
-      padding: 32px 32px;
+    .flip-card {
+      position: relative;
+      height: 440px;
       will-change: transform, opacity;
     }
 
-    .service-cell:first-child {
-      padding-left: 0;
-      border-right: 1px solid rgba(15, 23, 42, 0.11);
-    }
-
-    .service-cell:last-child {
-      padding-right: 0;
-    }
-
-    .service-info {
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      min-width: 0;
-    }
-
-    .service-card-title {
-      font-size: clamp(19px, 1.6vw, 22.5px);
-      font-weight: 700;
-      letter-spacing: -0.6px;
-      line-height: 1.18;
-      color: var(--text-dark);
-      margin: 0;
-    }
-
-    .service-price-line {
-      margin-top: 8px;
-      font-size: 13px;
-      color: var(--text-muted);
-      font-weight: 500;
-      display: flex;
-      align-items: baseline;
-      gap: 5px;
-    }
-
-    .service-price-line strong {
-      font-size: 14.5px;
-      font-weight: 800;
-      color: var(--text-dark);
-      letter-spacing: -0.2px;
-    }
-
-    .service-specs {
-      margin: 22px 0 18px 0;
-      display: flex;
-      flex-direction: column;
-      gap: 7px;
-    }
-
-    .spec-row {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 10px;
-      font-size: 12px;
-      line-height: 1.35;
-      color: #475569;
-      font-weight: 500;
-    }
-
-    .spec-row strong {
-      color: var(--text-dark);
-      font-weight: 700;
-    }
-
-    .spec-label {
-      min-width: 0;
-    }
-
-    .spec-icon {
-      width: 14px;
-      height: 14px;
-      stroke: var(--text-eyebrow);
-      flex-shrink: 0;
-    }
-
-    .spec-stars {
-      display: inline-flex;
-      align-items: center;
-      gap: 2px;
-      color: var(--primary-orange);
-      flex-shrink: 0;
-    }
-
-    .spec-stars svg {
-      width: 11px;
-      height: 11px;
-      fill: currentColor;
-    }
-
-    .service-pill-cta {
+    .flip-card-scene {
       width: 100%;
-      height: 42px;
-      border-radius: 9999px;
-      background: #11141b;
-      color: #ffffff;
-      padding: 0 18px;
-      display: inline-flex;
-      align-items: center;
-      justify-content: space-between;
-      text-decoration: none;
-      font-size: 12.5px;
-      font-weight: 600;
-      letter-spacing: -0.1px;
-      transition: background 0.25s ease, transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+      height: 100%;
+      perspective: 1400px;
     }
 
-    .service-pill-cta:hover {
-      background: var(--primary-orange);
-      transform: translateY(-1px);
-    }
-
-    .service-pill-sparkle {
-      width: 12px;
-      height: 12px;
-      flex-shrink: 0;
-      color: #ffffff;
-      transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
-    }
-
-    .service-pill-cta:hover .service-pill-sparkle {
-      transform: rotate(45deg) scale(1.1);
-    }
-
-    .service-media {
+    .flip-card-inner {
       position: relative;
       width: 100%;
-      aspect-ratio: 1 / 1;
-      min-height: 210px;
-      overflow: hidden;
-      border-radius: 4px;
-      background: #f1f5f9;
+      height: 100%;
+      transform-style: preserve-3d;
+      transition: transform 0.72s cubic-bezier(0.22, 1, 0.36, 1);
+      will-change: transform;
     }
 
-    .service-media img {
+    @media (hover: hover) {
+      .flip-card:hover .flip-card-inner,
+      .flip-card:focus-within .flip-card-inner {
+        transform: rotateY(180deg);
+      }
+
+      .flip-card:hover .flip-front,
+      .flip-card:focus-within .flip-front {
+        pointer-events: none;
+      }
+
+      .flip-card:hover .flip-back,
+      .flip-card:focus-within .flip-back {
+        pointer-events: auto;
+      }
+    }
+
+    .flip-card.is-flipped .flip-card-inner {
+      transform: rotateY(180deg);
+    }
+
+    .flip-card.is-flipped .flip-front {
+      pointer-events: none;
+    }
+
+    .flip-card.is-flipped .flip-back {
+      pointer-events: auto;
+    }
+
+    .flip-face {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      border-radius: 26px;
+      overflow: hidden;
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
+    }
+
+    /* Front Face */
+    .flip-front {
+      transform: rotateY(0deg);
+      z-index: 2;
+      background: #142230;
+      box-shadow: 0 18px 36px -14px rgba(15, 23, 42, 0.22);
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+    }
+
+    .flip-card-bg {
+      position: absolute;
+      inset: 0;
       width: 100%;
       height: 100%;
       object-fit: cover;
       display: block;
-      transition: transform 0.65s cubic-bezier(0.16, 1, 0.3, 1);
+      transition: transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
     }
 
-    .service-cell:hover .service-media img {
-      transform: scale(1.045);
+    .flip-card:hover .flip-card-bg {
+      transform: scale(1.05);
+    }
+
+    .flip-front-scrim {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background: linear-gradient(
+        to top,
+        var(--card-tint-solid, rgba(16, 56, 68, 0.98)) 0%,
+        var(--card-tint-mid, rgba(16, 56, 68, 0.90)) 36%,
+        var(--card-tint-fade, rgba(16, 56, 68, 0.42)) 58%,
+        rgba(15, 23, 42, 0.10) 76%,
+        rgba(15, 23, 42, 0.04) 100%
+      );
+    }
+
+    .card-bookmark-btn {
+      position: absolute;
+      top: 14px;
+      right: 14px;
+      z-index: 4;
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      border: 1px solid rgba(255, 255, 255, 0.28);
+      background: rgba(15, 23, 42, 0.28);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      color: #ffffff;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: background 0.2s ease, transform 0.2s ease, border-color 0.2s ease;
+    }
+
+    .card-bookmark-btn:hover {
+      background: rgba(255, 255, 255, 0.28);
+      transform: scale(1.06);
+    }
+
+    .card-bookmark-btn.saved {
+      background: var(--primary-orange);
+      border-color: var(--primary-orange);
+    }
+
+    .card-bookmark-btn svg {
+      width: 14px;
+      height: 14px;
+      stroke: currentColor;
+      fill: none;
+    }
+
+    .card-bookmark-btn.saved svg {
+      fill: currentColor;
+    }
+
+    .card-front-content {
+      position: relative;
+      z-index: 3;
+      padding: 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      color: #ffffff;
+    }
+
+    .card-title-row {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .card-front-title {
+      font-size: 16.5px;
+      font-weight: 700;
+      letter-spacing: -0.35px;
+      line-height: 1.24;
+      color: #ffffff;
+      margin: 0;
+    }
+
+    .card-price-badge {
+      flex-shrink: 0;
+      padding: 4px 9px;
+      border-radius: 9999px;
+      background: rgba(255, 255, 255, 0.18);
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      font-size: 11px;
+      font-weight: 700;
+      color: #ffffff;
+      white-space: nowrap;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .card-front-desc {
+      font-size: 12px;
+      line-height: 1.48;
+      color: rgba(255, 255, 255, 0.84);
+      font-weight: 400;
+      margin: 0;
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .card-meta-row {
+      display: flex;
+      flex-wrap: nowrap;
+      align-items: center;
+      gap: 5px;
+      overflow: hidden;
+    }
+
+    .card-meta-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 4px 8px;
+      border-radius: 9999px;
+      background: rgba(255, 255, 255, 0.14);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      font-size: 10.5px;
+      font-weight: 600;
+      color: rgba(255, 255, 255, 0.94);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .card-meta-chip svg {
+      width: 10.5px;
+      height: 10.5px;
+      flex-shrink: 0;
+      color: #ffffff;
+    }
+
+    .card-front-btn {
+      width: 100%;
+      height: 40px;
+      margin-top: 2px;
+      border: none;
+      border-radius: 9999px;
+      background: #ffffff;
+      color: #11141c;
+      font-size: 12.5px;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      text-decoration: none;
+      transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), background 0.2s ease;
+    }
+
+    .card-front-btn:hover {
+      background: #f8fafc;
+      transform: translateY(-1px);
+    }
+
+    /* Back Face (Detail Layanan + Chat WhatsApp) */
+    .flip-back {
+      transform: rotateY(180deg);
+      z-index: 1;
+      pointer-events: none;
+      background: #11141c;
+      color: #ffffff;
+      border: 1px solid rgba(255, 255, 255, 0.10);
+      box-shadow: 0 22px 44px -14px rgba(15, 23, 42, 0.34);
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .flip-back-top {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .flip-back-kicker-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .flip-back-kicker {
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: 1.6px;
+      text-transform: uppercase;
+      color: var(--primary-orange);
+    }
+
+    .flip-back-close {
+      display: none;
+      background: rgba(255, 255, 255, 0.12);
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      color: #ffffff;
+      border-radius: 9999px;
+      padding: 4px 10px;
+      font-size: 10.5px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    @media (hover: none) {
+      .flip-back-close {
+        display: inline-flex;
+        align-items: center;
+      }
+    }
+
+    .flip-back-title {
+      font-size: 16.5px;
+      font-weight: 700;
+      line-height: 1.25;
+      letter-spacing: -0.3px;
+      color: #ffffff;
+      margin: 0;
+    }
+
+    .flip-back-sub {
+      font-size: 12px;
+      line-height: 1.45;
+      color: #94a3b8;
+      margin: 0;
+    }
+
+    .back-detail-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 9px;
+      padding: 12px 0;
+      border-top: 1px solid rgba(255, 255, 255, 0.10);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.10);
+      margin: auto 0;
+    }
+
+    .back-detail-list li {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      font-size: 12px;
+      line-height: 1.4;
+      color: #e2e8f0;
+    }
+
+    .back-detail-list svg {
+      width: 14px;
+      height: 14px;
+      flex-shrink: 0;
+      margin-top: 2px;
+      color: var(--primary-orange);
+    }
+
+    .flip-back-footer {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .flip-back-note {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 11px;
+      color: #94a3b8;
+    }
+
+    .flip-back-note strong {
+      color: #ffffff;
+      font-weight: 700;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .wa-flip-cta {
+      width: 100%;
+      height: 42px;
+      border-radius: 9999px;
+      background: var(--primary-orange);
+      color: #ffffff;
+      text-decoration: none;
+      font-size: 12.5px;
+      font-weight: 700;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 0 16px;
+      box-shadow: 0 10px 22px -6px rgba(242, 91, 32, 0.45);
+      transition: background 0.2s ease, transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .wa-flip-cta:hover {
+      background: var(--primary-orange-hover);
+      transform: translateY(-1px);
+    }
+
+    .wa-flip-cta svg {
+      width: 15px;
+      height: 15px;
+      flex-shrink: 0;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .flip-card-inner,
+      .flip-card-bg {
+        transition: none;
+      }
     }
 
     /* Final CTA Block (Clean flow directly beneath Services Grid) */
@@ -1018,14 +1265,29 @@
               }
             }
 
-            @media (max-width: 1024px) {
-              .service-cell {
-                grid-template-columns: minmax(0, 1fr) 170px;
-                gap: 18px;
-                padding: 26px 22px;
+            @media (max-width: 1320px) {
+              .services-grid {
+                gap: 16px;
+              }
+              .flip-card {
+                height: 426px;
+              }
+              .card-front-content,
+              .flip-back {
+                padding: 16px;
               }
               .services-lead-wrap {
                 padding-left: 22px;
+              }
+            }
+
+            @media (max-width: 1100px) {
+              .services-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+                gap: 18px;
+              }
+              .flip-card {
+                height: 435px;
               }
             }
 
@@ -1039,27 +1301,6 @@
               .services-lead-wrap {
                 padding-left: 0;
               }
-
-              .services-grid-row {
-                grid-template-columns: 1fr;
-              }
-
-              .service-cell:first-child {
-                border-right: none;
-                border-bottom: 1px solid rgba(15, 23, 42, 0.11);
-                padding-left: 0;
-                padding-right: 0;
-              }
-
-              .service-cell:last-child {
-                padding-left: 0;
-                padding-right: 0;
-              }
-
-              .service-cell {
-                grid-template-columns: minmax(0, 1fr) 210px;
-                padding: 24px 0;
-              }
             }
 
             @media (max-width: 860px) {
@@ -1072,16 +1313,15 @@
               }
             }
 
-            @media (max-width: 560px) {
-              .service-cell {
+            @media (max-width: 600px) {
+              .services-grid {
                 grid-template-columns: 1fr;
                 gap: 16px;
+                padding-top: 22px;
               }
 
-              .service-media {
-                order: -1;
-                aspect-ratio: 16 / 10;
-                min-height: 170px;
+              .flip-card {
+                height: 430px;
               }
             }
   </style>
@@ -1200,278 +1440,413 @@
         </header>
 
         <div class="services-grid">
-          <!-- Row 1 -->
-          <div class="services-grid-row">
-            <!-- Card 1: Virtual Tour Guide Online -->
-            <article class="service-cell reveal-item" data-stagger="0">
-              <div class="service-info">
-                <div class="service-head">
-                  <h3 class="service-card-title">Virtual Tour Guide Online 24/7</h3>
-                  <div class="service-price-line">
-                    <span class="price-prefix">mulai</span>
-                    <strong>Hemat 70% Biaya Tour</strong>
+          <!-- Card 1: Virtual Tour Guide Online 24/7 -->
+          <article class="flip-card reveal-item" data-stagger="0" tabindex="0" style="--card-tint-solid: rgba(16, 59, 70, 0.98); --card-tint-mid: rgba(16, 59, 70, 0.88); --card-tint-fade: rgba(16, 59, 70, 0.34);">
+            <div class="flip-card-scene">
+              <div class="flip-card-inner">
+                <div class="flip-face flip-front">
+                  <img class="flip-card-bg" src="assets/cards/card-4.jpg" alt="Virtual Tour Guide Online 24/7 di Tokyo" loading="lazy" referrerpolicy="no-referrer">
+                  <div class="flip-front-scrim"></div>
+                  <button class="card-bookmark-btn" type="button" aria-label="Simpan layanan Virtual Tour Guide">
+                    <svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
+                  </button>
+                  <div class="card-front-content">
+                    <div class="card-title-row">
+                      <h3 class="card-front-title">Virtual Tour Guide</h3>
+                      <span class="card-price-badge">Hemat 70%</span>
+                    </div>
+                    <p class="card-front-desc">Pendampingan wisata Jepang secara live 24 jam via WhatsApp, lengkap navigasi kereta &amp; terjemahan.</p>
+                    <div class="card-meta-row">
+                      <span class="card-meta-chip"><svg viewBox="0 0 20 20" fill="currentColor"><path d="M10 1.5l2.6 5.3 5.8.8-4.2 4.1 1 5.8L10 14.8l-5.2 2.7 1-5.8-4.2-4.1 5.8-.8z"/></svg>4.9</span>
+                      <span class="card-meta-chip">Live 24/7</span>
+                      <span class="card-meta-chip">All Japan</span>
+                    </div>
+                    <button class="card-front-btn" type="button">Lihat Detail</button>
                   </div>
                 </div>
-                <div class="service-specs">
-                  <div class="spec-row">
-                    <span class="spec-label">Tokyo, Kyoto, Osaka &amp; Seluruh Jepang</span>
-                    <svg class="spec-icon" viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                <div class="flip-face flip-back">
+                  <div class="flip-back-top">
+                    <div class="flip-back-kicker-row">
+                      <span class="flip-back-kicker">Detail Layanan</span>
+                      <button class="flip-back-close" type="button">Tutup</button>
+                    </div>
+                    <h4 class="flip-back-title">Virtual Tour Guide Online 24/7</h4>
+                    <p class="flip-back-sub">Solusi hemat bagi solo traveler, pasangan &amp; keluarga tanpa biaya akomodasi guide.</p>
                   </div>
-                  <div class="spec-row">
-                    <span class="spec-label">24 Jam Live WhatsApp (Bebas Rute)</span>
-                    <svg class="spec-icon" viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-                  </div>
-                  <div class="spec-row">
-                    <span class="spec-label">Solo Traveler, Pasangan &amp; Keluarga</span>
-                    <svg class="spec-icon" viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-                  </div>
-                  <div class="spec-row">
-                    <span class="spec-label">Dipercaya <strong>1.200+</strong> traveler Indonesia</span>
-                    <span class="spec-stars" aria-label="5 stars">
-                      <svg viewBox="0 0 20 20"><path d="M10 1.5l2.6 5.3 5.8.8-4.2 4.1 1 5.8L10 14.8l-5.2 2.7 1-5.8-4.2-4.1 5.8-.8z"/></svg>
-                      <svg viewBox="0 0 20 20"><path d="M10 1.5l2.6 5.3 5.8.8-4.2 4.1 1 5.8L10 14.8l-5.2 2.7 1-5.8-4.2-4.1 5.8-.8z"/></svg>
-                      <svg viewBox="0 0 20 20"><path d="M10 1.5l2.6 5.3 5.8.8-4.2 4.1 1 5.8L10 14.8l-5.2 2.7 1-5.8-4.2-4.1 5.8-.8z"/></svg>
-                      <svg viewBox="0 0 20 20"><path d="M10 1.5l2.6 5.3 5.8.8-4.2 4.1 1 5.8L10 14.8l-5.2 2.7 1-5.8-4.2-4.1 5.8-.8z"/></svg>
-                      <svg viewBox="0 0 20 20"><path d="M10 1.5l2.6 5.3 5.8.8-4.2 4.1 1 5.8L10 14.8l-5.2 2.7 1-5.8-4.2-4.1 5.8-.8z"/></svg>
-                    </span>
+                  <ul class="back-detail-list">
+                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span>Panduan rute Shinkansen, subway &amp; bus real-time</span></li>
+                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span>Bantuan translasi &amp; pesan restoran halal/lokal</span></li>
+                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span>Rencana itinerary harian custom sesuai minat</span></li>
+                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span>Dipercaya 1.200+ traveler Indonesia</span></li>
+                  </ul>
+                  <div class="flip-back-footer">
+                    <div class="flip-back-note"><span>Cakupan: Tokyo, Kyoto, Osaka</span><strong>24/7 Live</strong></div>
+                    <a href="https://wa.me/6281318939319?text=Halo%20Tanogaido,%20saya%20ingin%20konsultasi%20layanan%20Virtual%20Tour%20Guide%20Online%2024/7." target="_blank" rel="noopener noreferrer" class="wa-flip-cta">
+                      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.5 3.5A11.8 11.8 0 0 0 12 0C5.4 0 0 5.4 0 12c0 2.1.6 4.2 1.6 6L0 24l6.2-1.6A12 12 0 0 0 12 24c6.6 0 12-5.4 12-12 0-3.2-1.2-6.2-3.5-8.5zM12 21.8c-1.8 0-3.6-.5-5.1-1.4l-.4-.2-3.7 1 1-3.6-.2-.4A9.8 9.8 0 0 1 2.2 12c0-5.4 4.4-9.8 9.8-9.8 2.6 0 5.1 1 6.9 2.9A9.7 9.7 0 0 1 21.8 12c0 5.4-4.4 9.8-9.8 9.8zm5.4-7.4c-.3-.2-1.8-.9-2-.1-.3-.1-.5-.2-.7.2-.2.3-.8 1-.9 1.2-.2.2-.3.2-.6.1-.3-.2-1.3-.5-2.4-1.5-.9-.8-1.5-1.8-1.7-2.1-.2-.3 0-.5.1-.6l.5-.5.3-.5v-.5c-.1-.2-.7-1.6-.9-2.2-.3-.6-.5-.5-.7-.5h-.6c-.2 0-.6.1-.9.4-.3.3-1.1 1.1-1.1 2.7s1.1 3.1 1.3 3.3c.2.2 2.2 3.4 5.4 4.7.8.3 1.4.5 1.8.6.8.2 1.5.2 2 .1.6-.1 1.8-.7 2-1.4.3-.7.3-1.3.2-1.4-.1-.2-.3-.3-.6-.4z"/></svg>
+                      <span>Chat ke WhatsApp</span>
+                    </a>
                   </div>
                 </div>
-                <a href="https://wa.me/6281318939319?text=Halo%20Tanogaido,%20saya%20tertarik%20dengan%20layanan%20Virtual%20Tour%20Guide%20Online%2024/7." target="_blank" rel="noopener noreferrer" class="service-pill-cta">
-                  <span>Explore Layanan</span>
-                  <svg class="service-pill-sparkle" viewBox="0 0 16 16"><path d="M8 0L9.8 6.2L16 8L9.8 9.8L8 16L6.2 9.8L0 8L6.2 6.2Z" fill="currentColor"/></svg>
-                </a>
               </div>
-              <div class="service-media">
-                <img src="assets/tokyo-pulse.jpg" alt="Virtual Tour Guide Online Jepang" loading="lazy">
-              </div>
-            </article>
+            </div>
+          </article>
 
-            <!-- Card 2: Private Tour & Custom Itinerary -->
-            <article class="service-cell reveal-item" data-stagger="1">
-              <div class="service-info">
-                <div class="service-head">
-                  <h3 class="service-card-title">Private Tour &amp; Custom Itinerary</h3>
-                  <div class="service-price-line">
-                    <span class="price-prefix">grup privat</span>
-                    <strong>1–15 Pax Custom Jadwal</strong>
+          <!-- Card 2: Private Tour & Custom Itinerary -->
+          <article class="flip-card reveal-item" data-stagger="1" tabindex="0" style="--card-tint-solid: rgba(20, 38, 61, 0.98); --card-tint-mid: rgba(20, 38, 61, 0.88); --card-tint-fade: rgba(20, 38, 61, 0.34);">
+            <div class="flip-card-scene">
+              <div class="flip-card-inner">
+                <div class="flip-face flip-front">
+                  <img class="flip-card-bg" src="assets/fuji-climb.jpg" alt="Private Tour Gunung Fuji dan Sakura" loading="lazy" referrerpolicy="no-referrer">
+                  <div class="flip-front-scrim"></div>
+                  <button class="card-bookmark-btn" type="button" aria-label="Simpan layanan Private Tour">
+                    <svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
+                  </button>
+                  <div class="card-front-content">
+                    <div class="card-title-row">
+                      <h3 class="card-front-title">Private Tour Jepang</h3>
+                      <span class="card-price-badge">1–15 Pax</span>
+                    </div>
+                    <p class="card-front-desc">Perjalanan privat eksklusif dengan guide lokal bilingual berlisensi menuju Fuji, Kyoto &amp; Shirakawa-go.</p>
+                    <div class="card-meta-row">
+                      <span class="card-meta-chip"><svg viewBox="0 0 20 20" fill="currentColor"><path d="M10 1.5l2.6 5.3 5.8.8-4.2 4.1 1 5.8L10 14.8l-5.2 2.7 1-5.8-4.2-4.1 5.8-.8z"/></svg>5.0</span>
+                      <span class="card-meta-chip">Custom Route</span>
+                      <span class="card-meta-chip">3–14 Hari</span>
+                    </div>
+                    <button class="card-front-btn" type="button">Lihat Detail</button>
                   </div>
                 </div>
-                <div class="service-specs">
-                  <div class="spec-row">
-                    <span class="spec-label">Mount Fuji, Kyoto, Shirakawa-go</span>
-                    <svg class="spec-icon" viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                <div class="flip-face flip-back">
+                  <div class="flip-back-top">
+                    <div class="flip-back-kicker-row">
+                      <span class="flip-back-kicker">Detail Layanan</span>
+                      <button class="flip-back-close" type="button">Tutup</button>
+                    </div>
+                    <h4 class="flip-back-title">Private Tour &amp; Custom Itinerary</h4>
+                    <p class="flip-back-sub">Liburan nyaman tanpa digabung rombongan lain, jadwal fleksibel sesuai ritme keluarga.</p>
                   </div>
-                  <div class="spec-row">
-                    <span class="spec-label">Jadwal Fleksibel (3 – 14 Hari)</span>
-                    <svg class="spec-icon" viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-                  </div>
-                  <div class="spec-row">
-                    <span class="spec-label">Guide Lokal Bilingual Berlisensi</span>
-                    <svg class="spec-icon" viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-                  </div>
-                  <div class="spec-row">
-                    <span class="spec-label">Dipercaya <strong>650+</strong> rombongan privat</span>
-                    <span class="spec-stars" aria-label="5 stars">
-                      <svg viewBox="0 0 20 20"><path d="M10 1.5l2.6 5.3 5.8.8-4.2 4.1 1 5.8L10 14.8l-5.2 2.7 1-5.8-4.2-4.1 5.8-.8z"/></svg>
-                      <svg viewBox="0 0 20 20"><path d="M10 1.5l2.6 5.3 5.8.8-4.2 4.1 1 5.8L10 14.8l-5.2 2.7 1-5.8-4.2-4.1 5.8-.8z"/></svg>
-                      <svg viewBox="0 0 20 20"><path d="M10 1.5l2.6 5.3 5.8.8-4.2 4.1 1 5.8L10 14.8l-5.2 2.7 1-5.8-4.2-4.1 5.8-.8z"/></svg>
-                      <svg viewBox="0 0 20 20"><path d="M10 1.5l2.6 5.3 5.8.8-4.2 4.1 1 5.8L10 14.8l-5.2 2.7 1-5.8-4.2-4.1 5.8-.8z"/></svg>
-                      <svg viewBox="0 0 20 20"><path d="M10 1.5l2.6 5.3 5.8.8-4.2 4.1 1 5.8L10 14.8l-5.2 2.7 1-5.8-4.2-4.1 5.8-.8z"/></svg>
-                    </span>
+                  <ul class="back-detail-list">
+                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span>Tour leader berpengalaman fasih bahasa Indonesia &amp; Jepang</span></li>
+                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span>Rute Mount Fuji, Hakone, Kyoto, Osaka &amp; Hokkaido</span></li>
+                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span>Kurasi hotel strategis, tiket atraksi &amp; kuliner</span></li>
+                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span>Dipercaya 650+ rombongan privat &amp; korporat</span></li>
+                  </ul>
+                  <div class="flip-back-footer">
+                    <div class="flip-back-note"><span>Kapasitas: Keluarga &amp; Grup</span><strong>1–15 Pax</strong></div>
+                    <a href="https://wa.me/6281318939319?text=Halo%20Tanogaido,%20saya%20ingin%20konsultasi%20paket%20Private%20Tour%20dan%20Custom%20Itinerary%20Jepang." target="_blank" rel="noopener noreferrer" class="wa-flip-cta">
+                      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.5 3.5A11.8 11.8 0 0 0 12 0C5.4 0 0 5.4 0 12c0 2.1.6 4.2 1.6 6L0 24l6.2-1.6A12 12 0 0 0 12 24c6.6 0 12-5.4 12-12 0-3.2-1.2-6.2-3.5-8.5zM12 21.8c-1.8 0-3.6-.5-5.1-1.4l-.4-.2-3.7 1 1-3.6-.2-.4A9.8 9.8 0 0 1 2.2 12c0-5.4 4.4-9.8 9.8-9.8 2.6 0 5.1 1 6.9 2.9A9.7 9.7 0 0 1 21.8 12c0 5.4-4.4 9.8-9.8 9.8zm5.4-7.4c-.3-.2-1.8-.9-2-.1-.3-.1-.5-.2-.7.2-.2.3-.8 1-.9 1.2-.2.2-.3.2-.6.1-.3-.2-1.3-.5-2.4-1.5-.9-.8-1.5-1.8-1.7-2.1-.2-.3 0-.5.1-.6l.5-.5.3-.5v-.5c-.1-.2-.7-1.6-.9-2.2-.3-.6-.5-.5-.7-.5h-.6c-.2 0-.6.1-.9.4-.3.3-1.1 1.1-1.1 2.7s1.1 3.1 1.3 3.3c.2.2 2.2 3.4 5.4 4.7.8.3 1.4.5 1.8.6.8.2 1.5.2 2 .1.6-.1 1.8-.7 2-1.4.3-.7.3-1.3.2-1.4-.1-.2-.3-.3-.6-.4z"/></svg>
+                      <span>Chat ke WhatsApp</span>
+                    </a>
                   </div>
                 </div>
-                <a href="https://wa.me/6281318939319?text=Halo%20Tanogaido,%20saya%20ingin%20konsultasi%20paket%20Private%20Tour%20dan%20Custom%20Itinerary%20Jepang." target="_blank" rel="noopener noreferrer" class="service-pill-cta">
-                  <span>Explore Layanan</span>
-                  <svg class="service-pill-sparkle" viewBox="0 0 16 16"><path d="M8 0L9.8 6.2L16 8L9.8 9.8L8 16L6.2 9.8L0 8L6.2 6.2Z" fill="currentColor"/></svg>
-                </a>
               </div>
-              <div class="service-media">
-                <img src="assets/fuji-climb.jpg" alt="Private Tour Gunung Fuji Jepang" loading="lazy">
-              </div>
-            </article>
-          </div>
+            </div>
+          </article>
 
-          <!-- Row 2 -->
-          <div class="services-grid-row">
-            <!-- Card 3: Sewa Mobil & Private Driver -->
-            <article class="service-cell reveal-item" data-stagger="0">
-              <div class="service-info">
-                <div class="service-head">
-                  <h3 class="service-card-title">Sewa Mobil &amp; Private Driver</h3>
-                  <div class="service-price-line">
-                    <span class="price-prefix">armada</span>
-                    <strong>Alphard, HiAce &amp; Bus</strong>
+          <!-- Card 3: Sewa Mobil & Private Driver -->
+          <article class="flip-card reveal-item" data-stagger="2" tabindex="0" style="--card-tint-solid: rgba(38, 27, 22, 0.98); --card-tint-mid: rgba(38, 27, 22, 0.88); --card-tint-fade: rgba(38, 27, 22, 0.34);">
+            <div class="flip-card-scene">
+              <div class="flip-card-inner">
+                <div class="flip-face flip-front">
+                  <img class="flip-card-bg" src="assets/cards/card-1.jpg" alt="Sewa Mobil Private Driver Kyoto" loading="lazy" referrerpolicy="no-referrer">
+                  <div class="flip-front-scrim"></div>
+                  <button class="card-bookmark-btn" type="button" aria-label="Simpan layanan Sewa Mobil">
+                    <svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
+                  </button>
+                  <div class="card-front-content">
+                    <div class="card-title-row">
+                      <h3 class="card-front-title">Sewa Mobil &amp; Driver</h3>
+                      <span class="card-price-badge">Alphard/HiAce</span>
+                    </div>
+                    <p class="card-front-desc">Armada legal pelat hijau berizin resmi untuk transfer bandara Haneda/Narita dan charter harian.</p>
+                    <div class="card-meta-row">
+                      <span class="card-meta-chip"><svg viewBox="0 0 20 20" fill="currentColor"><path d="M10 1.5l2.6 5.3 5.8.8-4.2 4.1 1 5.8L10 14.8l-5.2 2.7 1-5.8-4.2-4.1 5.8-.8z"/></svg>4.9</span>
+                      <span class="card-meta-chip">10–12 Jam</span>
+                      <span class="card-meta-chip">Door-to-Door</span>
+                    </div>
+                    <button class="card-front-btn" type="button">Lihat Detail</button>
                   </div>
                 </div>
-                <div class="service-specs">
-                  <div class="spec-row">
-                    <span class="spec-label">Antar Jemput Bandara &amp; Antar Kota</span>
-                    <svg class="spec-icon" viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                <div class="flip-face flip-back">
+                  <div class="flip-back-top">
+                    <div class="flip-back-kicker-row">
+                      <span class="flip-back-kicker">Detail Layanan</span>
+                      <button class="flip-back-close" type="button">Tutup</button>
+                    </div>
+                    <h4 class="flip-back-title">Sewa Mobil &amp; Private Driver</h4>
+                    <p class="flip-back-sub">Perjalanan praktis membawa koper besar, anak kecil, atau orang tua tanpa pindah kereta.</p>
                   </div>
-                  <div class="spec-row">
-                    <span class="spec-label">10 – 12 Jam Charter Harian</span>
-                    <svg class="spec-icon" viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-                  </div>
-                  <div class="spec-row">
-                    <span class="spec-label">Kapasitas Nyaman + Bagasi Koper</span>
-                    <svg class="spec-icon" viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-                  </div>
-                  <div class="spec-row">
-                    <span class="spec-label">Dipercaya <strong>480+</strong> trip keluarga</span>
-                    <span class="spec-stars" aria-label="5 stars">
-                      <svg viewBox="0 0 20 20"><path d="M10 1.5l2.6 5.3 5.8.8-4.2 4.1 1 5.8L10 14.8l-5.2 2.7 1-5.8-4.2-4.1 5.8-.8z"/></svg>
-                      <svg viewBox="0 0 20 20"><path d="M10 1.5l2.6 5.3 5.8.8-4.2 4.1 1 5.8L10 14.8l-5.2 2.7 1-5.8-4.2-4.1 5.8-.8z"/></svg>
-                      <svg viewBox="0 0 20 20"><path d="M10 1.5l2.6 5.3 5.8.8-4.2 4.1 1 5.8L10 14.8l-5.2 2.7 1-5.8-4.2-4.1 5.8-.8z"/></svg>
-                      <svg viewBox="0 0 20 20"><path d="M10 1.5l2.6 5.3 5.8.8-4.2 4.1 1 5.8L10 14.8l-5.2 2.7 1-5.8-4.2-4.1 5.8-.8z"/></svg>
-                      <svg viewBox="0 0 20 20"><path d="M10 1.5l2.6 5.3 5.8.8-4.2 4.1 1 5.8L10 14.8l-5.2 2.7 1-5.8-4.2-4.1 5.8-.8z"/></svg>
-                    </span>
+                  <ul class="back-detail-list">
+                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span>Pilihan Toyota Alphard, HiAce Grand Cabin &amp; Bus</span></li>
+                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span>Antar jemput Haneda, Narita, Kansai &amp; Chitose</span></li>
+                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span>Sudah termasuk BBM, tol jalan bebas hambatan &amp; driver</span></li>
+                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span>Dipercaya 480+ perjalanan keluarga</span></li>
+                  </ul>
+                  <div class="flip-back-footer">
+                    <div class="flip-back-note"><span>Durasi Charter Harian</span><strong>10–12 Jam</strong></div>
+                    <a href="https://wa.me/6281318939319?text=Halo%20Tanogaido,%20saya%20ingin%20info%20sewa%20mobil%20dan%20private%20driver%20di%20Jepang." target="_blank" rel="noopener noreferrer" class="wa-flip-cta">
+                      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.5 3.5A11.8 11.8 0 0 0 12 0C5.4 0 0 5.4 0 12c0 2.1.6 4.2 1.6 6L0 24l6.2-1.6A12 12 0 0 0 12 24c6.6 0 12-5.4 12-12 0-3.2-1.2-6.2-3.5-8.5zM12 21.8c-1.8 0-3.6-.5-5.1-1.4l-.4-.2-3.7 1 1-3.6-.2-.4A9.8 9.8 0 0 1 2.2 12c0-5.4 4.4-9.8 9.8-9.8 2.6 0 5.1 1 6.9 2.9A9.7 9.7 0 0 1 21.8 12c0 5.4-4.4 9.8-9.8 9.8zm5.4-7.4c-.3-.2-1.8-.9-2-.1-.3-.1-.5-.2-.7.2-.2.3-.8 1-.9 1.2-.2.2-.3.2-.6.1-.3-.2-1.3-.5-2.4-1.5-.9-.8-1.5-1.8-1.7-2.1-.2-.3 0-.5.1-.6l.5-.5.3-.5v-.5c-.1-.2-.7-1.6-.9-2.2-.3-.6-.5-.5-.7-.5h-.6c-.2 0-.6.1-.9.4-.3.3-1.1 1.1-1.1 2.7s1.1 3.1 1.3 3.3c.2.2 2.2 3.4 5.4 4.7.8.3 1.4.5 1.8.6.8.2 1.5.2 2 .1.6-.1 1.8-.7 2-1.4.3-.7.3-1.3.2-1.4-.1-.2-.3-.3-.6-.4z"/></svg>
+                      <span>Chat ke WhatsApp</span>
+                    </a>
                   </div>
                 </div>
-                <a href="https://wa.me/6281318939319?text=Halo%20Tanogaido,%20saya%20ingin%20info%20sewa%20mobil%20dan%20private%20driver%20di%20Jepang." target="_blank" rel="noopener noreferrer" class="service-pill-cta">
-                  <span>Explore Layanan</span>
-                  <svg class="service-pill-sparkle" viewBox="0 0 16 16"><path d="M8 0L9.8 6.2L16 8L9.8 9.8L8 16L6.2 9.8L0 8L6.2 6.2Z" fill="currentColor"/></svg>
-                </a>
               </div>
-              <div class="service-media">
-                <img src="assets/zen-retreat.jpg" alt="Sewa Mobil Private Driver Jepang" loading="lazy">
-              </div>
-            </article>
+            </div>
+          </article>
 
-            <!-- Card 4: JR Pass & Tiket Shinkansen -->
-            <article class="service-cell reveal-item" data-stagger="1">
-              <div class="service-info">
-                <div class="service-head">
-                  <h3 class="service-card-title">JR Pass &amp; Tiket Shinkansen</h3>
-                  <div class="service-price-line">
-                    <span class="price-prefix">resmi</span>
-                    <strong>Whole Japan &amp; Regional Pass</strong>
+          <!-- Card 4: JR Pass & Tiket Shinkansen -->
+          <article class="flip-card reveal-item" data-stagger="3" tabindex="0" style="--card-tint-solid: rgba(22, 26, 36, 0.98); --card-tint-mid: rgba(22, 26, 36, 0.88); --card-tint-fade: rgba(22, 26, 36, 0.34);">
+            <div class="flip-card-scene">
+              <div class="flip-card-inner">
+                <div class="flip-face flip-front">
+                  <img class="flip-card-bg" src="assets/shinkansen.jpg" alt="JR Pass dan Tiket Shinkansen Resmi" loading="lazy" referrerpolicy="no-referrer">
+                  <div class="flip-front-scrim"></div>
+                  <button class="card-bookmark-btn" type="button" aria-label="Simpan layanan JR Pass">
+                    <svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
+                  </button>
+                  <div class="card-front-content">
+                    <div class="card-title-row">
+                      <h3 class="card-front-title">JR Pass &amp; Shinkansen</h3>
+                      <span class="card-price-badge">Resmi</span>
+                    </div>
+                    <p class="card-front-desc">Tiket Whole Japan Pass, Regional Pass &amp; reservasi kursi Shinkansen Nozomi atau Hikari antarkota.</p>
+                    <div class="card-meta-row">
+                      <span class="card-meta-chip"><svg viewBox="0 0 20 20" fill="currentColor"><path d="M10 1.5l2.6 5.3 5.8.8-4.2 4.1 1 5.8L10 14.8l-5.2 2.7 1-5.8-4.2-4.1 5.8-.8z"/></svg>4.9</span>
+                      <span class="card-meta-chip">7 / 14 / 21 Hari</span>
+                      <span class="card-meta-chip">Green &amp; Ord</span>
+                    </div>
+                    <button class="card-front-btn" type="button">Lihat Detail</button>
                   </div>
                 </div>
-                <div class="service-specs">
-                  <div class="spec-row">
-                    <span class="spec-label">Tokyo – Kyoto – Osaka – Hokkaido</span>
-                    <svg class="spec-icon" viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                <div class="flip-face flip-back">
+                  <div class="flip-back-top">
+                    <div class="flip-back-kicker-row">
+                      <span class="flip-back-kicker">Detail Layanan</span>
+                      <button class="flip-back-close" type="button">Tutup</button>
+                    </div>
+                    <h4 class="flip-back-title">JR Pass &amp; Tiket Shinkansen</h4>
+                    <p class="flip-back-sub">Konsultasi perhitungan rute terlebih dulu agar pilihan pass benar-benar hemat biaya kereta.</p>
                   </div>
-                  <div class="spec-row">
-                    <span class="spec-label">Pilihan 7, 14 &amp; 21 Hari Berturut</span>
-                    <svg class="spec-icon" viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-                  </div>
-                  <div class="spec-row">
-                    <span class="spec-label">Gratis Konsultasi Efisiensi Rute</span>
-                    <svg class="spec-icon" viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-                  </div>
-                  <div class="spec-row">
-                    <span class="spec-label">Dipercaya <strong>890+</strong> pemegang JR Pass</span>
-                    <span class="spec-stars" aria-label="5 stars">
-                      <svg viewBox="0 0 20 20"><path d="M10 1.5l2.6 5.3 5.8.8-4.2 4.1 1 5.8L10 14.8l-5.2 2.7 1-5.8-4.2-4.1 5.8-.8z"/></svg>
-                      <svg viewBox="0 0 20 20"><path d="M10 1.5l2.6 5.3 5.8.8-4.2 4.1 1 5.8L10 14.8l-5.2 2.7 1-5.8-4.2-4.1 5.8-.8z"/></svg>
-                      <svg viewBox="0 0 20 20"><path d="M10 1.5l2.6 5.3 5.8.8-4.2 4.1 1 5.8L10 14.8l-5.2 2.7 1-5.8-4.2-4.1 5.8-.8z"/></svg>
-                      <svg viewBox="0 0 20 20"><path d="M10 1.5l2.6 5.3 5.8.8-4.2 4.1 1 5.8L10 14.8l-5.2 2.7 1-5.8-4.2-4.1 5.8-.8z"/></svg>
-                      <svg viewBox="0 0 20 20"><path d="M10 1.5l2.6 5.3 5.8.8-4.2 4.1 1 5.8L10 14.8l-5.2 2.7 1-5.8-4.2-4.1 5.8-.8z"/></svg>
-                    </span>
+                  <ul class="back-detail-list">
+                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span>Whole Japan Rail Pass &amp; Kansai/Hokkaido Regional Pass</span></li>
+                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span>Bantu pilih posisi kursi sisi Gunung Fuji</span></li>
+                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span>Panduan tukar voucher di stasiun kedatangan Jepang</span></li>
+                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span>Dipercaya 890+ pemegang JR Pass</span></li>
+                  </ul>
+                  <div class="flip-back-footer">
+                    <div class="flip-back-note"><span>Masa Berlaku Berturut</span><strong>7 / 14 / 21 Hari</strong></div>
+                    <a href="https://wa.me/6281318939319?text=Halo%20Tanogaido,%20saya%20ingin%20beli%20JR%20Pass%20dan%20tiket%20Shinkansen%20Jepang." target="_blank" rel="noopener noreferrer" class="wa-flip-cta">
+                      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.5 3.5A11.8 11.8 0 0 0 12 0C5.4 0 0 5.4 0 12c0 2.1.6 4.2 1.6 6L0 24l6.2-1.6A12 12 0 0 0 12 24c6.6 0 12-5.4 12-12 0-3.2-1.2-6.2-3.5-8.5zM12 21.8c-1.8 0-3.6-.5-5.1-1.4l-.4-.2-3.7 1 1-3.6-.2-.4A9.8 9.8 0 0 1 2.2 12c0-5.4 4.4-9.8 9.8-9.8 2.6 0 5.1 1 6.9 2.9A9.7 9.7 0 0 1 21.8 12c0 5.4-4.4 9.8-9.8 9.8zm5.4-7.4c-.3-.2-1.8-.9-2-.1-.3-.1-.5-.2-.7.2-.2.3-.8 1-.9 1.2-.2.2-.3.2-.6.1-.3-.2-1.3-.5-2.4-1.5-.9-.8-1.5-1.8-1.7-2.1-.2-.3 0-.5.1-.6l.5-.5.3-.5v-.5c-.1-.2-.7-1.6-.9-2.2-.3-.6-.5-.5-.7-.5h-.6c-.2 0-.6.1-.9.4-.3.3-1.1 1.1-1.1 2.7s1.1 3.1 1.3 3.3c.2.2 2.2 3.4 5.4 4.7.8.3 1.4.5 1.8.6.8.2 1.5.2 2 .1.6-.1 1.8-.7 2-1.4.3-.7.3-1.3.2-1.4-.1-.2-.3-.3-.6-.4z"/></svg>
+                      <span>Chat ke WhatsApp</span>
+                    </a>
                   </div>
                 </div>
-                <a href="https://wa.me/6281318939319?text=Halo%20Tanogaido,%20saya%20ingin%20beli%20JR%20Pass%20dan%20tiket%20Shinkansen%20Jepang." target="_blank" rel="noopener noreferrer" class="service-pill-cta">
-                  <span>Explore Layanan</span>
-                  <svg class="service-pill-sparkle" viewBox="0 0 16 16"><path d="M8 0L9.8 6.2L16 8L9.8 9.8L8 16L6.2 9.8L0 8L6.2 6.2Z" fill="currentColor"/></svg>
-                </a>
               </div>
-              <div class="service-media">
-                <img src="assets/shinkansen.jpg" alt="JR Pass dan Kereta Shinkansen Jepang" loading="lazy">
-              </div>
-            </article>
-          </div>
+            </div>
+          </article>
 
-          <!-- Row 3 -->
-          <div class="services-grid-row">
-            <!-- Card 5: Visa Jepang & Pocket WiFi 4G -->
-            <article class="service-cell reveal-item" data-stagger="0">
-              <div class="service-info">
-                <div class="service-head">
-                  <h3 class="service-card-title">Visa Jepang &amp; Pocket WiFi 4G</h3>
-                  <div class="service-price-line">
-                    <span class="price-prefix">cepat</span>
-                    <strong>E-Visa &amp; Unlimited 4G LTE</strong>
+          <!-- Card 5: Visa Jepang & Pocket WiFi 4G -->
+          <article class="flip-card reveal-item" data-stagger="0" tabindex="0" style="--card-tint-solid: rgba(19, 29, 51, 0.98); --card-tint-mid: rgba(19, 29, 51, 0.88); --card-tint-fade: rgba(19, 29, 51, 0.34);">
+            <div class="flip-card-scene">
+              <div class="flip-card-inner">
+                <div class="flip-face flip-front">
+                  <img class="flip-card-bg" src="assets/cards/card-7.jpg" alt="Visa Jepang dan Pocket WiFi 4G LTE" loading="lazy" referrerpolicy="no-referrer">
+                  <div class="flip-front-scrim"></div>
+                  <button class="card-bookmark-btn" type="button" aria-label="Simpan layanan Visa dan WiFi">
+                    <svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
+                  </button>
+                  <div class="card-front-content">
+                    <div class="card-title-row">
+                      <h3 class="card-front-title">Visa &amp; Pocket WiFi</h3>
+                      <span class="card-price-badge">4G Unlimited</span>
+                    </div>
+                    <p class="card-front-desc">Pengurusan E-Visa, Visa Waiver, maupun visa tempel Jepang plus sewa Pocket WiFi &amp; eSIM cepat.</p>
+                    <div class="card-meta-row">
+                      <span class="card-meta-chip"><svg viewBox="0 0 20 20" fill="currentColor"><path d="M10 1.5l2.6 5.3 5.8.8-4.2 4.1 1 5.8L10 14.8l-5.2 2.7 1-5.8-4.2-4.1 5.8-.8z"/></svg>4.9</span>
+                      <span class="card-meta-chip">Cek Berkas</span>
+                      <span class="card-meta-chip">5 Perangkat</span>
+                    </div>
+                    <button class="card-front-btn" type="button">Lihat Detail</button>
                   </div>
                 </div>
-                <div class="service-specs">
-                  <div class="spec-row">
-                    <span class="spec-label">Ambil di Bandara / Kirim Rumah</span>
-                    <svg class="spec-icon" viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                <div class="flip-face flip-back">
+                  <div class="flip-back-top">
+                    <div class="flip-back-kicker-row">
+                      <span class="flip-back-kicker">Detail Layanan</span>
+                      <button class="flip-back-close" type="button">Tutup</button>
+                    </div>
+                    <h4 class="flip-back-title">Visa Jepang &amp; Pocket WiFi 4G</h4>
+                    <p class="flip-back-sub">Persiapan dokumen teliti sebelum berangkat dan internet stabil sejak mendarat.</p>
                   </div>
-                  <div class="spec-row">
-                    <span class="spec-label">Proses Dokumen Teliti &amp; Transparan</span>
-                    <svg class="spec-icon" viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-                  </div>
-                  <div class="spec-row">
-                    <span class="spec-label">Koneksi hingga 5 Perangkat</span>
-                    <svg class="spec-icon" viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-                  </div>
-                  <div class="spec-row">
-                    <span class="spec-label">Dipercaya <strong>940+</strong> pemohon visa</span>
-                    <span class="spec-stars" aria-label="5 stars">
-                      <svg viewBox="0 0 20 20"><path d="M10 1.5l2.6 5.3 5.8.8-4.2 4.1 1 5.8L10 14.8l-5.2 2.7 1-5.8-4.2-4.1 5.8-.8z"/></svg>
-                      <svg viewBox="0 0 20 20"><path d="M10 1.5l2.6 5.3 5.8.8-4.2 4.1 1 5.8L10 14.8l-5.2 2.7 1-5.8-4.2-4.1 5.8-.8z"/></svg>
-                      <svg viewBox="0 0 20 20"><path d="M10 1.5l2.6 5.3 5.8.8-4.2 4.1 1 5.8L10 14.8l-5.2 2.7 1-5.8-4.2-4.1 5.8-.8z"/></svg>
-                      <svg viewBox="0 0 20 20"><path d="M10 1.5l2.6 5.3 5.8.8-4.2 4.1 1 5.8L10 14.8l-5.2 2.7 1-5.8-4.2-4.1 5.8-.8z"/></svg>
-                      <svg viewBox="0 0 20 20"><path d="M10 1.5l2.6 5.3 5.8.8-4.2 4.1 1 5.8L10 14.8l-5.2 2.7 1-5.8-4.2-4.1 5.8-.8z"/></svg>
-                    </span>
+                  <ul class="back-detail-list">
+                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span>Review dokumen lengkap untuk E-Visa &amp; Single/Multiple Entry</span></li>
+                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span>Unlimited 4G LTE bisa dibagi hingga 5 smartphone</span></li>
+                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span>Opsi ambil di bandara atau kirim langsung ke rumah</span></li>
+                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span>Dipercaya 940+ pemohon visa wisata &amp; bisnis</span></li>
+                  </ul>
+                  <div class="flip-back-footer">
+                    <div class="flip-back-note"><span>Proses Transparan</span><strong>Anti Ribet</strong></div>
+                    <a href="https://wa.me/6281318939319?text=Halo%20Tanogaido,%20saya%20ingin%20info%20pengurusan%20Visa%20Jepang%20dan%20sewa%20Pocket%20WiFi." target="_blank" rel="noopener noreferrer" class="wa-flip-cta">
+                      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.5 3.5A11.8 11.8 0 0 0 12 0C5.4 0 0 5.4 0 12c0 2.1.6 4.2 1.6 6L0 24l6.2-1.6A12 12 0 0 0 12 24c6.6 0 12-5.4 12-12 0-3.2-1.2-6.2-3.5-8.5zM12 21.8c-1.8 0-3.6-.5-5.1-1.4l-.4-.2-3.7 1 1-3.6-.2-.4A9.8 9.8 0 0 1 2.2 12c0-5.4 4.4-9.8 9.8-9.8 2.6 0 5.1 1 6.9 2.9A9.7 9.7 0 0 1 21.8 12c0 5.4-4.4 9.8-9.8 9.8zm5.4-7.4c-.3-.2-1.8-.9-2-.1-.3-.1-.5-.2-.7.2-.2.3-.8 1-.9 1.2-.2.2-.3.2-.6.1-.3-.2-1.3-.5-2.4-1.5-.9-.8-1.5-1.8-1.7-2.1-.2-.3 0-.5.1-.6l.5-.5.3-.5v-.5c-.1-.2-.7-1.6-.9-2.2-.3-.6-.5-.5-.7-.5h-.6c-.2 0-.6.1-.9.4-.3.3-1.1 1.1-1.1 2.7s1.1 3.1 1.3 3.3c.2.2 2.2 3.4 5.4 4.7.8.3 1.4.5 1.8.6.8.2 1.5.2 2 .1.6-.1 1.8-.7 2-1.4.3-.7.3-1.3.2-1.4-.1-.2-.3-.3-.6-.4z"/></svg>
+                      <span>Chat ke WhatsApp</span>
+                    </a>
                   </div>
                 </div>
-                <a href="https://wa.me/6281318939319?text=Halo%20Tanogaido,%20saya%20ingin%20info%20pengurusan%20Visa%20Jepang%20dan%20sewa%20Pocket%20WiFi." target="_blank" rel="noopener noreferrer" class="service-pill-cta">
-                  <span>Explore Layanan</span>
-                  <svg class="service-pill-sparkle" viewBox="0 0 16 16"><path d="M8 0L9.8 6.2L16 8L9.8 9.8L8 16L6.2 9.8L0 8L6.2 6.2Z" fill="currentColor"/></svg>
-                </a>
               </div>
-              <div class="service-media">
-                <img src="assets/tea-ceremony.jpg" alt="Visa Jepang dan Pengalaman Budaya" loading="lazy">
-              </div>
-            </article>
+            </div>
+          </article>
 
-            <!-- Card 6: Wisata Pulau & Hidden Gems Jepang -->
-            <article class="service-cell reveal-item" data-stagger="1">
-              <div class="service-info">
-                <div class="service-head">
-                  <h3 class="service-card-title">Kurasi Budaya &amp; Pulau Jepang</h3>
-                  <div class="service-price-line">
-                    <span class="price-prefix">kurasi</span>
-                    <strong>Hidden Gems &amp; Onsen</strong>
+          <!-- Card 6: Kurasi Budaya & Kuliner Halal -->
+          <article class="flip-card reveal-item" data-stagger="1" tabindex="0" style="--card-tint-solid: rgba(20, 42, 40, 0.98); --card-tint-mid: rgba(20, 42, 40, 0.88); --card-tint-fade: rgba(20, 42, 40, 0.34);">
+            <div class="flip-card-scene">
+              <div class="flip-card-inner">
+                <div class="flip-face flip-front">
+                  <img class="flip-card-bg" src="assets/cards/card-2.jpg" alt="Kurasi Budaya Tradisional dan Kuliner Halal Jepang" loading="lazy" referrerpolicy="no-referrer">
+                  <div class="flip-front-scrim"></div>
+                  <button class="card-bookmark-btn" type="button" aria-label="Simpan layanan Kurasi Budaya">
+                    <svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
+                  </button>
+                  <div class="card-front-content">
+                    <div class="card-title-row">
+                      <h3 class="card-front-title">Budaya &amp; Kuliner Halal</h3>
+                      <span class="card-price-badge">Muslim Friendly</span>
+                    </div>
+                    <p class="card-front-desc">Reservasi upacara minum teh Uji, penginapan ryokan onsen privat &amp; restoran Wagyu halal tersertifikasi.</p>
+                    <div class="card-meta-row">
+                      <span class="card-meta-chip"><svg viewBox="0 0 20 20" fill="currentColor"><path d="M10 1.5l2.6 5.3 5.8.8-4.2 4.1 1 5.8L10 14.8l-5.2 2.7 1-5.8-4.2-4.1 5.8-.8z"/></svg>4.8</span>
+                      <span class="card-meta-chip">Ryokan &amp; Tea</span>
+                      <span class="card-meta-chip">Kyoto / Uji</span>
+                    </div>
+                    <button class="card-front-btn" type="button">Lihat Detail</button>
                   </div>
                 </div>
-                <div class="service-specs">
-                  <div class="spec-row">
-                    <span class="spec-label">Naoshima, Hokkaido, Okinawa &amp; Uji</span>
-                    <svg class="spec-icon" viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                <div class="flip-face flip-back">
+                  <div class="flip-back-top">
+                    <div class="flip-back-kicker-row">
+                      <span class="flip-back-kicker">Detail Layanan</span>
+                      <button class="flip-back-close" type="button">Tutup</button>
+                    </div>
+                    <h4 class="flip-back-title">Kurasi Budaya &amp; Kuliner Halal</h4>
+                    <p class="flip-back-sub">Pengalaman Jepang autentik sekaligus tenang mencari ruang sholat dan makanan halal.</p>
                   </div>
-                  <div class="spec-row">
-                    <span class="spec-label">Sakura, Autumn &amp; Winter Season</span>
-                    <svg class="spec-icon" viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-                  </div>
-                  <div class="spec-row">
-                    <span class="spec-label">Reservasi Ryokan, Tea &amp; Kuliner Halal</span>
-                    <svg class="spec-icon" viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-                  </div>
-                  <div class="spec-row">
-                    <span class="spec-label">Dipercaya <strong>340+</strong> tamu repeater</span>
-                    <span class="spec-stars" aria-label="5 stars">
-                      <svg viewBox="0 0 20 20"><path d="M10 1.5l2.6 5.3 5.8.8-4.2 4.1 1 5.8L10 14.8l-5.2 2.7 1-5.8-4.2-4.1 5.8-.8z"/></svg>
-                      <svg viewBox="0 0 20 20"><path d="M10 1.5l2.6 5.3 5.8.8-4.2 4.1 1 5.8L10 14.8l-5.2 2.7 1-5.8-4.2-4.1 5.8-.8z"/></svg>
-                      <svg viewBox="0 0 20 20"><path d="M10 1.5l2.6 5.3 5.8.8-4.2 4.1 1 5.8L10 14.8l-5.2 2.7 1-5.8-4.2-4.1 5.8-.8z"/></svg>
-                      <svg viewBox="0 0 20 20"><path d="M10 1.5l2.6 5.3 5.8.8-4.2 4.1 1 5.8L10 14.8l-5.2 2.7 1-5.8-4.2-4.1 5.8-.8z"/></svg>
-                      <svg viewBox="0 0 20 20"><path d="M10 1.5l2.6 5.3 5.8.8-4.2 4.1 1 5.8L10 14.8l-5.2 2.7 1-5.8-4.2-4.1 5.8-.8z"/></svg>
-                    </span>
+                  <ul class="back-detail-list">
+                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span>Reservasi restoran ramen &amp; Wagyu halal populer Jepang</span></li>
+                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span>Sesi tea ceremony privat &amp; workshop kerajinan Kyoto</span></li>
+                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span>Pilihan ryokan tradisional dengan private onsen keluarga</span></li>
+                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span>Dipercaya 410+ keluarga Muslim Indonesia</span></li>
+                  </ul>
+                  <div class="flip-back-footer">
+                    <div class="flip-back-note"><span>Reservasi Terjamin</span><strong>100% Kurasi</strong></div>
+                    <a href="https://wa.me/6281318939319?text=Halo%20Tanogaido,%20saya%20tertarik%20dengan%20kurasi%20Budaya%20dan%20Kuliner%20Halal%20Jepang." target="_blank" rel="noopener noreferrer" class="wa-flip-cta">
+                      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.5 3.5A11.8 11.8 0 0 0 12 0C5.4 0 0 5.4 0 12c0 2.1.6 4.2 1.6 6L0 24l6.2-1.6A12 12 0 0 0 12 24c6.6 0 12-5.4 12-12 0-3.2-1.2-6.2-3.5-8.5zM12 21.8c-1.8 0-3.6-.5-5.1-1.4l-.4-.2-3.7 1 1-3.6-.2-.4A9.8 9.8 0 0 1 2.2 12c0-5.4 4.4-9.8 9.8-9.8 2.6 0 5.1 1 6.9 2.9A9.7 9.7 0 0 1 21.8 12c0 5.4-4.4 9.8-9.8 9.8zm5.4-7.4c-.3-.2-1.8-.9-2-.1-.3-.1-.5-.2-.7.2-.2.3-.8 1-.9 1.2-.2.2-.3.2-.6.1-.3-.2-1.3-.5-2.4-1.5-.9-.8-1.5-1.8-1.7-2.1-.2-.3 0-.5.1-.6l.5-.5.3-.5v-.5c-.1-.2-.7-1.6-.9-2.2-.3-.6-.5-.5-.7-.5h-.6c-.2 0-.6.1-.9.4-.3.3-1.1 1.1-1.1 2.7s1.1 3.1 1.3 3.3c.2.2 2.2 3.4 5.4 4.7.8.3 1.4.5 1.8.6.8.2 1.5.2 2 .1.6-.1 1.8-.7 2-1.4.3-.7.3-1.3.2-1.4-.1-.2-.3-.3-.6-.4z"/></svg>
+                      <span>Chat ke WhatsApp</span>
+                    </a>
                   </div>
                 </div>
-                <a href="https://wa.me/6281318939319?text=Halo%20Tanogaido,%20saya%20tertarik%20dengan%20paket%20Kurasi%20Budaya%20dan%20Pulau%20Eksklusif%20Jepang." target="_blank" rel="noopener noreferrer" class="service-pill-cta">
-                  <span>Explore Layanan</span>
-                  <svg class="service-pill-sparkle" viewBox="0 0 16 16"><path d="M8 0L9.8 6.2L16 8L9.8 9.8L8 16L6.2 9.8L0 8L6.2 6.2Z" fill="currentColor"/></svg>
-                </a>
               </div>
-              <div class="service-media">
-                <img src="assets/island-hop.jpg" alt="Wisata Pulau dan Budaya Jepang" loading="lazy">
+            </div>
+          </article>
+
+          <!-- Card 7: Sewa Kimono & Dokumentasi Foto -->
+          <article class="flip-card reveal-item" data-stagger="2" tabindex="0" style="--card-tint-solid: rgba(43, 25, 25, 0.98); --card-tint-mid: rgba(43, 25, 25, 0.88); --card-tint-fade: rgba(43, 25, 25, 0.34);">
+            <div class="flip-card-scene">
+              <div class="flip-card-inner">
+                <div class="flip-face flip-front">
+                  <img class="flip-card-bg" src="assets/cards/card-5.jpg" alt="Sewa Kimono dan Sesi Foto Privat Kyoto" loading="lazy" referrerpolicy="no-referrer">
+                  <div class="flip-front-scrim"></div>
+                  <button class="card-bookmark-btn" type="button" aria-label="Simpan layanan Kimono dan Foto">
+                    <svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
+                  </button>
+                  <div class="card-front-content">
+                    <div class="card-title-row">
+                      <h3 class="card-front-title">Kimono &amp; Foto Privat</h3>
+                      <span class="card-price-badge">Pro Fotografer</span>
+                    </div>
+                    <p class="card-front-desc">Sesi foto profesional berbusana kimono autentik di Gion, Arashiyama &amp; spot ikonik Asakusa.</p>
+                    <div class="card-meta-row">
+                      <span class="card-meta-chip"><svg viewBox="0 0 20 20" fill="currentColor"><path d="M10 1.5l2.6 5.3 5.8.8-4.2 4.1 1 5.8L10 14.8l-5.2 2.7 1-5.8-4.2-4.1 5.8-.8z"/></svg>4.9</span>
+                      <span class="card-meta-chip">Couple &amp; Fam</span>
+                      <span class="card-meta-chip">Gion / Tokyo</span>
+                    </div>
+                    <button class="card-front-btn" type="button">Lihat Detail</button>
+                  </div>
+                </div>
+                <div class="flip-face flip-back">
+                  <div class="flip-back-top">
+                    <div class="flip-back-kicker-row">
+                      <span class="flip-back-kicker">Detail Layanan</span>
+                      <button class="flip-back-close" type="button">Tutup</button>
+                    </div>
+                    <h4 class="flip-back-title">Kimono &amp; Dokumentasi Privat</h4>
+                    <p class="flip-back-sub">Abadikan momen honeymoon atau liburan keluarga tanpa repot mengatur tripod sendiri.</p>
+                  </div>
+                  <ul class="back-detail-list">
+                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span>Sewa kimono premium lengkap aksesori &amp; hijab styling</span></li>
+                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span>Fotografer lokal di spot sepi turis pagi/sore hari</span></li>
+                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span>Semua file resolusi tinggi + pilihan edit warna editorial</span></li>
+                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span>Dipercaya 310+ pasangan &amp; keluarga</span></li>
+                  </ul>
+                  <div class="flip-back-footer">
+                    <div class="flip-back-note"><span>Hasil Foto Siap Cepat</span><strong>2–4 Hari</strong></div>
+                    <a href="https://wa.me/6281318939319?text=Halo%20Tanogaido,%20saya%20tertarik%20dengan%20paket%20Kimono%20dan%20Foto%20Privat%20di%20Jepang." target="_blank" rel="noopener noreferrer" class="wa-flip-cta">
+                      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.5 3.5A11.8 11.8 0 0 0 12 0C5.4 0 0 5.4 0 12c0 2.1.6 4.2 1.6 6L0 24l6.2-1.6A12 12 0 0 0 12 24c6.6 0 12-5.4 12-12 0-3.2-1.2-6.2-3.5-8.5zM12 21.8c-1.8 0-3.6-.5-5.1-1.4l-.4-.2-3.7 1 1-3.6-.2-.4A9.8 9.8 0 0 1 2.2 12c0-5.4 4.4-9.8 9.8-9.8 2.6 0 5.1 1 6.9 2.9A9.7 9.7 0 0 1 21.8 12c0 5.4-4.4 9.8-9.8 9.8zm5.4-7.4c-.3-.2-1.8-.9-2-.1-.3-.1-.5-.2-.7.2-.2.3-.8 1-.9 1.2-.2.2-.3.2-.6.1-.3-.2-1.3-.5-2.4-1.5-.9-.8-1.5-1.8-1.7-2.1-.2-.3 0-.5.1-.6l.5-.5.3-.5v-.5c-.1-.2-.7-1.6-.9-2.2-.3-.6-.5-.5-.7-.5h-.6c-.2 0-.6.1-.9.4-.3.3-1.1 1.1-1.1 2.7s1.1 3.1 1.3 3.3c.2.2 2.2 3.4 5.4 4.7.8.3 1.4.5 1.8.6.8.2 1.5.2 2 .1.6-.1 1.8-.7 2-1.4.3-.7.3-1.3.2-1.4-.1-.2-.3-.3-.6-.4z"/></svg>
+                      <span>Chat ke WhatsApp</span>
+                    </a>
+                  </div>
+                </div>
               </div>
-            </article>
-          </div>
+            </div>
+          </article>
+
+          <!-- Card 8: Paket Musiman Sakura, Momiji & Salju -->
+          <article class="flip-card reveal-item" data-stagger="3" tabindex="0" style="--card-tint-solid: rgba(22, 35, 59, 0.98); --card-tint-mid: rgba(22, 35, 59, 0.88); --card-tint-fade: rgba(22, 35, 59, 0.34);">
+            <div class="flip-card-scene">
+              <div class="flip-card-inner">
+                <div class="flip-face flip-front">
+                  <img class="flip-card-bg" src="assets/cards/card-6.jpg" alt="Paket Wisata Musiman Sakura dan Winter Jepang" loading="lazy" referrerpolicy="no-referrer">
+                  <div class="flip-front-scrim"></div>
+                  <button class="card-bookmark-btn" type="button" aria-label="Simpan layanan Paket Musiman">
+                    <svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
+                  </button>
+                  <div class="card-front-content">
+                    <div class="card-title-row">
+                      <h3 class="card-front-title">Paket 4 Musim &amp; Pulau</h3>
+                      <span class="card-price-badge">Musiman</span>
+                    </div>
+                    <p class="card-front-desc">Eksplorasi mekarnya Sakura, daun gugur Kyoto, ski resort Hokkaido hingga pulau seni Naoshima.</p>
+                    <div class="card-meta-row">
+                      <span class="card-meta-chip"><svg viewBox="0 0 20 20" fill="currentColor"><path d="M10 1.5l2.6 5.3 5.8.8-4.2 4.1 1 5.8L10 14.8l-5.2 2.7 1-5.8-4.2-4.1 5.8-.8z"/></svg>5.0</span>
+                      <span class="card-meta-chip">Hidden Gems</span>
+                      <span class="card-meta-chip">Hokkaido / Uji</span>
+                    </div>
+                    <button class="card-front-btn" type="button">Lihat Detail</button>
+                  </div>
+                </div>
+                <div class="flip-face flip-back">
+                  <div class="flip-back-top">
+                    <div class="flip-back-kicker-row">
+                      <span class="flip-back-kicker">Detail Layanan</span>
+                      <button class="flip-back-close" type="button">Tutup</button>
+                    </div>
+                    <h4 class="flip-back-title">Paket 4 Musim &amp; Hidden Gems</h4>
+                    <p class="flip-back-sub">Kejar momen musiman terbaik di Jepang dengan jadwal akurat mengikuti prakiraan cuaca lokal.</p>
+                  </div>
+                  <ul class="back-detail-list">
+                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span>Spot Sakura &amp; Momiji terbaik jauh dari kerumunan</span></li>
+                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span>Paket Winter bermain salju di Gala Yuzawa &amp; Niseko</span></li>
+                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span>Tur pulau eksotis Okinawa, Naoshima &amp; Shirakawa-go</span></li>
+                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span>Dipercaya 340+ tamu repeater Tanogaido</span></li>
+                  </ul>
+                  <div class="flip-back-footer">
+                    <div class="flip-back-note"><span>Musim Terjadwal</span><strong>Sakura · Winter</strong></div>
+                    <a href="https://wa.me/6281318939319?text=Halo%20Tanogaido,%20saya%20ingin%20konsultasi%20Paket%204%20Musim%20dan%20Hidden%20Gems%20Jepang." target="_blank" rel="noopener noreferrer" class="wa-flip-cta">
+                      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.5 3.5A11.8 11.8 0 0 0 12 0C5.4 0 0 5.4 0 12c0 2.1.6 4.2 1.6 6L0 24l6.2-1.6A12 12 0 0 0 12 24c6.6 0 12-5.4 12-12 0-3.2-1.2-6.2-3.5-8.5zM12 21.8c-1.8 0-3.6-.5-5.1-1.4l-.4-.2-3.7 1 1-3.6-.2-.4A9.8 9.8 0 0 1 2.2 12c0-5.4 4.4-9.8 9.8-9.8 2.6 0 5.1 1 6.9 2.9A9.7 9.7 0 0 1 21.8 12c0 5.4-4.4 9.8-9.8 9.8zm5.4-7.4c-.3-.2-1.8-.9-2-.1-.3-.1-.5-.2-.7.2-.2.3-.8 1-.9 1.2-.2.2-.3.2-.6.1-.3-.2-1.3-.5-2.4-1.5-.9-.8-1.5-1.8-1.7-2.1-.2-.3 0-.5.1-.6l.5-.5.3-.5v-.5c-.1-.2-.7-1.6-.9-2.2-.3-.6-.5-.5-.7-.5h-.6c-.2 0-.6.1-.9.4-.3.3-1.1 1.1-1.1 2.7s1.1 3.1 1.3 3.3c.2.2 2.2 3.4 5.4 4.7.8.3 1.4.5 1.8.6.8.2 1.5.2 2 .1.6-.1 1.8-.7 2-1.4.3-.7.3-1.3.2-1.4-.1-.2-.3-.3-.6-.4z"/></svg>
+                      <span>Chat ke WhatsApp</span>
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </article>
         </div>
 
         <!-- Final Call To Action Milestone -->
@@ -1684,6 +2059,53 @@
           });
         });
       }
+
+      // Service Flip Cards (Touch Flip Toggle + Bookmark Save State)
+      const flipCards = document.querySelectorAll('.flip-card');
+      flipCards.forEach((card) => {
+        const frontBtn = card.querySelector('.card-front-btn');
+        const closeBtn = card.querySelector('.flip-back-close');
+        const bookmarkBtn = card.querySelector('.card-bookmark-btn');
+
+        if (bookmarkBtn) {
+          bookmarkBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            bookmarkBtn.classList.toggle('saved');
+          });
+        }
+
+        if (frontBtn) {
+          frontBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            flipCards.forEach((other) => {
+              if (other !== card) other.classList.remove('is-flipped');
+            });
+            card.classList.add('is-flipped');
+          });
+        }
+
+        if (closeBtn) {
+          closeBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            card.classList.remove('is-flipped');
+          });
+        }
+
+        card.addEventListener('click', (e) => {
+          if (e.target.closest('a, .card-bookmark-btn, .flip-back-close')) return;
+          if (!window.matchMedia('(hover: hover)').matches) {
+            const willFlip = !card.classList.contains('is-flipped');
+            flipCards.forEach((other) => other.classList.remove('is-flipped'));
+            if (willFlip) card.classList.add('is-flipped');
+          }
+        });
+      });
+
+      document.addEventListener('click', (e) => {
+        if (!e.target.closest('.flip-card')) {
+          flipCards.forEach((card) => card.classList.remove('is-flipped'));
+        }
+      });
 
       const images = new Array(TOTAL_FRAMES);
       const loaded = new Uint8Array(TOTAL_FRAMES);
@@ -2094,7 +2516,7 @@
             const stagger = parseFloat(item.getAttribute('data-stagger') || '0');
             const screenTop = item.offsetTop + trackY;
             const rawReveal = clamp((h * 0.98 - screenTop) / revealSpan, 0, 1);
-            const staggeredReveal = clamp((rawReveal - stagger * 0.10) / (1 - stagger * 0.10), 0, 1);
+            const staggeredReveal = clamp((rawReveal - stagger * 0.08) / (1 - stagger * 0.08), 0, 1);
             const easedReveal = easeOutCubic(staggeredReveal) * enterGlobal;
 
             item.style.opacity = String(easedReveal);
