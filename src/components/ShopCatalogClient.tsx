@@ -1,43 +1,26 @@
 'use client';
 
-import React, { useState, useMemo, useEffect } from 'react';
-import { Search, ShoppingBag, X, MessageSquare, ArrowRight } from 'lucide-react';
-import Image from 'next/image';
+import React, { useEffect, useMemo, useState } from 'react';
+import Link from 'next/link';
+import type { ProductItem, ServiceItem } from '@/types/cms';
+import { SHOP_CATEGORIES, getWhatsAppUrl } from '@/data/fallback-data';
+import { useBag } from '@/components/BagProvider';
+import { Navbar } from '@/components/Navbar';
 import { ProductCard } from '@/components/ProductCard';
-import { useShopBag } from '@/context/ShopBagContext';
-import { SiteFooter } from '@/components/SiteFooter';
-import type { Product } from '@/types/cms';
+import { NewsletterBand } from '@/components/NewsletterBand';
+import { Footer } from '@/components/Footer';
 
-interface ShopCatalogClientProps {
-  products: Product[];
-}
-
-const CATEGORIES = [
-  { id: 'all', label: 'All Products' },
-  { id: 'Lifestyle & Drinkware', label: 'Drinkware & Table' },
-  { id: 'Textiles & Living', label: 'Textiles & Living' },
-  { id: 'Connectivity', label: 'Connectivity' },
-  { id: 'Matcha & Tea', label: 'Matcha & Tea' },
-];
-
-export function ShopCatalogClient({ products }: ShopCatalogClientProps) {
-  const {
-    items,
-    isBagOpen,
-    totalCount,
-    subtotal,
-    freeShippingProgress,
-    freeShippingEligible,
-    updateQuantity,
-    removeItem,
-    closeBag,
-    openBag,
-    checkoutWhatsApp,
-  } = useShopBag();
-
-  const [category, setCategory] = useState('all');
-  const [query, setQuery] = useState('');
-  const [sort, setSort] = useState<'featured' | 'price-asc' | 'price-desc'>('featured');
+export function ShopCatalogClient({
+  products,
+  services,
+}: {
+  products: ProductItem[];
+  services: ServiceItem[];
+}) {
+  const { bagCount, openBag } = useBag();
+  const [currentCat, setCurrentCat] = useState<string>('all');
+  const [currentQuery, setCurrentQuery] = useState('');
+  const [currentSort, setCurrentSort] = useState<'featured' | 'price-asc' | 'price-desc'>('featured');
 
   useEffect(() => {
     document.body.classList.add('is-shop-page');
@@ -46,225 +29,253 @@ export function ShopCatalogClient({ products }: ShopCatalogClientProps) {
     };
   }, []);
 
-  const filtered = useMemo(() => {
+  const filteredProducts = useMemo(() => {
+    const q = currentQuery.trim().toLowerCase();
     let list = products.filter((p) => {
-      const matchCat = category === 'all' || p.category === category;
-      const name = p.name || p.title || '';
-      const matchQuery =
-        !query ||
-        name.toLowerCase().includes(query.toLowerCase()) ||
-        p.shortDesc.toLowerCase().includes(query.toLowerCase());
-      return matchCat && matchQuery;
+      const catMatch = currentCat === 'all' || p.category === currentCat;
+      const textMatch =
+        !q ||
+        p.title.toLowerCase().includes(q) ||
+        p.origin.toLowerCase().includes(q) ||
+        p.categoryLabel.toLowerCase().includes(q);
+      return catMatch && textMatch;
     });
 
-    if (sort === 'price-asc') {
+    if (currentSort === 'price-asc') {
       list = [...list].sort((a, b) => a.price - b.price);
-    } else if (sort === 'price-desc') {
+    } else if (currentSort === 'price-desc') {
       list = [...list].sort((a, b) => b.price - a.price);
     }
-
     return list;
-  }, [products, category, query, sort]);
+  }, [products, currentCat, currentQuery, currentSort]);
 
   return (
-    <div className="shop-main">
-      {/* Hero Header */}
-      <section className="shop-hero-band">
-        <span className="section-eyebrow">Curated Japanese Goods</span>
-        <h1 className="section-title">The Tanogaido Japanese Goods Store</h1>
-        <p className="section-sub">
-          Handcrafted tableware, Imabari organic cotton, ceremonial grade Uji matcha, and reliable Pocket WiFi shipped directly from Japan.
-        </p>
-      </section>
-
-      {/* Toolbar */}
-      <section className="shop-toolbar-band">
-        <div className="category-filter-strip" style={{ marginBottom: 0 }}>
-          {CATEGORIES.map((cat) => (
-            <button
-              key={cat.id}
-              type="button"
-              className={`category-pill ${category === cat.id ? 'is-active' : ''}`}
-              onClick={() => setCategory(cat.id)}
-            >
-              {cat.label}
-            </button>
-          ))}
-        </div>
-
-        <div style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
-          <div style={{ position: 'relative' }}>
-            <Search
-              size={16}
-              style={{ position: 'absolute', left: 14, top: '50%', transform: 'translateY(-50%)', color: '#94a3b8' }}
-            />
-            <input
-              type="text"
-              placeholder="Search products..."
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              className="shop-search-input"
-              style={{ paddingLeft: 38 }}
-            />
-          </div>
-
-          <select
-            value={sort}
-            onChange={(e) => setSort(e.target.value as any)}
-            className="category-pill"
-            style={{ padding: '9px 14px', outline: 'none' }}
-          >
-            <option value="featured">Featured</option>
-            <option value="price-asc">Price: Low to High</option>
-            <option value="price-desc">Price: High to Low</option>
-          </select>
-        </div>
-      </section>
-
-      {/* Products Grid */}
-      <div className="products-grid">
-        {filtered.map((product) => (
-          <ProductCard key={product.id} product={product} />
-        ))}
-      </div>
-
-      {/* Slide-over Bag Drawer */}
-      <div
-        className={`tg-bag-backdrop ${isBagOpen ? 'is-open' : ''}`}
-        onClick={closeBag}
+    <>
+      <Navbar
+        services={services}
+        ctaLabel="Concierge Order"
+        ctaHref={getWhatsAppUrl('Hello Tanogaido Shop, I would like assistance ordering Japanese goods.')}
+        mobileCtaLabel="Concierge Shop Support"
       />
-      <div className={`tg-bag-drawer ${isBagOpen ? 'is-open' : ''}`}>
-        <div className="tg-bag-head">
-          <h3>Your Shopping Bag ({totalCount})</h3>
-          <button
-            type="button"
-            className="tg-bag-close-btn"
-            onClick={closeBag}
-            aria-label="Close bag"
-          >
-            <X size={20} />
-          </button>
-        </div>
 
-        {/* Free Shipping Meter */}
-        <div className="tg-free-shipping-bar">
-          {freeShippingEligible ? (
-            <span>You have unlocked <strong>FREE worldwide shipping</strong>!</span>
-          ) : (
-            <span>
-              Add <strong>${(150 - subtotal).toFixed(2)}</strong> more to get <strong>FREE shipping</strong>!
-            </span>
-          )}
-          <div className="tg-free-shipping-track">
-            <div
-              className="tg-free-shipping-progress"
-              style={{ width: `${freeShippingProgress}%` }}
-            />
+      <main className="shop-main">
+        {/* Breadcrumb Bar */}
+        <div className="breadcrumb-bar">
+          <div className="page-container">
+            <nav className="breadcrumb-nav" aria-label="Breadcrumb">
+              <Link href="/">Home</Link>
+              <span className="breadcrumb-sep" aria-hidden="true">
+                /
+              </span>
+              <span className="breadcrumb-current">Japan Goods Shop</span>
+            </nav>
           </div>
         </div>
 
-        {/* Bag Items */}
-        <div className="tg-bag-items-list">
-          {items.length === 0 ? (
-            <div style={{ textAlign: 'center', padding: '48px 0', color: '#94a3b8' }}>
-              <ShoppingBag size={48} style={{ margin: '0 auto 12px auto', opacity: 0.4 }} />
-              <p>Your bag is currently empty.</p>
-            </div>
-          ) : (
-            items.map((item) => (
-              <div
-                key={`${item.product.id}-${item.variant || 'default'}`}
-                className="tg-bag-item"
-              >
-                <Image
-                  src={item.product.image}
-                  alt={item.product.name || item.product.title}
-                  width={72}
-                  height={72}
-                  className="tg-bag-item-img"
-                />
-                <div className="tg-bag-item-details">
-                  <h4 className="tg-bag-item-title">{item.product.name || item.product.title}</h4>
-                  {item.variant && (
-                    <span className="tg-bag-item-variant">Variant: {item.variant}</span>
-                  )}
-                  <span className="tg-bag-item-price">${item.product.price.toFixed(2)}</span>
-
-                  <div className="tg-bag-item-ctrls">
-                    <div className="tg-bag-qty-group">
-                      <button
-                        type="button"
-                        className="tg-bag-qty-btn"
-                        onClick={() =>
-                          updateQuantity(item.product.id, item.variant, item.quantity - 1)
-                        }
-                      >
-                        -
-                      </button>
-                      <span className="tg-bag-qty-val">{item.quantity}</span>
-                      <button
-                        type="button"
-                        className="tg-bag-qty-btn"
-                        onClick={() =>
-                          updateQuantity(item.product.id, item.variant, item.quantity + 1)
-                        }
-                      >
-                        +
-                      </button>
-                    </div>
-
-                    <button
-                      type="button"
-                      className="tg-bag-remove-btn"
-                      onClick={() => removeItem(item.product.id, item.variant)}
-                    >
-                      Remove
-                    </button>
-                  </div>
+        {/* Shop Hero Banner */}
+        <section className="shop-hero-band">
+          <div className="page-container">
+            <div className="shop-hero-banner">
+              <div className="shop-hero-content">
+                <div className="eyebrow-row">
+                  <span className="eyebrow">CURATED JAPANESE CRAFTS &amp; ESSENTIALS</span>
+                  <span className="eyebrow-line" aria-hidden="true" />
                 </div>
+                <h1 className="shop-hero-title">
+                  Crafted Across <span>Kyoto, Hakone &amp; Tokyo</span>
+                </h1>
+                <p className="shop-hero-desc">
+                  Explore small-batch Uji ceremonial matcha, hand-thrown Kiyomizu ceramics, Edo Kiriko
+                  glassware, and purpose-built rail travel gear sourced directly by Tanogaido’s concierge
+                  specialists.
+                </p>
               </div>
-            ))
-          )}
-        </div>
-
-        {/* Bag Footer with WhatsApp Checkout */}
-        {items.length > 0 && (
-          <div className="tg-bag-footer">
-            <div className="tg-bag-totals-row">
-              <span>Subtotal</span>
-              <span>${subtotal.toFixed(2)}</span>
+              <div className="shop-hero-visual">
+                <img
+                  src="/assets/products/shop-hero.jpg"
+                  alt="Curated collection of authentic Japanese craft tea goods and travel essentials"
+                />
+              </div>
             </div>
-            <button
-              type="button"
-              className="tg-bag-checkout-btn"
-              onClick={checkoutWhatsApp}
-            >
-              <MessageSquare size={18} />
-              <span>Checkout via WhatsApp &rarr;</span>
-            </button>
-            <p style={{ textAlign: 'center', fontSize: 11.5, color: '#94a3b8', marginTop: 10 }}>
-              Generates an invoice and connects directly with our concierge desk.
-            </p>
           </div>
-        )}
-      </div>
+        </section>
 
-      {/* Floating Mobile Bag Bar */}
-      <div
-        className={`tg-mobile-bag-bar ${totalCount > 0 ? 'is-visible' : ''}`}
-        onClick={openBag}
-      >
-        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-          <ShoppingBag size={20} />
-          <span style={{ fontWeight: 700 }}>{totalCount} {totalCount === 1 ? 'item' : 'items'} in Bag</span>
-        </div>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-          <span style={{ fontWeight: 700 }}>${subtotal.toFixed(2)}</span>
-          <ArrowRight size={16} />
-        </div>
-      </div>
+        {/* Filter, Search, Sort & Bag Bar */}
+        <section className="shop-controls-band" aria-label="Filter Shop Goods">
+          <div className="page-container">
+            <div className="shop-toolbar">
+              <div className="shop-cat-tabs" role="tablist" aria-label="Product Categories">
+                {SHOP_CATEGORIES.map((cat) => (
+                  <button
+                    key={cat.id}
+                    type="button"
+                    className={`shop-cat-tab ${currentCat === cat.id ? 'active' : ''}`}
+                    role="tab"
+                    aria-selected={currentCat === cat.id}
+                    onClick={() => setCurrentCat(cat.id)}
+                  >
+                    {cat.label}
+                  </button>
+                ))}
+              </div>
 
-      <SiteFooter />
-    </div>
+              <div className="shop-right-tools">
+                <div className="shop-search-wrap">
+                  <svg viewBox="0 0 24 24" fill="none" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <circle cx="11" cy="11" r="8" />
+                    <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                  </svg>
+                  <input
+                    type="search"
+                    className="shop-search"
+                    id="shop-search"
+                    placeholder="Search craft or origin..."
+                    aria-label="Search shop goods"
+                    value={currentQuery}
+                    onChange={(e) => setCurrentQuery(e.target.value)}
+                  />
+                </div>
+                <select
+                  className="shop-sort-select"
+                  id="shop-sort"
+                  aria-label="Sort products"
+                  value={currentSort}
+                  onChange={(e) =>
+                    setCurrentSort(e.target.value as 'featured' | 'price-asc' | 'price-desc')
+                  }
+                >
+                  <option value="featured">Sort: Featured</option>
+                  <option value="price-asc">Price: Low to High</option>
+                  <option value="price-desc">Price: High to Low</option>
+                </select>
+                <span className="shop-count-label" id="shop-count-label">
+                  {filteredProducts.length} Authentic{' '}
+                  {filteredProducts.length === 1 ? 'Item' : 'Items'}
+                </span>
+                <button
+                  type="button"
+                  className="bag-trigger-btn"
+                  aria-label="Open Shopping Bag"
+                  onClick={openBag}
+                >
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z" />
+                    <line x1="3" y1="6" x2="21" y2="6" />
+                    <path d="M16 10a4 4 0 0 1-8 0" />
+                  </svg>
+                  <span>
+                    Bag (<span data-bag-count>{bagCount}</span>)
+                  </span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Product Grid */}
+        <section className="shop-grid-band">
+          <div className="page-container">
+            <div className="products-grid" id="shop-products-grid">
+              {filteredProducts.length === 0 ? (
+                <div
+                  style={{
+                    gridColumn: '1/-1',
+                    textAlign: 'center',
+                    padding: '42px 16px',
+                    color: '#64748b',
+                    fontSize: '14px',
+                  }}
+                >
+                  No items match that filter. Try another category or keyword.
+                </div>
+              ) : (
+                filteredProducts.map((p) => <ProductCard key={p.slug} product={p} />)
+              )}
+            </div>
+          </div>
+        </section>
+
+        {/* Craft & Provenance Story */}
+        <section className="provenance-band">
+          <div className="page-container">
+            <div className="provenance-grid">
+              <div className="provenance-card">
+                <span className="provenance-kicker">01 · PROVENANCE</span>
+                <h3>Direct Artisan Relationships</h3>
+                <p>
+                  Every ceramic, wooden marquetry folio, and tea tin is sourced straight from vetted workshops
+                  across Kyoto, Hakone, Sumida, and Ehime without middlemen markups.
+                </p>
+              </div>
+              <div className="provenance-card">
+                <span className="provenance-kicker">02 · HOTEL OR WORLDWIDE DROP</span>
+                <h3>Flexible Delivery While You Travel</h3>
+                <p>
+                  Receive your goods waiting at your Tokyo or Kyoto hotel check-in desk, or ship globally in
+                  custom impact-cushioned air freight packaging.
+                </p>
+              </div>
+              <div className="provenance-card">
+                <span className="provenance-kicker">03 · PERSONAL SHOPPER</span>
+                <h3>Looking for Something Rare?</h3>
+                <p>
+                  Need a specific vintage timepiece, limited matcha harvest, or custom gift box? Our Tokyo
+                  Jastip concierge team shops live with boutique receipts.
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Direct Personal Shopper Banner */}
+        <section className="concierge-banner-band">
+          <div className="page-container">
+            <div className="concierge-banner-card">
+              <div>
+                <span className="eyebrow" style={{ color: '#fca5a5' }}>
+                  TOKYO PERSONAL SHOPPER DESK
+                </span>
+                <h2>Request Custom Japan Sourcing</h2>
+                <p>
+                  Looking for specific Ginza releases, limited department store drops, or corporate gifting?
+                  Chat with our bilingual personal shopper team directly.
+                </p>
+              </div>
+              <a
+                href={getWhatsAppUrl('Hello Tanogaido, I would like custom Japan Personal Shopper sourcing.')}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hero-cta-btn"
+              >
+                <span>Message Personal Shopper</span>
+                <span className="hero-cta-circle" aria-hidden="true">
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2.2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <path d="M7 17L17 7M17 7H8M17 7V16" />
+                  </svg>
+                </span>
+              </a>
+            </div>
+          </div>
+        </section>
+
+        <NewsletterBand source="shop-newsletter" />
+
+        <Footer />
+      </main>
+    </>
   );
 }

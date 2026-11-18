@@ -1,191 +1,305 @@
 'use client';
 
-import React, { useState, useMemo } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
-import Image from 'next/image';
-import { Search, ArrowRight, MessageSquare, Check } from 'lucide-react';
-import { ServiceIcon } from '@/components/ServiceIcon';
-import { ConciergeBanner } from '@/components/ConciergeBanner';
-import { SiteFooter } from '@/components/SiteFooter';
-import type { Service } from '@/types/cms';
+import type { ServiceItem } from '@/types/cms';
+import { SERVICE_CATEGORIES, getWhatsAppUrl } from '@/data/fallback-data';
+import { Navbar } from '@/components/Navbar';
+import { NewsletterBand } from '@/components/NewsletterBand';
+import { Footer } from '@/components/Footer';
 
-interface ServicesCatalogClientProps {
-  services: Service[];
-}
-
-const CATEGORIES = [
-  { id: 'all', label: 'All Services (20)' },
-  { id: 'planning', label: 'Planning & Guides' },
-  { id: 'transport', label: 'Transport & Transit' },
-  { id: 'tickets', label: 'Tickets & Parks' },
-  { id: 'stays', label: 'Stays & Onsen' },
-  { id: 'lifestyle', label: 'Lifestyle & Cargo' },
-];
-
-export function ServicesCatalogClient({ services }: ServicesCatalogClientProps) {
-  const [selectedCategory, setSelectedCategory] = useState('all');
+export function ServicesCatalogClient({ services }: { services: ServiceItem[] }) {
+  const [activeCat, setActiveCat] = useState<string>('all');
   const [query, setQuery] = useState('');
+  const [highlightedSlug, setHighlightedSlug] = useState<string | null>(null);
 
-  const filtered = useMemo(() => {
-    return services.filter((svc) => {
-      const matchCat = selectedCategory === 'all' || svc.category === selectedCategory;
-      const matchQuery =
-        !query ||
-        svc.title.toLowerCase().includes(query.toLowerCase()) ||
-        svc.shortDesc.toLowerCase().includes(query.toLowerCase());
-      return matchCat && matchQuery;
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const catParam = params.get('category');
+    if (catParam && SERVICE_CATEGORIES.some((c) => c.id === catParam)) {
+      setActiveCat(catParam);
+    }
+
+    const hash = window.location.hash;
+    if (hash && hash.startsWith('#service-')) {
+      const slug = hash.replace('#service-', '');
+      const el = document.getElementById(`service-${slug}`);
+      if (el) {
+        setTimeout(() => {
+          el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          setHighlightedSlug(slug);
+          setTimeout(() => setHighlightedSlug(null), 2200);
+        }, 120);
+      }
+    }
+  }, []);
+
+  const filteredServices = useMemo(() => {
+    const q = query.trim().toLowerCase();
+    return services.filter((s) => {
+      const catMatch = activeCat === 'all' || s.category === activeCat;
+      const textMatch =
+        !q ||
+        s.title.toLowerCase().includes(q) ||
+        s.shortDesc.toLowerCase().includes(q) ||
+        s.categoryLabel.toLowerCase().includes(q) ||
+        s.kicker.toLowerCase().includes(q);
+      return catMatch && textMatch;
     });
-  }, [services, selectedCategory, query]);
+  }, [services, activeCat, query]);
+
+  const sections = useMemo(() => {
+    const categoriesToShow =
+      activeCat === 'all'
+        ? SERVICE_CATEGORIES
+        : SERVICE_CATEGORIES.filter((c) => c.id === activeCat);
+
+    return categoriesToShow
+      .map((cat) => ({
+        ...cat,
+        items: filteredServices.filter((s) => s.category === cat.id),
+      }))
+      .filter((sec) => sec.items.length > 0);
+  }, [activeCat, filteredServices]);
 
   return (
-    <div className="services-catalog-root" style={{ background: '#ffffff', minHeight: '100vh', paddingTop: '88px' }}>
-      {/* Hero Header */}
-      <section className="section-band" style={{ paddingBottom: '32px' }}>
-        <div className="section-head">
-          <span className="section-eyebrow">End-to-End Travel Capabilities</span>
-          <h1 className="section-title">All Japan Concierge Services</h1>
-          <p className="section-sub">
-            From private bilingual guides and VIP van charters to Michelin dining and secluded onsen ryokan bookings. Select any service to explore detailed pricing, itineraries, and inclusions.
-          </p>
-        </div>
+    <>
+      <Navbar
+        services={services}
+        ctaLabel="Free Consultation"
+        ctaHref={getWhatsAppUrl('Hello Tanogaido, I would like a free Japan & visa consultation.')}
+        mobileCtaLabel="Free Consultation"
+      />
 
-        {/* Toolbar: Categories + Search */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 20, alignItems: 'center' }}>
-          <div className="category-filter-strip" style={{ marginBottom: 0 }}>
-            {CATEGORIES.map((cat) => (
-              <button
-                key={cat.id}
-                type="button"
-                className={`category-pill ${selectedCategory === cat.id ? 'is-active' : ''}`}
-                onClick={() => setSelectedCategory(cat.id)}
-              >
-                {cat.label}
-              </button>
-            ))}
-          </div>
-
-          <div style={{ position: 'relative', width: '100%', maxWidth: '380px' }}>
-            <Search
-              size={18}
-              style={{ position: 'absolute', left: 16, top: '50%', transform: 'translateY(-50%)', color: '#94a3b8' }}
-            />
-            <input
-              type="text"
-              placeholder="Search services (e.g. guide, transport, disney)..."
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              className="shop-search-input"
-              style={{ width: '100%', paddingLeft: 44 }}
-            />
+      <main className="catalog-main">
+        {/* Breadcrumb Bar */}
+        <div className="breadcrumb-bar">
+          <div className="page-container">
+            <nav className="breadcrumb-nav" aria-label="Breadcrumb">
+              <Link href="/">Home</Link>
+              <span className="breadcrumb-sep" aria-hidden="true">
+                /
+              </span>
+              <span className="breadcrumb-current">Our Services</span>
+            </nav>
           </div>
         </div>
-      </section>
 
-      {/* Grid of Services (Direct links to /services/[slug]) */}
-      <section className="section-band" style={{ paddingTop: 0 }}>
-        <div className="services-grid">
-          {filtered.map((svc) => (
-            <article
-              key={svc.id}
-              className="product-card"
-              style={{ display: 'flex', flexDirection: 'column', minHeight: '440px' }}
-            >
-              <div className="product-card-media" style={{ height: '220px' }}>
-                <Link href={`/services/${svc.slug}`} tabIndex={-1}>
-                  <Image
-                    src={svc.heroImage}
-                    alt={svc.title}
-                    fill
-                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                    className="product-card-img"
-                  />
-                </Link>
-                <span className="product-card-badge">{svc.badge}</span>
-              </div>
-
-              <div className="product-card-body" style={{ display: 'flex', flexDirection: 'column', flexGrow: 1 }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 6 }}>
-                  <span
-                    style={{
-                      width: 26,
-                      height: 26,
-                      borderRadius: 6,
-                      background: '#fef2f2',
-                      color: '#dc2626',
-                      display: 'inline-flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                    }}
-                  >
-                    <ServiceIcon name={svc.icon || 'compass'} size={14} />
-                  </span>
-                  <span style={{ fontSize: 12, fontWeight: 700, textTransform: 'uppercase', color: '#64748b' }}>
-                    {svc.category}
-                  </span>
+        {/* Catalog Hero */}
+        <section className="catalog-hero-band">
+          <div className="page-container">
+            <div className="catalog-hero-banner">
+              <div>
+                <div className="eyebrow-row">
+                  <span className="eyebrow">COMPLETE JAPAN &amp; VISA CONCIERGE</span>
+                  <span className="eyebrow-line" aria-hidden="true" />
                 </div>
-
-                <Link
-                  href={`/services/${svc.slug}`}
-                  className="product-card-title"
-                  style={{ fontSize: 20, marginBottom: 8 }}
-                >
-                  {svc.title}
-                </Link>
-
-                <p className="product-card-desc" style={{ marginBottom: 14 }}>
-                  {svc.shortDesc}
+                <h1 className="catalog-hero-title">
+                  20+ Specialized <span>Concierge Services</span>
+                </h1>
+                <p className="catalog-hero-desc">
+                  Explore every travel, guiding, visa processing, rail pass, private vehicle charter, golf,
+                  prewedding, property survey, and logistics solution crafted by PT. Tanogaido Fantasi
+                  Pratama since 2007.
                 </p>
-
-                <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: 6, marginBottom: 16 }}>
-                  {svc.highlights.slice(0, 2).map((h, i) => (
-                    <li key={i} style={{ fontSize: 12.5, color: '#475569', display: 'flex', alignItems: 'center', gap: 6 }}>
-                      <Check size={13} color="#dc2626" />
-                      <span>{h.title}</span>
-                    </li>
-                  ))}
-                </ul>
-
-                <div
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: 10,
-                    marginTop: 'auto',
-                    paddingTop: 14,
-                    borderTop: '1px solid #f1f5f9',
-                  }}
-                >
-                  <Link
-                    href={`/services/${svc.slug}`}
-                    className="btn-flip-details"
-                    style={{ flex: 1, padding: '10px 14px', fontSize: 13 }}
-                  >
-                    <span>View Details</span>
-                    <ArrowRight size={14} />
-                  </Link>
-
-                  <a
-                    href={`https://wa.me/6281318047974?text=${encodeURIComponent(`Hello Tanogaido, I would like to inquire about: ${svc.title}`)}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="product-card-btn"
-                    style={{ padding: '10px 12px' }}
-                    aria-label={`Inquire about ${svc.title} on WhatsApp`}
-                  >
-                    <MessageSquare size={16} color="#16a34a" />
-                  </a>
-                </div>
               </div>
-            </article>
-          ))}
-        </div>
-      </section>
+              <div className="catalog-count-badge">
+                <div className="catalog-count-num">{services.length} Core Services</div>
+                <div className="catalog-count-label">5 Service Divisions</div>
+              </div>
+            </div>
+          </div>
+        </section>
 
-      {/* Concierge Banner */}
-      <ConciergeBanner />
+        {/* Filter & Search Bar */}
+        <section className="catalog-controls-band" aria-label="Filter Services">
+          <div className="page-container">
+            <div className="catalog-controls-row">
+              <div className="catalog-tabs" role="tablist" aria-label="Service Categories">
+                <button
+                  type="button"
+                  className={`catalog-tab ${activeCat === 'all' ? 'active' : ''}`}
+                  role="tab"
+                  aria-selected={activeCat === 'all'}
+                  onClick={() => setActiveCat('all')}
+                >
+                  All Services ({services.length})
+                </button>
+                {SERVICE_CATEGORIES.map((c) => (
+                  <button
+                    key={c.id}
+                    type="button"
+                    className={`catalog-tab ${activeCat === c.id ? 'active' : ''}`}
+                    role="tab"
+                    aria-selected={activeCat === c.id}
+                    onClick={() => setActiveCat(c.id)}
+                  >
+                    {c.label}
+                  </button>
+                ))}
+              </div>
 
-      {/* Footer */}
-      <SiteFooter />
-    </div>
+              <div className="catalog-right-controls">
+                <div className="catalog-search-wrap">
+                  <svg viewBox="0 0 24 24" fill="none" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <circle cx="11" cy="11" r="8" />
+                    <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                  </svg>
+                  <input
+                    type="search"
+                    className="catalog-search"
+                    placeholder="Search service (e.g., Visa, Golf, WiFi...)"
+                    aria-label="Search Tanogaido services"
+                    value={query}
+                    onChange={(e) => setQuery(e.target.value)}
+                  />
+                </div>
+                <span className="catalog-result-count">
+                  Showing {filteredServices.length}{' '}
+                  {filteredServices.length === 1 ? 'Service' : 'Services'}
+                </span>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Full Catalog Listing */}
+        <section className="catalog-list-band">
+          <div className="page-container" id="catalog-container">
+            {sections.length === 0 ? (
+              <div className="catalog-empty">
+                No Tanogaido service matches that keyword. Try clearing your filter or search for{' '}
+                <strong>Japan</strong>, <strong>Visa</strong>, or <strong>Tour</strong>.
+              </div>
+            ) : (
+              sections.map((section) => (
+                <div key={section.id} className="catalog-category-section">
+                  <div className="catalog-cat-head">
+                    <h2>{section.label}</h2>
+                    <span>
+                      {section.items.length} {section.items.length === 1 ? 'service' : 'services'}
+                    </span>
+                  </div>
+                  <div className="catalog-grid">
+                    {section.items.map((svc) => (
+                      <article
+                        key={svc.slug}
+                        className={`catalog-card ${
+                          highlightedSlug === svc.slug ? 'is-highlighted' : ''
+                        }`}
+                        id={`service-${svc.slug}`}
+                      >
+                        <Link
+                          href={`/services/${svc.slug}`}
+                          className="catalog-card-img-link"
+                          aria-label={`View details for ${svc.title}`}
+                        >
+                          <div className="catalog-card-img">
+                            <img src={svc.imagePath} alt={svc.title} loading="lazy" />
+                          </div>
+                        </Link>
+                        <div className="catalog-card-body">
+                          <span className="catalog-card-kicker">{svc.kicker}</span>
+                          <h3 className="catalog-card-title">
+                            <Link href={`/services/${svc.slug}`}>{svc.title}</Link>
+                          </h3>
+                          <p className="catalog-card-desc">{svc.shortDesc}</p>
+                          <ul className="catalog-feature-list">
+                            {svc.features.map((f) => (
+                              <li key={f}>
+                                <svg
+                                  viewBox="0 0 24 24"
+                                  fill="none"
+                                  strokeWidth="2.4"
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                >
+                                  <polyline points="20 6 9 17 4 12" />
+                                </svg>
+                                <span>{f}</span>
+                              </li>
+                            ))}
+                          </ul>
+                          <div className="catalog-card-footer">
+                            <Link
+                              href={`/services/${svc.slug}`}
+                              className="catalog-detail-link"
+                            >
+                              View Full Details &rarr;
+                            </Link>
+                            <a
+                              href={getWhatsAppUrl(svc.waText)}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="catalog-wa-btn"
+                            >
+                              <span>Book via WhatsApp</span>
+                              <svg
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                strokeWidth="2.2"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                              >
+                                <path d="M5 12h14M13 6l6 6-6 6" />
+                              </svg>
+                            </a>
+                          </div>
+                        </div>
+                      </article>
+                    ))}
+                  </div>
+                </div>
+              ))
+            )}
+          </div>
+        </section>
+
+        {/* Direct Concierge Consultation Band */}
+        <section className="concierge-banner-band">
+          <div className="page-container">
+            <div className="concierge-banner-card">
+              <div>
+                <span className="eyebrow" style={{ color: '#fca5a5' }}>
+                  BESPOKE CONCIERGE DESK
+                </span>
+                <h2>Need a Custom Multi-Service Japan Bundle?</h2>
+                <p>
+                  Combine airport chauffeur transfers, Japan E-Visa handling, Pocket WiFi, USJ Express Passes,
+                  and a dedicated tour guide under one seamless WhatsApp concierge.
+                </p>
+              </div>
+              <a
+                href={getWhatsAppUrl('Hello Tanogaido, I would like a custom Japan travel bundle quote.')}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hero-cta-btn"
+              >
+                <span>Consult on WhatsApp</span>
+                <span className="hero-cta-circle" aria-hidden="true">
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2.2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <path d="M7 17L17 7M17 7H8M17 7V16" />
+                  </svg>
+                </span>
+              </a>
+            </div>
+          </div>
+        </section>
+
+        <NewsletterBand
+          successText="Subscribed! Watch your inbox for curated Japan drops & travel notes."
+          source="services-catalog"
+        />
+
+        <Footer />
+      </main>
+    </>
   );
 }

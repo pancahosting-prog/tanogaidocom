@@ -1,24 +1,16 @@
-export interface ServiceCategory {
-  id: string;
-  label: string;
-}
-
 export interface ServiceStat {
   val: string;
   label: string;
-  value?: string;
 }
 
 export interface ServiceHighlight {
   title: string;
   desc: string;
-  icon?: string;
 }
 
 export interface ServiceStep {
   title: string;
   desc: string;
-  step?: string | number;
 }
 
 export interface ServiceFaq {
@@ -26,40 +18,33 @@ export interface ServiceFaq {
   a: string;
 }
 
-export interface HomeCardOverride {
-  categoryTab: string;
-  kicker: string;
-  title: string;
-  shortDesc: string;
-  thumb: string;
-  backTitle: string;
-  backSub: string;
-  backBullets: string[];
-  badge?: string;
-  teaser?: string;
-  image?: string;
-}
+export type ServiceCategorySlug =
+  | 'tours'
+  | 'visa'
+  | 'transport'
+  | 'specialty'
+  | 'essentials';
 
-export interface Service {
-  id: string;
+export interface ServiceItem {
+  slug: string;
   title: string;
-  category: string;
+  category: ServiceCategorySlug;
   categoryLabel: string;
   kicker: string;
   shortDesc: string;
-  image: string;
+  imagePath: string;
+  heroImagePath: string;
+  heroImageAlt: string;
+  detailImagePath: string;
+  detailImageAlt: string;
   features: string[];
   seoTitle: string;
   metaDescription: string;
-  keywords: string | string[];
+  keywords: string;
   eyebrow: string;
   h1Lead: string;
   h1Accent: string;
   heroDesc: string;
-  heroImage: string;
-  heroImageAlt: string;
-  detailImage: string;
-  detailImageAlt: string;
   stats: ServiceStat[];
   highlights: ServiceHighlight[];
   overviewTitle: string;
@@ -67,128 +52,82 @@ export interface Service {
   included: string[];
   steps: ServiceStep[];
   faqs: ServiceFaq[];
-  relatedIds: string[];
+  relatedSlugs: string[];
   waText: string;
-  homeCard?: HomeCardOverride;
-
-  slug?: string;
-  badge?: string;
-  headline?: string;
-  subheadline?: string;
-  overview?: string;
-  inclusions?: string[];
-  icon?: string;
-  priceStarting?: number;
-  featuredOnHome?: boolean;
-  seoDescription?: string;
+  showOnHome: boolean;
+  homeSortOrder: number;
+  sortOrder: number;
+  homeCategory?: string;
+  homeCardTitle?: string;
+  homeCardTag?: string;
+  homeCardKicker?: string;
+  homeCardShort?: string;
+  homeCardImage?: string;
+  homeCardSubtitle?: string;
+  homeCardFeatures?: string[];
 }
+
+export type ProductCategorySlug = 'tea' | 'travel' | 'craft' | 'home';
 
 export interface ProductGalleryItem {
   src: string;
   label: string;
 }
 
-export interface ProductVariant {
-  name: string;
-  price?: number;
-}
-
-export interface Product {
-  id: string;
+export interface ProductItem {
+  slug: string;
   title: string;
   origin: string;
   categoryLabel: string;
-  category: string;
+  category: ProductCategorySlug;
   status: string;
-  rating: string | number;
+  rating: string;
   reviewCount: number;
   price: number;
   priceJpy: string;
-  image: string;
-  gallery: (string | ProductGalleryItem)[];
+  imagePath: string;
+  gallery: ProductGalleryItem[];
   shortDesc: string;
   craftStory: string;
-  variants: (string | ProductVariant)[];
-  specs: string[] | Record<string, string>;
+  variants: string[];
+  specs: string[];
   shippingNote: string;
   featured: boolean;
-
-  slug?: string;
-  name?: string;
-  badge?: string;
-  description?: string;
-  inStock?: boolean;
+  sortOrder: number;
 }
 
-export interface Trip {
-  id: string;
+export interface TripItem {
+  slug: string;
   title: string;
-  durationDays: string;
-  priceFrom: number;
-  image: string;
-  imageAlt: string;
-  desc: string;
-  destination: string;
+  daysLabel: string;
+  locationLabel: string;
+  priceFrom: string;
+  shortDesc: string;
+  imagePath: string;
   waText: string;
-
-  slug?: string;
-  duration?: string;
-  summary?: string;
+  sortOrder: number;
 }
 
-export interface Testimonial {
+export interface TestimonialItem {
   id: string;
   author: string;
-  avatar: string;
-  quote: string;
   trip: string;
-
-  tripType?: string;
-  rating?: number;
-  location?: string;
+  quote: string;
+  avatarPath: string;
+  sortOrder: number;
 }
 
-export interface TravelStyle {
-  id: string;
-  label: string;
-  iconName: string;
-  waText: string;
-
-  title?: string;
-  desc?: string;
-  image?: string;
-  link?: string;
-}
-
-export interface SiteSettings {
-  siteName: string;
-  siteTagline: string;
-  companyLegalName: string;
-  establishedYear: number;
-  nib: string;
-  decreeNumber: string;
+export interface SiteSettingsData {
+  brandName: string;
+  companyName: string;
+  nibNumber: string;
+  ahuDecree: string;
   address: string;
-  contactEmail: string;
-  contactPhone: string;
-  waNumber: string;
-  socials: {
-    instagram: string;
-    facebook: string;
-    youtube: string;
-    whatsapp: string;
-  };
-}
-
-export interface AboutPageData {
-  profile: string;
-  metrics: { val: string; lbl: string }[];
-  vision: string;
-  missions: string[];
-  pillars: { title: string; desc: string }[];
-  whyChoose: { title: string; desc: string }[];
-  legal: {
-    nib: string;
-    decree: string;
-    address: string;
-  };
+  email: string;
+  whatsappNumber: string;
+  heroEyebrow: string;
+  heroTitleLead: string;
+  heroTitleAccent: string;
+  heroDescription: string;
+  heroVideoUrl: string;
 }

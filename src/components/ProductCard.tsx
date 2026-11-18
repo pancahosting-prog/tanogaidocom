@@ -1,68 +1,69 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import Link from 'next/link';
-import Image from 'next/image';
-import { Heart, Plus } from 'lucide-react';
-import { useShopBag } from '@/context/ShopBagContext';
-import type { Product } from '@/types/cms';
+import type { ProductItem } from '@/types/cms';
+import { useBag } from '@/components/BagProvider';
 
-interface ProductCardProps {
-  product: Product;
-}
+export function ProductCard({ product }: { product: ProductItem }) {
+  const { addToBag, isFavorite, toggleFavorite } = useBag();
+  const [justAdded, setJustAdded] = useState(false);
 
-export function ProductCard({ product }: ProductCardProps) {
-  const { addItem, toggleFavorite, isFavorite } = useShopBag();
-  const fav = isFavorite(product.id);
-  const slug = product.slug || product.id;
-  const name = product.name || product.title;
-  const badge = product.badge || product.status;
+  const saved = isFavorite(product.slug);
+  const url = `/shop/${product.slug}`;
+
+  function handleAdd(e: React.MouseEvent) {
+    e.preventDefault();
+    e.stopPropagation();
+    addToBag(product, undefined, 1);
+    setJustAdded(true);
+    setTimeout(() => setJustAdded(false), 1150);
+  }
 
   return (
-    <article className="product-card">
-      <div className="product-card-media">
-        <Link href={`/product/${slug}`} tabIndex={-1} aria-hidden="true">
-          <Image
-            src={product.image}
-            alt={name}
-            fill
-            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
-            className="product-card-img"
-          />
+    <article className="product-card" data-product-id={product.slug}>
+      <div className="product-img-wrap">
+        <Link href={url} className="product-card-img-link" aria-label={`View ${product.title}`}>
+          <img src={product.imagePath} alt={product.title} loading="lazy" />
         </Link>
-
-        {badge && <span className="product-card-badge">{badge}</span>}
-
         <button
           type="button"
-          className={`product-card-fav ${fav ? 'is-favorite' : ''}`}
+          className={`product-fav-btn ${saved ? 'saved' : ''}`}
+          aria-label={`Save ${product.title}`}
           onClick={(e) => {
             e.preventDefault();
-            toggleFavorite(product.id);
+            e.stopPropagation();
+            toggleFavorite(product.slug);
           }}
-          aria-label={fav ? 'Remove from favorites' : 'Add to favorites'}
         >
-          <Heart size={16} fill={fav ? '#dc2626' : 'none'} />
+          <svg viewBox="0 0 24 24" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
+          </svg>
         </button>
+        <span className="product-quick-hint">View Product</span>
       </div>
-
-      <div className="product-card-body">
-        <span className="product-card-category">{product.category}</span>
-        <Link href={`/product/${slug}`} className="product-card-title">
-          {name}
+      <div className="product-body">
+        <div className="product-meta-row">
+          <span className="product-kicker">
+            {product.origin} &middot; {product.categoryLabel}
+          </span>
+          <span className="product-status-note">{product.status}</span>
+        </div>
+        <Link href={url} className="product-title-link">
+          <h3 className="product-title">{product.title}</h3>
         </Link>
-        <p className="product-card-desc">{product.shortDesc}</p>
-
-        <div className="product-card-bottom">
-          <span className="product-card-price">${product.price.toFixed(2)}</span>
+        <p className="product-sub">{product.shortDesc}</p>
+        <div className="product-footer">
+          <div className="product-price-wrap">
+            <span className="product-price">${product.price}</span>
+            <span className="product-price-jpy">{product.priceJpy}</span>
+          </div>
           <button
             type="button"
-            className="product-card-btn"
-            onClick={() => addItem(product)}
-            aria-label={`Add ${name} to bag`}
+            className={`product-add-btn ${justAdded ? 'is-added' : ''}`}
+            onClick={handleAdd}
           >
-            <Plus size={14} style={{ display: 'inline', marginRight: 4 }} />
-            Add to Bag
+            {justAdded ? 'Added' : '+ Bag'}
           </button>
         </div>
       </div>

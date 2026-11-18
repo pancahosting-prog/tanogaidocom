@@ -1,27 +1,28 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { revalidatePath } from 'next/cache';
+import { revalidatePath, revalidateTag } from 'next/cache';
+import { NextResponse } from 'next/server';
 
-export async function POST(req: NextRequest) {
+export async function POST(req: Request) {
   try {
-    const { secret, path } = await req.json();
-
-    const expectedSecret = process.env.REVALIDATE_SECRET || 'tanogaido-revalidate-secret-token';
-    if (!secret || secret !== expectedSecret) {
-      return NextResponse.json({ message: 'Invalid revalidation secret' }, { status: 401 });
+    const secret = process.env.REVALIDATION_SECRET;
+    if (secret) {
+      const auth = req.headers.get('x-revalidation-secret') || new URL(req.url).searchParams.get('secret');
+      if (auth !== secret) {
+        return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+      }
     }
 
-    if (!path || typeof path !== 'string') {
-      return NextResponse.json({ message: 'Path string is required' }, { status: 400 });
+    const body = (await req.json().catch(() => ({}))) as { paths?: string[] };
+    const paths = Array.isArray(body.paths) && body.paths.length
+      ? body.paths
+      : ['/', '/services', '/shop', '/about', '/product'];
+
+    for (const p of paths) {
+      revalidatePath(p);
     }
+    revalidateTag('tanogaido-cms');
 
-    revalidatePath(path);
-
-    return NextResponse.json({
-      revalidated: true,
-      path,
-      timestamp: Date.now(),
-    });
-  } catch (err: any) {
-    return NextResponse.json({ message: err?.message || 'Revalidation failed' }, { status: 500 });
+    return NextResponse.json({ revalidated: true, paths, timestamp: new Date().toISOString() });
+  } catch {
+    return NextResponse.json({ error: 'Revalidation failed' }, { status: 500 });
   }
 }

@@ -1,48 +1,29 @@
-import React from 'react';
 import type { Metadata } from 'next';
-import { getServices } from '@/lib/cms-data';
+import { getServices } from '@/lib/cms';
 import { ServicesCatalogClient } from '@/components/ServicesCatalogClient';
 
 export const revalidate = 60;
 
 export const metadata: Metadata = {
-  title: 'All Japan Travel Services & Concierge Capabilities',
+  title: 'Our Services — Complete Japan Travel, Visa & Concierge Catalog | Tanogaido',
   description:
-    'Explore 20 premier Japan travel services from Tanogaido: licensed tour guides, private van charters, Shinkansen tickets, theme park admissions, and ryokan bookings.',
+    'Browse all 20 Tanogaido Japan services: Licensed Tour Guides, Visa Processing, JR Pass, Car & Bus Rental, Pocket WiFi, Cargo Import, Prewedding Photography & Study in Japan.',
+  keywords:
+    'Tanogaido services, Japan tour guide, Japan visa processing, JR pass tickets, Japan car rental, Pocket WiFi Japan, Japan import service',
   alternates: {
-    canonical: 'https://tanogaido.com/services',
+    canonical: '/services',
   },
   openGraph: {
-    title: 'All Japan Travel Services & Concierge Capabilities | Tanogaido',
+    type: 'website',
+    siteName: 'Tanogaido',
+    title: 'Our Services — Complete Japan Travel, Visa & Concierge Catalog | Tanogaido',
     description:
-      'Explore 20 premier Japan travel services from Tanogaido: licensed tour guides, private van charters, and luxury bookings.',
-    url: 'https://tanogaido.com/services',
-    images: ['/assets/shinkansen.jpg'],
+      'Explore every travel, guiding, visa processing, rail pass, private vehicle charter, golf, prewedding, property survey, and logistics solution crafted by PT. Tanogaido Fantasi Pratama.',
+    images: [{ url: '/assets/cards/card-4.jpg', alt: 'Tanogaido Complete Japan Concierge Services' }],
   },
 };
 
-export default async function ServicesPage() {
+export default async function ServicesCatalogPage() {
   const services = await getServices();
-
-  const itemListSchema = {
-    '@context': 'https://schema.org',
-    '@type': 'ItemList',
-    name: 'Tanogaido Japan Travel Services',
-    itemListElement: services.map((svc, index) => ({
-      '@type': 'ListItem',
-      position: index + 1,
-      name: svc.title,
-      url: `https://tanogaido.com/services/${svc.slug}`,
-    })),
-  };
-
-  return (
-    <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(itemListSchema) }}
-      />
-      <ServicesCatalogClient services={services} />
-    </>
-  );
+  return <ServicesCatalogClient services={services} />;
 }

@@ -1,94 +1,64 @@
-import React from 'react';
 import type { Metadata, Viewport } from 'next';
 import { Playfair_Display, Plus_Jakarta_Sans } from 'next/font/google';
-import { getServices } from '@/lib/cms-data';
-import { FrontendShell } from '@/components/FrontendShell';
-
-import './styles/base.css';
-import './styles/pages.css';
+import '@/styles/tanogaido.css';
+import { BagProvider } from '@/components/BagProvider';
 
 const playfair = Playfair_Display({
   subsets: ['latin'],
-  variable: '--font-serif',
+  weight: ['600', '700'],
+  variable: '--font-playfair',
   display: 'swap',
 });
 
 const plusJakarta = Plus_Jakarta_Sans({
   subsets: ['latin'],
-  variable: '--font-sans',
+  weight: ['400', '500', '600', '700', '800'],
+  variable: '--font-plus-jakarta',
   display: 'swap',
 });
 
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://tanogaido.com';
+
 export const viewport: Viewport = {
-  themeColor: '#ffffff',
   width: 'device-width',
   initialScale: 1,
-  maximumScale: 5,
+  viewportFit: 'cover',
 };
 
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://tanogaido.com'),
+  metadataBase: new URL(SITE_URL),
   title: {
-    default: 'Tanogaido — Premier Japan Tour Operator & Concierge Services',
-    template: '%s | Tanogaido Japan',
+    default: 'Tanogaido — Explore Authentic Japan',
+    template: '%s',
   },
   description:
-    'Licensed Japan tour operator (PT. Tanogaido Fantasi Pratama). Bilingual private tour guides, VIP van charters, Shinkansen tickets, traditional ryokan onsen, and artisan merchandise.',
-  keywords: [
-    'Japan Tour Guide',
-    'Private Tour Japan',
-    'Tanogaido',
-    'Tokyo Concierge',
-    'Japan Private Van',
-    'Shinkansen Tickets',
-    'Hakone Ryokan',
-    'Tokyo Disney Tickets',
-  ],
-  authors: [{ name: 'PT. Tanogaido Fantasi Pratama', url: 'https://tanogaido.com' }],
-  creator: 'PT. Tanogaido Fantasi Pratama',
+    'PT. Tanogaido Fantasi Pratama — Your Gateway to Japan since 2007. Curated private Japan tours, licensed local guides, visa processing, JR Pass, private transport, and authentic Japanese crafts.',
   openGraph: {
     type: 'website',
-    locale: 'en_US',
-    url: 'https://tanogaido.com',
-    siteName: 'Tanogaido Japan',
-    title: 'Tanogaido — Premier Japan Tour Operator & Concierge Services',
+    siteName: 'Tanogaido',
+    title: 'Tanogaido — Explore Authentic Japan',
     description:
-      'Licensed Japan tour operator offering bilingual guides, private transfers, and bespoke luxury travel.',
-    images: [
-      {
-        url: '/assets/shinkansen.jpg',
-        width: 1200,
-        height: 630,
-        alt: 'Tanogaido Japan Travel Experience',
-      },
-    ],
+      'PT. Tanogaido Fantasi Pratama — Your Gateway to Japan since 2007. Curated private Japan tours, licensed local guides, visa processing, JR Pass, private transport, and authentic Japanese crafts.',
+    images: [{ url: '/assets/tokyo-pulse.jpg', alt: 'Tanogaido — Explore Authentic Japan' }],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Tanogaido — Premier Japan Tour Operator & Concierge Services',
-    description: 'Licensed private Japan tours, VIP transfers, and bespoke luxury itineraries.',
-    images: ['/assets/shinkansen.jpg'],
-  },
-  robots: {
-    index: true,
-    follow: true,
+    title: 'Tanogaido — Explore Authentic Japan',
+    description:
+      'Curated private Japan tours, licensed local guides, visa processing, JR Pass, private transport, and authentic Japanese crafts.',
+    images: ['/assets/tokyo-pulse.jpg'],
   },
 };
 
-export default async function FrontendLayout({
+export default function FrontendLayout({
   children,
-}: {
+}: Readonly<{
   children: React.ReactNode;
-}) {
-  const services = await getServices();
-
+}>) {
   return (
     <html lang="en" className={`${playfair.variable} ${plusJakarta.variable}`}>
-      <head>
-        <link rel="icon" href="/assets/logotano.png" />
-      </head>
       <body>
-        <FrontendShell services={services}>{children}</FrontendShell>
+        <BagProvider>{children}</BagProvider>
       </body>
     </html>
   );

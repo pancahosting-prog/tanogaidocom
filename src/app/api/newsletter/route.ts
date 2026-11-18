@@ -1,50 +1,39 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { getPayload } from 'payload';
-import configPromise from '@/payload.config';
+import { NextResponse } from 'next/server';
+import { getPayloadClient } from '@/lib/cms';
 
-export async function POST(req: NextRequest) {
+export async function POST(req: Request) {
   try {
-    const body = await req.json();
-    const email = body?.email?.trim()?.toLowerCase();
+    const body = (await req.json()) as { email?: string; source?: string };
+    const email = (body.email || '').trim().toLowerCase();
 
     if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-      return NextResponse.json(
-        { success: false, error: 'Valid email address is required.' },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: 'Please enter a valid email address.' }, { status: 400 });
     }
 
-    if (process.env.MONGODB_URI?.trim()) {
+    if (process.env.MONGODB_URI) {
       try {
-        const payload = await getPayload({ config: configPromise });
+        const payload = await getPayloadClient();
         const existing = await payload.find({
-          collection: 'newsletter-subscribers',
+          collection: 'subscribers',
           where: { email: { equals: email } },
           limit: 1,
         });
-
-        if (existing.totalDocs === 0) {
+        if (existing.docs.length === 0) {
           await payload.create({
-            collection: 'newsletter-subscribers',
+            collection: 'subscribers',
             data: {
               email,
-              subscribedAt: new Date().toISOString(),
+              source: body.source || 'website-newsletter',
             },
           });
         }
-      } catch (dbErr) {
-        console.warn('Could not store subscriber in Payload/MongoDB:', dbErr);
+      } catch {
+        // Gracefully accept even if MongoDB is unreachable in static preview
       }
     }
 
-    return NextResponse.json({
-      success: true,
-      message: 'Thank you for subscribing to Tanogaido travel updates!',
-    });
-  } catch (err: any) {
-    return NextResponse.json(
-      { success: false, error: err?.message || 'Failed to process subscription' },
-      { status: 500 }
-    );
+    return NextResponse.json({ ok: true, email });
+  } catch {
+    return NextResponse.json({ error: 'Invalid request body.' }, { status: 400 });
   }
 }

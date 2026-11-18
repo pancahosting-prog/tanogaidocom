@@ -1,19 +1,19 @@
-import path from 'path';
-import { fileURLToPath } from 'url';
-import { buildConfig } from 'payload';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { mongooseAdapter } from '@payloadcms/db-mongodb';
 import { lexicalEditor } from '@payloadcms/richtext-lexical';
-import { seoPlugin } from '@payloadcms/plugin-seo';
+import { buildConfig } from 'payload';
 import sharp from 'sharp';
 
-import { Users } from './payload/collections/Users';
-import { Media } from './payload/collections/Media';
-import { Services } from './payload/collections/Services';
-import { Products } from './payload/collections/Products';
-import { Trips } from './payload/collections/Trips';
-import { Testimonials } from './payload/collections/Testimonials';
-import { NewsletterSubscribers } from './payload/collections/NewsletterSubscribers';
-import { SiteSettingsGlobal } from './payload/globals/SiteSettings';
+import { Users } from './collections/Users';
+import { Media } from './collections/Media';
+import { Services } from './collections/Services';
+import { Products } from './collections/Products';
+import { Trips } from './collections/Trips';
+import { Testimonials } from './collections/Testimonials';
+import { Subscribers } from './collections/Subscribers';
+import { Orders } from './collections/Orders';
+import { SiteSettings } from './globals/SiteSettings';
 
 const filename = fileURLToPath(import.meta.url);
 const dirname = path.dirname(filename);
@@ -24,6 +24,9 @@ export default buildConfig({
     importMap: {
       baseDir: path.resolve(dirname),
     },
+    meta: {
+      titleSuffix: '— Tanogaido CMS',
+    },
   },
   collections: [
     Users,
@@ -32,26 +35,20 @@ export default buildConfig({
     Products,
     Trips,
     Testimonials,
-    NewsletterSubscribers,
+    Subscribers,
+    Orders,
   ],
-  globals: [
-    SiteSettingsGlobal,
-  ],
-  editor: lexicalEditor({}),
-  secret: process.env.PAYLOAD_SECRET || 'tanogaido-payload-secret-key-32-chars-long',
+  globals: [SiteSettings],
+  editor: lexicalEditor(),
+  secret: process.env.PAYLOAD_SECRET || 'tanogaido-dev-secret-change-in-production',
   typescript: {
     outputFile: path.resolve(dirname, 'payload-types.ts'),
   },
   db: mongooseAdapter({
     url: process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/tanogaido',
+    connectOptions: {
+      serverSelectionTimeoutMS: 2500,
+    },
   }),
   sharp,
-  plugins: [
-    seoPlugin({
-      collections: ['services', 'products'],
-      uploadsCollection: 'media',
-      generateTitle: ({ doc }) => `${doc?.title ? `${doc.title} — ` : ''}Tanogaido`,
-      generateDescription: ({ doc }) => (doc?.shortDesc as string) || (doc?.metaDescription as string) || 'Tanogaido — Your Gateway to Japan.',
-    }),
-  ],
 });

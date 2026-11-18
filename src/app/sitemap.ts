@@ -1,51 +1,53 @@
-import { MetadataRoute } from 'next';
-import { getServices, getProducts } from '@/lib/cms-data';
+import type { MetadataRoute } from 'next';
+import { getProducts, getServices } from '@/lib/cms';
+
+export const revalidate = 60;
+
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://tanogaido.com';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://tanogaido.com';
-  const now = new Date();
-
   const [services, products] = await Promise.all([getServices(), getProducts()]);
+  const now = new Date();
 
   const staticRoutes: MetadataRoute.Sitemap = [
     {
-      url: `${siteUrl}`,
+      url: `${SITE_URL}/`,
       lastModified: now,
-      changeFrequency: 'daily',
-      priority: 1.0,
+      changeFrequency: 'weekly',
+      priority: 1,
     },
     {
-      url: `${siteUrl}/services`,
+      url: `${SITE_URL}/services`,
       lastModified: now,
       changeFrequency: 'weekly',
       priority: 0.9,
     },
     {
-      url: `${siteUrl}/shop`,
+      url: `${SITE_URL}/shop`,
       lastModified: now,
       changeFrequency: 'weekly',
-      priority: 0.85,
+      priority: 0.9,
     },
     {
-      url: `${siteUrl}/about`,
+      url: `${SITE_URL}/about`,
       lastModified: now,
       changeFrequency: 'monthly',
-      priority: 0.7,
+      priority: 0.8,
     },
   ];
 
-  const serviceRoutes: MetadataRoute.Sitemap = services.map((svc) => ({
-    url: `${siteUrl}/services/${svc.slug}`,
+  const serviceRoutes: MetadataRoute.Sitemap = services.map((s) => ({
+    url: `${SITE_URL}/services/${s.slug}`,
+    lastModified: now,
+    changeFrequency: 'weekly',
+    priority: 0.85,
+  }));
+
+  const productRoutes: MetadataRoute.Sitemap = products.map((p) => ({
+    url: `${SITE_URL}/shop/${p.slug}`,
     lastModified: now,
     changeFrequency: 'weekly',
     priority: 0.8,
-  }));
-
-  const productRoutes: MetadataRoute.Sitemap = products.map((prod) => ({
-    url: `${siteUrl}/product/${prod.slug}`,
-    lastModified: now,
-    changeFrequency: 'weekly',
-    priority: 0.75,
   }));
 
   return [...staticRoutes, ...serviceRoutes, ...productRoutes];

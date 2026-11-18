@@ -1,15 +1,16 @@
-import React from 'react';
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import Image from 'next/image';
 import { notFound } from 'next/navigation';
-import { ArrowUpRight, ArrowDown, Check, ChevronDown, Sparkles } from 'lucide-react';
-import { getServiceBySlug, getServices } from '@/lib/cms-data';
-import { ServiceIcon } from '@/components/ServiceIcon';
-import { ConciergeBanner } from '@/components/ConciergeBanner';
-import { SiteFooter } from '@/components/SiteFooter';
+import { getServiceBySlug, getServices, getSiteSettings } from '@/lib/cms';
+import { getWhatsAppUrl } from '@/data/fallback-data';
+import { Navbar } from '@/components/Navbar';
+import { NewsletterBand } from '@/components/NewsletterBand';
+import { Footer } from '@/components/Footer';
 
 export const revalidate = 60;
+export const dynamicParams = true;
+
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://tanogaido.com';
 
 export async function generateStaticParams() {
   const services = await getServices();
@@ -23,36 +24,37 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { slug } = await params;
   const service = await getServiceBySlug(slug);
-
   if (!service) {
-    return { title: 'Service Not Found' };
+    return {
+      title: 'Service Not Found | Tanogaido',
+    };
   }
 
   return {
-    title: `${service.title} — Tanogaido Japan Concierge`,
-    description: service.seoDescription || service.shortDesc,
+    title: service.seoTitle || `${service.title} | Tanogaido`,
+    description: service.metaDescription || service.shortDesc,
     keywords: service.keywords,
     alternates: {
-      canonical: `https://tanogaido.com/services/${service.slug}`,
+      canonical: `/services/${service.slug}`,
     },
     openGraph: {
-      title: `${service.title} | Tanogaido Japan`,
-      description: service.shortDesc,
-      url: `https://tanogaido.com/services/${service.slug}`,
+      type: 'website',
+      siteName: 'Tanogaido',
+      title: service.seoTitle || `${service.title} | Tanogaido`,
+      description: service.metaDescription || service.shortDesc,
+      url: `${SITE_URL}/services/${service.slug}`,
       images: [
         {
-          url: service.heroImage,
-          width: 1200,
-          height: 630,
-          alt: service.title,
+          url: service.heroImagePath || service.imagePath,
+          alt: service.heroImageAlt || service.title,
         },
       ],
     },
     twitter: {
       card: 'summary_large_image',
-      title: `${service.title} | Tanogaido Japan`,
-      description: service.shortDesc,
-      images: [service.heroImage],
+      title: service.seoTitle || `${service.title} | Tanogaido`,
+      description: service.metaDescription || service.shortDesc,
+      images: [service.heroImagePath || service.imagePath],
     },
   };
 }
@@ -63,49 +65,47 @@ export default async function ServiceDetailPage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const service = await getServiceBySlug(slug);
+  const [services, siteSettings] = await Promise.all([getServices(), getSiteSettings()]);
+  const service = services.find((s) => s.slug === slug);
 
   if (!service) {
     notFound();
   }
 
-  const allServices = await getServices();
-  const relatedServices = allServices
-    .filter((s) => s.id !== service.id && service.relatedIds?.includes(s.id))
-    .slice(0, 4);
+  const serviceUrl = `${SITE_URL}/services/${service.slug}`;
+  const waHref = getWhatsAppUrl(service.waText);
 
-  // Fallback to other services if relatedIds is empty
-  const displayRelated =
+  const relatedServices = (service.relatedSlugs || [])
+    .map((relSlug) => services.find((item) => item.slug === relSlug))
+    .filter((item): item is NonNullable<typeof item> => Boolean(item));
+
+  const fallbackRelated =
     relatedServices.length > 0
       ? relatedServices
-      : allServices.filter((s) => s.id !== service.id).slice(0, 4);
+      : services.filter((item) => item.slug !== service.slug).slice(0, 4);
 
-  // 1. Service Schema
-  const serviceSchema = {
+  const serviceJsonLd = {
     '@context': 'https://schema.org',
     '@type': 'Service',
     name: service.title,
-    serviceType: service.category,
+    serviceType: service.categoryLabel,
+    description: service.metaDescription || service.shortDesc,
+    url: serviceUrl,
+    image: `${SITE_URL}${service.heroImagePath || service.imagePath}`,
     provider: {
       '@type': 'TravelAgency',
-      name: 'PT. Tanogaido Fantasi Pratama',
-      url: 'https://tanogaido.com',
+      name: siteSettings.companyName || 'PT. Tanogaido Fantasi Pratama',
+      url: SITE_URL,
+      telephone: '+62-813-1893-9319',
+      email: siteSettings.email || 'tanogaidocom@gmail.com',
     },
     areaServed: {
       '@type': 'Country',
       name: 'Japan',
     },
-    description: service.seoDescription || service.shortDesc,
-    offers: {
-      '@type': 'Offer',
-      price: (service.priceStarting ?? 150).toString(),
-      priceCurrency: 'USD',
-      availability: 'https://schema.org/InStock',
-    },
   };
 
-  // 2. BreadcrumbList Schema
-  const breadcrumbSchema = {
+  const breadcrumbJsonLd = {
     '@context': 'https://schema.org',
     '@type': 'BreadcrumbList',
     itemListElement: [
@@ -113,25 +113,24 @@ export default async function ServiceDetailPage({
         '@type': 'ListItem',
         position: 1,
         name: 'Home',
-        item: 'https://tanogaido.com',
+        item: `${SITE_URL}/`,
       },
       {
         '@type': 'ListItem',
         position: 2,
-        name: 'Our Services',
-        item: 'https://tanogaido.com/services',
+        name: 'Services',
+        item: `${SITE_URL}/services`,
       },
       {
         '@type': 'ListItem',
         position: 3,
         name: service.title,
-        item: `https://tanogaido.com/services/${service.slug}`,
+        item: serviceUrl,
       },
     ],
   };
 
-  // 3. FAQPage Schema
-  const faqSchema = {
+  const faqJsonLd = {
     '@context': 'https://schema.org',
     '@type': 'FAQPage',
     mainEntity: service.faqs.map((faq) => ({
@@ -144,233 +143,345 @@ export default async function ServiceDetailPage({
     })),
   };
 
-  const whatsappMessage = encodeURIComponent(
-    `Hello Tanogaido, I would like to book or inquire about: ${service.title}`
-  );
-
   return (
-    <div className="svc-detail-main">
-      {/* JSON-LD Schemas */}
+    <>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(serviceSchema) }}
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(serviceJsonLd) }}
       />
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
       />
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
       />
 
-      {/* Breadcrumb Bar */}
-      <nav className="breadcrumb-bar" aria-label="Breadcrumb">
-        <Link href="/">Home</Link>
-        <span>/</span>
-        <Link href="/services">Our Services</Link>
-        <span>/</span>
-        <span className="active-crumb">{service.title}</span>
-      </nav>
+      <Navbar
+        services={services}
+        ctaLabel="Consult Now"
+        ctaHref={waHref}
+        mobileCtaLabel={`Consult About ${service.title}`}
+      />
 
-      {/* Hero Framed Band (Responsive with Mobile Non-Clipping Safeguards) */}
-      <section className="svc-hero-band" aria-label={`${service.title} Overview`}>
-        <div className="svc-hero-frame">
-          <Image
-            src={service.heroImage}
-            alt={service.title}
-            fill
-            priority
-            sizes="(max-width: 860px) 100vw, 1320px"
-            className="svc-hero-bg"
-          />
-          <div className="svc-hero-gradient" />
+      <main className="svc-detail-main">
+        {/* Breadcrumb Bar */}
+        <div className="breadcrumb-bar">
+          <div className="page-container">
+            <nav className="breadcrumb-nav" aria-label="Breadcrumb">
+              <Link href="/">Home</Link>
+              <span className="breadcrumb-sep" aria-hidden="true">
+                /
+              </span>
+              <Link href="/services">Our Services</Link>
+              <span className="breadcrumb-sep" aria-hidden="true">
+                /
+              </span>
+              <span className="breadcrumb-current">{service.title}</span>
+            </nav>
+          </div>
+        </div>
 
-          <div className="svc-hero-inner">
-            <span className="svc-hero-eyebrow">
-              <Sparkles size={14} />
-              <span>{service.badge} &bull; On-Site Support</span>
-            </span>
+        {/* 1. Home-Style Architectural Hero Stage */}
+        <section className="svc-hero-band">
+          <div className="page-container">
+            <div className="svc-hero-frame">
+              <img
+                className="svc-hero-bg"
+                src={service.heroImagePath || service.imagePath}
+                alt={service.heroImageAlt || service.title}
+              />
+              <div className="svc-hero-scrim" aria-hidden="true" />
+              <div className="svc-hero-inner">
+                <div className="svc-hero-copy">
+                  <div className="eyebrow-row">
+                    <span className="eyebrow">{service.eyebrow || service.kicker}</span>
+                    <span className="eyebrow-line" aria-hidden="true" />
+                  </div>
+                  <h1 className="svc-hero-title">
+                    {service.h1Lead}
+                    <br />
+                    <span className="line-red">{service.h1Accent}</span>
+                  </h1>
+                  <p className="svc-hero-desc">{service.heroDesc || service.shortDesc}</p>
+                  <div className="svc-hero-cta-row">
+                    <a
+                      href={waHref}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="hero-cta-btn"
+                    >
+                      <span>Book via WhatsApp</span>
+                      <span className="hero-cta-circle" aria-hidden="true">
+                        <svg
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="2.2"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        >
+                          <path d="M7 17L17 7M17 7H8M17 7V16" />
+                        </svg>
+                      </span>
+                    </a>
+                    <a href="#service-included" className="svc-hero-secondary-link">
+                      See What&rsquo;s Included &darr;
+                    </a>
+                  </div>
+                </div>
 
-            <h1 className="svc-hero-title">{service.headline}</h1>
+                <div className="svc-hero-stats">
+                  {service.stats.map((st, idx) => (
+                    <div className="svc-stat-glass" key={`${st.val}-${idx}`}>
+                      <div className="svc-stat-val">{st.val}</div>
+                      <div className="svc-stat-label">{st.label}</div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
 
-            <p className="svc-hero-desc">{service.subheadline}</p>
-
-            {/* CTAs */}
-            <div className="svc-hero-ctas">
-              <a
-                href={`https://wa.me/6281318047974?text=${whatsappMessage}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="btn-primary"
-              >
-                <span>Book via WhatsApp</span>
-                <span className="btn-icon-bubble">
-                  <ArrowUpRight size={16} />
-                </span>
-              </a>
-
-              <a href="#inclusions" className="btn-secondary">
-                <span>See What&apos;s Included</span>
-                <ArrowDown size={16} />
-              </a>
+        {/* 2. Key Service Highlights */}
+        <section className="svc-highlights-band">
+          <div className="page-container">
+            <div className="section-header-row">
+              <div>
+                <h2 className="section-heading-editorial">
+                  Why Choose Tanogaido for {service.title}
+                </h2>
+                <p className="section-subtitle">
+                  Engineered for clarity, bilingual support, and seamless execution across Japan and global
+                  hubs.
+                </p>
+              </div>
+              <Link href="/services" className="section-link-cta">
+                View All {services.length} Services <span>&rarr;</span>
+              </Link>
             </div>
 
-            {/* Stat Cards */}
-            <div className="svc-hero-stats">
-              {service.stats.map((st, i) => (
-                <div key={i} className="svc-hero-stat-card">
-                  <div className="svc-hero-stat-value">{st.value}</div>
-                  <div className="svc-hero-stat-label">{st.label}</div>
-                </div>
+            <div className="svc-highlights-grid">
+              {service.highlights.map((hl, idx) => (
+                <article className="svc-highlight-card" key={`${hl.title}-${idx}`}>
+                  <span className="svc-highlight-num">{String(idx + 1).padStart(2, '0')}</span>
+                  <h3 className="svc-highlight-title">{hl.title}</h3>
+                  <p className="svc-highlight-desc">{hl.desc}</p>
+                </article>
               ))}
             </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      {/* Highlights Band */}
-      <section className="svc-highlights-band" aria-labelledby="highlights-heading">
-        <div className="section-head" style={{ marginBottom: 28 }}>
-          <span className="section-eyebrow">Key Advantages</span>
-          <h2 id="highlights-heading" className="section-title">
-            Why Choose Tanogaido {service.title}
-          </h2>
-        </div>
-
-        <div className="svc-highlights-grid">
-          {service.highlights.map((hl, i) => (
-            <div key={i} className="svc-highlight-card">
-              <div className="svc-highlight-icon">
-                <ServiceIcon name={hl.icon || service.icon || 'compass'} size={20} />
+        {/* 3. Detailed Scope & Inclusions */}
+        <section className="svc-details-band" id="service-included">
+          <div className="page-container">
+            <div className="svc-details-grid">
+              <div className="svc-detail-media">
+                <img
+                  src={service.detailImagePath || service.imagePath}
+                  alt={service.detailImageAlt || service.title}
+                  loading="lazy"
+                />
               </div>
-              <h3 className="svc-highlight-title">{hl.title}</h3>
-              <p className="svc-highlight-desc">{hl.desc}</p>
+              <div className="svc-detail-copy">
+                <span className="svc-detail-kicker">{service.categoryLabel} &middot; SERVICE SCOPE</span>
+                <h2 className="section-heading-editorial">{service.overviewTitle}</h2>
+                <p>{service.overviewText}</p>
+                <ul className="svc-included-list">
+                  {service.included.map((item) => (
+                    <li key={item}>
+                      <svg
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2.4"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        aria-hidden="true"
+                      >
+                        <polyline points="20 6 9 17 4 12" />
+                      </svg>
+                      <span>{item}</span>
+                    </li>
+                  ))}
+                </ul>
+                <div className="svc-inline-links">
+                  <a
+                    href={waHref}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="hero-cta-btn"
+                    style={{
+                      border: '1px solid #e2e8f0',
+                      boxShadow: '0 10px 24px -10px rgba(15,23,42,0.18)',
+                    }}
+                  >
+                    <span>Request Free Quote</span>
+                    <span className="hero-cta-circle" aria-hidden="true">
+                      <svg
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2.2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      >
+                        <path d="M7 17L17 7M17 7H8M17 7V16" />
+                      </svg>
+                    </span>
+                  </a>
+                  <span>
+                    Explore also: <Link href="/shop">Tanogaido Japan Shop</Link> &middot;{' '}
+                    <Link href="/about">About PT. Tanogaido</Link>
+                  </span>
+                </div>
+              </div>
             </div>
-          ))}
-        </div>
-      </section>
+          </div>
+        </section>
 
-      {/* Scope & Inclusions Split */}
-      <section className="svc-details-band" id="inclusions" aria-labelledby="details-heading">
-        <div className="svc-details-split">
-          {/* Prose */}
-          <div className="svc-prose-col">
-            <h2 id="details-heading">Comprehensive Service Overview</h2>
-            <p>{service.overview || service.overviewText || service.shortDesc}</p>
-            <p>{service.subheadline || service.heroDesc || service.shortDesc}</p>
+        {/* 4. How It Works */}
+        <section className="svc-steps-band">
+          <div className="page-container">
+            <div className="section-header-row">
+              <div>
+                <h2 className="section-heading-editorial">How Booking Works</h2>
+                <p className="section-subtitle">
+                  Three straightforward steps to lock in your {service.title} reservation.
+                </p>
+              </div>
+            </div>
+            <div className="svc-steps-grid">
+              {service.steps.map((step, idx) => (
+                <article className="svc-step-card" key={`${step.title}-${idx}`}>
+                  <span className="svc-step-tag">STEP {String(idx + 1).padStart(2, '0')}</span>
+                  <h3>{step.title}</h3>
+                  <p>{step.desc}</p>
+                </article>
+              ))}
+            </div>
+          </div>
+        </section>
 
-            <div style={{ marginTop: 12 }}>
+        {/* 5. Frequently Asked Questions */}
+        <section className="svc-faq-band">
+          <div className="page-container">
+            <div className="section-header-row">
+              <div>
+                <h2 className="section-heading-editorial">
+                  {service.title} &mdash; Frequently Asked Questions
+                </h2>
+                <p className="section-subtitle">
+                  Quick answers before you book with our bilingual Japan concierge desk.
+                </p>
+              </div>
+            </div>
+            <div className="svc-faq-list">
+              {service.faqs.map((faq, idx) => (
+                <details className="svc-faq-item" key={faq.q} open={idx === 0}>
+                  <summary>
+                    <span>{faq.q}</span>
+                    <svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2.4"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      aria-hidden="true"
+                    >
+                      <polyline points="6 9 12 15 18 9" />
+                    </svg>
+                  </summary>
+                  <p>{faq.a}</p>
+                </details>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* 6. Related Services Internal Linking */}
+        <section className="svc-related-band">
+          <div className="page-container">
+            <div className="section-header-row">
+              <div>
+                <h2 className="section-heading-editorial">Pair With Complementary Services</h2>
+                <p className="section-subtitle">
+                  Combine your {service.title} request with other Tanogaido travel, visa, or transport
+                  essentials.
+                </p>
+              </div>
+              <Link href="/services" className="section-link-cta">
+                Browse Full Catalog <span>&rarr;</span>
+              </Link>
+            </div>
+            <div className="svc-related-grid">
+              {fallbackRelated.map((rel) => (
+                <Link key={rel.slug} href={`/services/${rel.slug}`} className="svc-related-card">
+                  <div className="svc-related-img">
+                    <img
+                      src={rel.imagePath}
+                      alt={rel.heroImageAlt || rel.title}
+                      loading="lazy"
+                    />
+                  </div>
+                  <div className="svc-related-body">
+                    <span className="svc-related-kicker">{rel.categoryLabel}</span>
+                    <h3 className="svc-related-title">{rel.title}</h3>
+                    <p className="svc-related-desc">{rel.shortDesc}</p>
+                    <span className="svc-related-more">Explore Service &rarr;</span>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* 7. Conversion CTA Banner */}
+        <section className="concierge-banner-band">
+          <div className="page-container">
+            <div className="concierge-banner-card">
+              <div>
+                <span className="eyebrow" style={{ color: '#fca5a5' }}>
+                  DIRECT CONCIERGE DESK
+                </span>
+                <h2>Ready to Plan Your {service.title}?</h2>
+                <p>
+                  Speak directly with our bilingual travel specialists on WhatsApp for transparent quotes,
+                  schedule availability, and customized multi-service bundles.
+                </p>
+              </div>
               <a
-                href={`https://wa.me/6281318047974?text=${whatsappMessage}`}
+                href={waHref}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="btn-primary"
-                style={{ background: '#dc2626', color: '#ffffff', display: 'inline-flex' }}
+                className="hero-cta-btn"
               >
-                <span>Reserve {service.title}</span>
-                <ArrowUpRight size={16} />
+                <span>Chat With Concierge Now</span>
+                <span className="hero-cta-circle" aria-hidden="true">
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2.2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <path d="M7 17L17 7M17 7H8M17 7V16" />
+                  </svg>
+                </span>
               </a>
             </div>
           </div>
+        </section>
 
-          {/* Inclusions Card */}
-          <div className="svc-inclusions-col">
-            <div className="svc-inclusions-card">
-              <h3>What&apos;s Included</h3>
-              <ul className="svc-inclusions-list">
-                {(service.inclusions || service.included || service.features || []).map((item, i) => (
-                  <li key={i}>
-                    <Check size={18} />
-                    <span>{item}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </div>
-        </div>
-      </section>
+        <NewsletterBand source={`service-${service.slug}`} />
 
-      {/* 3 Steps */}
-      <section className="svc-steps-band" aria-labelledby="steps-heading">
-        <div className="svc-steps-wrap">
-          <div className="section-head" style={{ marginBottom: 20 }}>
-            <span className="section-eyebrow">Seamless Process</span>
-            <h2 id="steps-heading" className="section-title">How It Works in 3 Simple Steps</h2>
-          </div>
-
-          <div className="svc-steps-grid">
-            {service.steps.map((step) => (
-              <div key={step.step} className="svc-step-card">
-                <div className="svc-step-number">{step.step}</div>
-                <h3 className="svc-step-title">{step.title}</h3>
-                <p className="svc-step-desc">{step.desc}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* FAQs */}
-      <section className="svc-faq-band" aria-labelledby="faq-heading">
-        <div className="section-head" style={{ marginBottom: 12 }}>
-          <span className="section-eyebrow">Frequently Asked Questions</span>
-          <h2 id="faq-heading" className="section-title">Questions & Answers</h2>
-        </div>
-
-        <div className="faq-list">
-          {service.faqs.map((faq, idx) => (
-            <details key={idx} className="faq-item" open={idx === 0}>
-              <summary className="faq-summary">
-                <span>{faq.q}</span>
-                <ChevronDown />
-              </summary>
-              <div className="faq-content">
-                <p>{faq.a}</p>
-              </div>
-            </details>
-          ))}
-        </div>
-      </section>
-
-      {/* Related Services */}
-      <section className="svc-related-band" aria-labelledby="related-heading">
-        <div className="section-head" style={{ marginBottom: 8 }}>
-          <span className="section-eyebrow">Complementary Capabilities</span>
-          <h2 id="related-heading" className="section-title">You May Also Need</h2>
-        </div>
-
-        <div className="svc-related-grid">
-          {displayRelated.map((rel) => (
-            <Link
-              key={rel.id}
-              href={`/services/${rel.slug}`}
-              className="svc-related-card"
-            >
-              <div
-                className="svc-related-thumb"
-                style={{ backgroundImage: `url('${rel.heroImage}')` }}
-              />
-              <div className="svc-related-body">
-                <h3 className="svc-related-title">{rel.title}</h3>
-                <p style={{ fontSize: 13, color: '#64748b', marginBottom: 12 }}>
-                  {rel.shortDesc.slice(0, 75)}...
-                </p>
-                <span className="svc-related-price">Explore Details &rarr;</span>
-              </div>
-            </Link>
-          ))}
-        </div>
-      </section>
-
-      {/* Concierge Banner */}
-      <ConciergeBanner
-        title={`Customize Your ${service.title} Package`}
-        description="Our licensed Tokyo concierges can adjust timings, routes, group configurations, and special accommodations to match your exact itinerary requirements."
-      />
-
-      {/* Footer */}
-      <SiteFooter />
-    </div>
+        <Footer />
+      </main>
+    </>
   );
 }

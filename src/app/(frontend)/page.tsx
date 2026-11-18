@@ -1,67 +1,40 @@
-import React from 'react';
 import type { Metadata } from 'next';
 import {
-  getServices,
-  getTrips,
   getProducts,
+  getServices,
+  getSiteSettings,
   getTestimonials,
-  getTravelStyles,
-} from '@/lib/cms-data';
-import { HomeExperienceClient } from '@/components/HomeExperienceClient';
+  getTrips,
+} from '@/lib/cms';
+import { HomeExperience } from '@/components/HomeExperience';
 
 export const revalidate = 60;
 
 export const metadata: Metadata = {
-  title: 'Tanogaido — Premier Japan Tour Operator & Travel Concierge',
+  title: 'Tanogaido — Explore Authentic Japan',
   description:
-    'Experience authentic Japan with licensed bilingual tour guides, VIP private vehicle charters, bespoke itineraries, onsen reservations, and curated Japanese goods.',
+    'Explore authentic Japan with PT. Tanogaido Fantasi Pratama. Licensed bilingual tour guides, private Japan tours, visa processing, JR Pass, airport chauffeur transfers, and curated Japanese goods.',
   alternates: {
-    canonical: 'https://tanogaido.com',
+    canonical: '/',
   },
 };
 
 export default async function HomePage() {
-  const [services, trips, products, testimonials, travelStyles] = await Promise.all([
+  const [services, products, trips, testimonials, siteSettings] = await Promise.all([
     getServices(),
-    getTrips(),
     getProducts(),
+    getTrips(),
     getTestimonials(),
-    getTravelStyles(),
+    getSiteSettings(),
   ]);
 
-  const organizationSchema = {
-    '@context': 'https://schema.org',
-    '@type': 'TravelAgency',
-    name: 'PT. Tanogaido Fantasi Pratama',
-    alternateName: 'Tanogaido',
-    url: 'https://tanogaido.com',
-    logo: 'https://tanogaido.com/assets/logotano.png',
-    description:
-      'Licensed Japan tour operator providing private tour guides, private transport, and bespoke itineraries.',
-    foundingDate: '2007',
-    telephone: '+6281318047974',
-    address: {
-      '@type': 'PostalAddress',
-      streetAddress: 'Plaza Pasifik Blok A4 No. 79, Kelapa Gading',
-      addressLocality: 'Jakarta Utara',
-      addressCountry: 'ID',
-    },
-    sameAs: ['https://www.instagram.com/tanogaido'],
-  };
-
   return (
-    <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }}
-      />
-      <HomeExperienceClient
-        services={services}
-        trips={trips}
-        products={products}
-        testimonials={testimonials}
-        travelStyles={travelStyles}
-      />
-    </>
+    <HomeExperience
+      services={services}
+      products={products}
+      trips={trips}
+      testimonials={testimonials}
+      siteSettings={siteSettings}
+    />
   );
 }

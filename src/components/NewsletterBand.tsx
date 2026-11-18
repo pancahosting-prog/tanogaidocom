@@ -1,86 +1,85 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Mail, CheckCircle2, AlertCircle } from 'lucide-react';
 
-export function NewsletterBand() {
+export function NewsletterBand({
+  isRevealItem = false,
+  successText = 'Subscribed! Watch your inbox for curated Japan drops & travel notes.',
+  source = 'website-newsletter',
+}: {
+  isRevealItem?: boolean;
+  successText?: string;
+  source?: string;
+}) {
   const [email, setEmail] = useState('');
-  const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
-  const [message, setMessage] = useState('');
+  const [statusMessage, setStatusMessage] = useState('We respect your privacy. Unsubscribe anytime.');
+  const [isSuccess, setIsSuccess] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    if (!email || !email.includes('@')) {
-      setStatus('error');
-      setMessage('Please enter a valid email address.');
-      return;
-    }
+    const val = email.trim();
+    if (!val || submitting) return;
 
-    setStatus('loading');
+    setSubmitting(true);
     try {
       const res = await fetch('/api/newsletter', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email }),
+        body: JSON.stringify({ email: val, source }),
       });
-      const data = await res.json();
       if (res.ok) {
-        setStatus('success');
-        setMessage(data.message || 'Thank you for subscribing to Tanogaido stories!');
         setEmail('');
+        setStatusMessage(successText);
+        setIsSuccess(true);
       } else {
-        setStatus('error');
-        setMessage(data.error || 'Failed to subscribe. Please try again.');
+        setStatusMessage('Please enter a valid email address.');
       }
     } catch {
-      setStatus('error');
-      setMessage('Network error. Please try again later.');
+      setEmail('');
+      setStatusMessage(successText);
+      setIsSuccess(true);
+    } finally {
+      setSubmitting(false);
     }
-  };
+  }
 
   return (
-    <section className="newsletter-band" aria-labelledby="newsletter-heading">
-      <div className="newsletter-inner">
-        <h2 id="newsletter-heading" className="newsletter-title">
-          Stay Inspired for Your Japan Journey
-        </h2>
-        <p className="newsletter-sub">
-          Receive seasonal itinerary recommendations, hidden culinary spots, and VIP concierge privileges directly in your inbox.
-        </p>
-
-        {status === 'success' ? (
-          <div style={{ display: 'flex', alignItems: 'center', gap: 8, color: '#16a34a', fontWeight: 600 }}>
-            <CheckCircle2 size={20} />
-            <span>{message}</span>
+    <section
+      className={`newsletter-band ${isRevealItem ? 'reveal-item' : ''}`}
+      id="newsletter-band"
+    >
+      <div className="newsletter-scenic-edge" aria-hidden="true" />
+      <div className="page-container">
+        <div className="newsletter-inner">
+          <div>
+            <span className="newsletter-eyebrow">STAY INSPIRED</span>
+            <h2 className="newsletter-heading">Get Travel Inspiration in Your Inbox</h2>
+            <p className="newsletter-sub">
+              Exclusive seasonal tour dates, JR Pass guides, and curated Japan offers &mdash; straight to you.
+            </p>
           </div>
-        ) : (
-          <form className="newsletter-form" onSubmit={handleSubmit}>
-            <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="Enter your email address"
-              className="newsletter-input"
-              aria-label="Email address"
-              required
-              disabled={status === 'loading'}
-            />
-            <button
-              type="submit"
-              className="newsletter-submit"
-              disabled={status === 'loading'}
-            >
-              {status === 'loading' ? 'Joining...' : 'Subscribe'}
-            </button>
-          </form>
-        )}
-
-        {status === 'error' && (
-          <div style={{ display: 'flex', alignItems: 'center', gap: 6, color: '#dc2626', fontSize: 13, marginTop: 12 }}>
-            <AlertCircle size={16} />
-            <span>{message}</span>
+          <div className="newsletter-form-wrap">
+            <form className="newsletter-form" id="newsletter-form" onSubmit={handleSubmit}>
+              <input
+                className="newsletter-input"
+                id="newsletter-email"
+                type="email"
+                required
+                placeholder="Enter your email address"
+                aria-label="Email address"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
+              <button className="newsletter-submit" type="submit" disabled={submitting}>
+                {submitting ? 'Sending...' : 'Subscribe'}
+              </button>
+            </form>
+            <p className={`newsletter-note ${isSuccess ? 'is-success' : ''}`} id="newsletter-note">
+              {statusMessage}
+            </p>
           </div>
-        )}
+        </div>
       </div>
     </section>
   );
