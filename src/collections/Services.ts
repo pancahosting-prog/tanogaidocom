@@ -52,6 +52,12 @@ export const Services: CollectionConfig = {
     { name: 'kicker', type: 'text', required: true },
     { name: 'shortDesc', type: 'textarea', required: true },
     { name: 'imagePath', type: 'text', required: true },
+    {
+      name: 'uploadedImage',
+      type: 'upload',
+      relationTo: 'media',
+      label: 'Upload Card Image (ImageKit Proxy)',
+    },
     { name: 'heroImagePath', type: 'text', required: true },
     { name: 'heroImageAlt', type: 'text', required: true },
     { name: 'detailImagePath', type: 'text', required: true },

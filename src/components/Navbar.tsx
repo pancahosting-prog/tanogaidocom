@@ -31,6 +31,9 @@ const easeInOutCubic = (t: number) =>
 const easeInOutQuart = (t: number) =>
   t < 0.5 ? 8 * t * t * t * t : 1 - Math.pow(-2 * t + 2, 4) / 2;
 
+const isNodeInside = (container: HTMLElement | null, target: EventTarget | null): boolean =>
+  Boolean(container && typeof Node !== 'undefined' && target instanceof Node && container.contains(target));
+
 export function Navbar({
   services,
   isHome = false,
@@ -91,10 +94,9 @@ export function Navbar({
       if (e.key === 'Escape') setIsServicesOpen(false);
     };
     const onOutsidePointer = (e: PointerEvent) => {
-      const target = e.target as Node | null;
       if (
-        dropdownItemRef.current?.contains(target) ||
-        drawerRef.current?.contains(target)
+        isNodeInside(dropdownItemRef.current, e.target) ||
+        isNodeInside(drawerRef.current, e.target)
       ) {
         return;
       }
@@ -308,7 +310,7 @@ export function Navbar({
                   if (!isTouchDevice) openDrawer();
                 }}
                 onMouseLeave={(e) => {
-                  if (!isTouchDevice && !drawerRef.current?.contains(e.relatedTarget as Node | null)) {
+                  if (!isTouchDevice && !isNodeInside(drawerRef.current, e.relatedTarget)) {
                     scheduleClose();
                   }
                 }}
@@ -522,7 +524,7 @@ export function Navbar({
           onMouseLeave={(e) => {
             if (
               !isTouchDevice &&
-              !dropdownItemRef.current?.contains(e.relatedTarget as Node | null)
+              !isNodeInside(dropdownItemRef.current, e.relatedTarget)
             ) {
               scheduleClose();
             }

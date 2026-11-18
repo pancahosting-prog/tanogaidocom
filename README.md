@@ -76,3 +76,19 @@ npm run dev
 npm run build
 npm run start
 ```
+
+---
+
+## Penyimpanan Media ImageKit + First-Party Proxy (`/media/...`)
+
+Seluruh file yang di-upload melalui `/admin` -> **Media** otomatis diunggah ke **ImageKit** dan disajikan melalui route proxy same-origin `/media/[...path]` agar URL media terlihat berasal langsung dari domain website.
+
+Tambahkan variabel berikut di `.env` (atau Vercel Environment Variables):
+
+```env
+IMAGEKIT_PUBLIC_KEY="public_xxxxxxxx"
+IMAGEKIT_PRIVATE_KEY="private_xxxxxxxx"
+IMAGEKIT_URL_ENDPOINT="https://ik.imagekit.io/id_anda"
+IMAGEKIT_FOLDER="tanogaido"
+```
+

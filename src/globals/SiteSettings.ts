@@ -45,7 +45,17 @@ export const SiteSettings: GlobalConfig = {
       name: 'heroVideoUrl',
       type: 'text',
       required: true,
-      defaultValue: 'https://res.cloudinary.com/dn4jqfz3s/video/upload/f_auto,q_auto/japan_3_y7b62u.mp4',
+      defaultValue: '/assets/hero-japan.mp4',
+    },
+    {
+      name: 'heroVideoMedia',
+      type: 'upload',
+      relationTo: 'media',
+      label: 'Hero Background Video (ImageKit Proxy Upload)',
+      admin: {
+        description:
+          'Opsional: Upload video MP4/WebM melalui Media (tersimpan di ImageKit, disajikan via /media/...). Jika kosong, memakai Hero Video URL.',
+      },
     },
   ],
 };

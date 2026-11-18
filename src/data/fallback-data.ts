@@ -53,8 +53,7 @@ export const FALLBACK_SITE_SETTINGS: SiteSettingsData = {
   heroTitleAccent: 'Across Japan.',
   heroDescription:
     "Curated private tours, seamless rail transport, and licensed bilingual guides for travelers who seek authentic Japan. From Kyoto's quiet shrines to Mount Fuji.",
-  heroVideoUrl:
-    'https://res.cloudinary.com/dn4jqfz3s/video/upload/f_auto,q_auto/japan_3_y7b62u.mp4',
+  heroVideoUrl: '/assets/hero-japan.mp4',
 };
 
 export const FALLBACK_SERVICES: ServiceItem[] = [

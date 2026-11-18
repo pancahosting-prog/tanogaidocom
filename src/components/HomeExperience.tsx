@@ -2,6 +2,7 @@
 
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import Link from 'next/link';
+import gsap from 'gsap';
 import type {
   ProductItem,
   ServiceItem,
@@ -130,6 +131,13 @@ export function HomeExperience({
   const [flippedSlug, setFlippedSlug] = useState<string | null>(null);
   const [savedCards, setSavedCards] = useState<Record<string, boolean>>({});
   const [activeReviewPage, setActiveReviewPage] = useState(0);
+  const [heroVideoSrc, setHeroVideoSrc] = useState(
+    () => siteSettings.heroVideoUrl || '/assets/hero-japan.mp4'
+  );
+
+  useEffect(() => {
+    setHeroVideoSrc(siteSettings.heroVideoUrl || '/assets/hero-japan.mp4');
+  }, [siteSettings.heroVideoUrl]);
 
   // Refs for curtain / scroll animation engine
   const heroVideoRef = useRef<HTMLVideoElement | null>(null);
@@ -199,7 +207,7 @@ export function HomeExperience({
     scrollToProgressRef.current(prog, href);
   }, []);
 
-  // Re-sync scroll budget after category change
+  // Re-sync scroll budget & cached geometry after category change
   useEffect(() => {
     const id = requestAnimationFrame(() => {
       syncBudgetRef.current();
@@ -219,12 +227,14 @@ export function HomeExperience({
     return () => document.removeEventListener('click', onDocClick);
   }, []);
 
-  // Core Curtain / Video / Logo Flight / Mobile Sticky Scroll Engine
+  // Core GSAP Curtain / Video / Logo Flight / Cached Scroll Engine
   useEffect(() => {
     document.body.classList.add('is-home-page');
     if ('scrollRestoration' in history) {
       history.scrollRestoration = 'manual';
     }
+
+    gsap.ticker.lagSmoothing(500, 33);
 
     const isReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     let mobileStylesApplied = false;
@@ -233,47 +243,74 @@ export function HomeExperience({
     let splashRaw = 0;
     let splashTarget = 0;
     let autoLockUntil = 0;
-    let scrollTween: {
-      startY: number;
-      targetY: number;
-      startTime: number;
-      duration: number;
-    } | null = null;
+
+    let activeScrollTween: gsap.core.Tween | null = null;
+    const scrollProxy = { y: 0 };
 
     let targetProgress = 0;
     let smoothedProgress = 0;
-    let lastTime = performance.now();
     let isCoverVideoActive = true;
     let logoTargetMetrics = { x: 100, y: 43 };
     let headerDotMetrics = { x: 145, y: 43 };
     let lastFramePathState = '';
-    let rafId = 0;
+    let needsRender = true;
+    let lastDrawnProg = -1;
+    let lastDrawnSplash = -1;
+    let resizeRaf = 0;
 
-    function getViewportSize() {
-      const svg = architecturalFrameSvgRef.current;
-      if (svg) {
-        const r = svg.getBoundingClientRect();
-        if (r.width > 0 && r.height > 0) {
-          return { w: Math.round(r.width), h: Math.round(r.height) };
-        }
-      }
-      return {
-        w: window.innerWidth || document.documentElement.clientWidth || 1280,
-        h: window.innerHeight || document.documentElement.clientHeight || 720,
-      };
+    // Cached layout metrics updated strictly on mount/resize/category-change (ZERO reflow inside tick)
+    const layoutCache = {
+      w: window.innerWidth || document.documentElement.clientWidth || 1280,
+      h: window.innerHeight || document.documentElement.clientHeight || 720,
+      maxScroll: 0,
+      trackHeight: 2000,
+      servicesBottomInTrack: 900,
+      catLiveCompactH: 40,
+      hdrLiveCompactH: 34,
+      catLiveFullH: 52,
+      hdrLiveFullH: 96,
+    };
+
+    interface RevealCacheEntry {
+      el: HTMLElement;
+      stagger: number;
+      topInTrack: number;
+      lastOpacity: number;
+      lastY: number;
     }
+    let revealCache: RevealCacheEntry[] = [];
 
-    function getMaxScroll() {
-      const doc = document.documentElement;
-      const body = document.body;
-      const { h } = getViewportSize();
-      const scrollHeight = Math.max(
-        doc.scrollHeight,
-        body.scrollHeight,
-        doc.offsetHeight,
-        body.offsetHeight
-      );
-      return Math.max(0, scrollHeight - h);
+    // Pre-bound GSAP quickSetters for compositor-only updates
+    const heroVideoEl = heroVideoRef.current;
+    const whiteScrollTrackEl = whiteScrollTrackRef.current;
+    const heroViewEl = heroViewRef.current;
+    const heroEyebrowEl = heroEyebrowRef.current;
+    const heroTitleEl = heroTitleRef.current;
+    const heroDescEl = heroDescRef.current;
+    const heroCtaEl = heroCtaRef.current;
+    const navCenterEl = navCenterZoneRef.current;
+    const navActionsEl = navActionsZoneRef.current;
+    const categoryBarEl = categoryBarBandRef.current;
+    const servicesHeaderEl = servicesHeaderRef.current;
+
+    if (whiteScrollTrackEl) gsap.set(whiteScrollTrackEl, { force3D: true });
+    if (heroViewEl) gsap.set(heroViewEl, { force3D: true });
+    if (heroVideoEl) gsap.set(heroVideoEl, { force3D: true, scale: 1.06 });
+
+    const setTrackY = whiteScrollTrackEl ? gsap.quickSetter(whiteScrollTrackEl, 'y', 'px') : null;
+    const setHeroY = heroViewEl ? gsap.quickSetter(heroViewEl, 'y', 'px') : null;
+    const setHeroVideoY = heroVideoEl ? gsap.quickSetter(heroVideoEl, 'y', 'px') : null;
+    const setNavCenterY = navCenterEl ? gsap.quickSetter(navCenterEl, 'y', 'px') : null;
+    const setNavActionsY = navActionsEl ? gsap.quickSetter(navActionsEl, 'y', 'px') : null;
+    const setEyebrowY = heroEyebrowEl ? gsap.quickSetter(heroEyebrowEl, 'y', 'px') : null;
+    const setTitleY = heroTitleEl ? gsap.quickSetter(heroTitleEl, 'y', 'px') : null;
+    const setDescY = heroDescEl ? gsap.quickSetter(heroDescEl, 'y', 'px') : null;
+    const setCtaY = heroCtaEl ? gsap.quickSetter(heroCtaEl, 'y', 'px') : null;
+    const setCatY = categoryBarEl ? gsap.quickSetter(categoryBarEl, 'y', 'px') : null;
+    const setHdrY = servicesHeaderEl ? gsap.quickSetter(servicesHeaderEl, 'y', 'px') : null;
+
+    function wakeEngine() {
+      needsRender = true;
     }
 
     function ensureHeroVideoPlayback() {
@@ -297,8 +334,8 @@ export function HomeExperience({
 
       const whiteScrollTrack = whiteScrollTrackRef.current;
       const categoryBarBand = categoryBarBandRef.current;
-      const servicesHeaderEl = servicesHeaderRef.current;
-      const servicesSubtitleEl = servicesHeaderEl?.querySelector('.section-subtitle') as HTMLElement | null;
+      const hdrEl = servicesHeaderRef.current;
+      const servicesSubtitleEl = hdrEl?.querySelector('.section-subtitle') as HTMLElement | null;
 
       if (whiteScrollTrack) {
         whiteScrollTrack.style.paddingTop = '';
@@ -314,15 +351,15 @@ export function HomeExperience({
         categoryBarBand.style.transform = '';
         categoryBarBand.style.opacity = '';
       }
-      if (servicesHeaderEl) {
-        servicesHeaderEl.classList.remove('is-mobile-compact');
-        servicesHeaderEl.style.position = '';
-        servicesHeaderEl.style.top = '';
-        servicesHeaderEl.style.left = '';
-        servicesHeaderEl.style.width = '';
-        servicesHeaderEl.style.zIndex = '';
-        servicesHeaderEl.style.transform = '';
-        servicesHeaderEl.style.opacity = '';
+      if (hdrEl) {
+        hdrEl.classList.remove('is-mobile-compact');
+        hdrEl.style.position = '';
+        hdrEl.style.top = '';
+        hdrEl.style.left = '';
+        hdrEl.style.width = '';
+        hdrEl.style.zIndex = '';
+        hdrEl.style.transform = '';
+        hdrEl.style.opacity = '';
       }
       if (servicesSubtitleEl) {
         servicesSubtitleEl.style.opacity = '';
@@ -353,19 +390,181 @@ export function HomeExperience({
       }
     }
 
-    function startScrollTween(targetY: number, durationMs: number) {
-      const startY = window.pageYOffset || document.documentElement.scrollTop || 0;
-      if (durationMs <= 0 || isReducedMotion) {
-        window.scrollTo(0, targetY);
-        scrollTween = null;
+    function rebuildRevealCache() {
+      const whiteScrollTrack = whiteScrollTrackRef.current;
+      if (!whiteScrollTrack) {
+        revealCache = [];
         return;
       }
-      scrollTween = {
-        startY,
-        targetY,
-        startTime: performance.now(),
-        duration: durationMs,
-      };
+      const nodes = whiteScrollTrack.querySelectorAll('.reveal-item');
+      const entries: RevealCacheEntry[] = [];
+      for (let i = 0; i < nodes.length; i++) {
+        const el = nodes[i] as HTMLElement;
+        if (el.classList.contains('is-hidden-cat')) continue;
+        const stagger = parseFloat(el.getAttribute('data-stagger') || '0');
+        let itemTop = 0;
+        let cur: HTMLElement | null = el;
+        while (cur && cur !== whiteScrollTrack) {
+          itemTop += cur.offsetTop || 0;
+          cur = cur.offsetParent as HTMLElement | null;
+        }
+        gsap.set(el, { force3D: true });
+        entries.push({
+          el,
+          stagger,
+          topInTrack: itemTop,
+          lastOpacity: -1,
+          lastY: -999,
+        });
+      }
+      revealCache = entries;
+    }
+
+    function syncScrollBudget() {
+      const whiteScrollTrack = whiteScrollTrackRef.current;
+      const categoryBarBand = categoryBarBandRef.current;
+      const hdrEl = servicesHeaderRef.current;
+      const postServicesWrap = postServicesWrapRef.current;
+      if (!whiteScrollTrack) return;
+
+      const svg = architecturalFrameSvgRef.current;
+      let w = window.innerWidth || document.documentElement.clientWidth || 1280;
+      let h = window.innerHeight || document.documentElement.clientHeight || 720;
+      if (svg) {
+        const r = svg.getBoundingClientRect();
+        if (r.width > 0 && r.height > 0) {
+          w = Math.round(r.width);
+          h = Math.round(r.height);
+        }
+      }
+      layoutCache.w = w;
+      layoutCache.h = h;
+
+      const isMobile = w <= 860;
+      const mm = mobileMetricsRef.current;
+
+      if (!isMobile) {
+        clearMobileInlineStyles();
+        const headerSafeTop = 72;
+        const trackHeight = whiteScrollTrack.offsetHeight || h;
+        const maxTrackTravel = Math.max(0, headerSafeTop + trackHeight - h);
+        const trackScrollSpan = 0.75;
+        const scrollBudget = Math.max(Math.round(h * 1.6), Math.round(maxTrackTravel / trackScrollSpan));
+        document.body.style.minHeight = '0px';
+        document.body.style.height = `${h + scrollBudget}px`;
+        layoutCache.trackHeight = trackHeight;
+      } else {
+        const headerSafeTop = 60;
+        const servicesSubtitleEl = hdrEl?.querySelector('.section-subtitle') as HTMLElement | null;
+        if (categoryBarBand && hdrEl) {
+          const prevCatCompact = categoryBarBand.classList.contains('is-mobile-compact');
+          const prevHdrCompact = hdrEl.classList.contains('is-mobile-compact');
+          const prevSubMax = servicesSubtitleEl ? servicesSubtitleEl.style.maxHeight : '';
+          const prevSubMargin = servicesSubtitleEl ? servicesSubtitleEl.style.marginTop : '';
+
+          categoryBarBand.classList.remove('is-mobile-compact');
+          hdrEl.classList.remove('is-mobile-compact');
+          if (servicesSubtitleEl) {
+            servicesSubtitleEl.style.maxHeight = '60px';
+            servicesSubtitleEl.style.marginTop = '4px';
+          }
+          mm.catFullH = categoryBarBand.offsetHeight || 52;
+          mm.hdrFullH = hdrEl.offsetHeight || 96;
+
+          categoryBarBand.classList.add('is-mobile-compact');
+          hdrEl.classList.add('is-mobile-compact');
+          if (servicesSubtitleEl) {
+            servicesSubtitleEl.style.maxHeight = '0px';
+            servicesSubtitleEl.style.marginTop = '0px';
+          }
+          mm.catCompactH = categoryBarBand.offsetHeight || 40;
+          mm.hdrCompactH = hdrEl.offsetHeight || 34;
+
+          categoryBarBand.classList.toggle('is-mobile-compact', prevCatCompact);
+          hdrEl.classList.toggle('is-mobile-compact', prevHdrCompact);
+          if (servicesSubtitleEl) {
+            servicesSubtitleEl.style.maxHeight = prevSubMax;
+            servicesSubtitleEl.style.marginTop = prevSubMargin;
+          }
+        }
+
+        layoutCache.catLiveFullH = mm.catFullH;
+        layoutCache.hdrLiveFullH = mm.hdrFullH;
+        layoutCache.catLiveCompactH = mm.catCompactH;
+        layoutCache.hdrLiveCompactH = mm.hdrCompactH;
+
+        mm.riseEnd = 0.2;
+        mm.headerEnd = 0.255;
+        mm.reserveH = mm.catFullH + mm.hdrFullH;
+        whiteScrollTrack.style.paddingTop = `${mm.reserveH}px`;
+
+        const trackHeight = whiteScrollTrack.offsetHeight || h;
+        const maxTrackTravel = Math.max(0, headerSafeTop + trackHeight - h);
+        const trackScrollSpan = 1 - mm.riseEnd;
+        const scrollBudget = Math.max(Math.round(h * 1.8), Math.round(maxTrackTravel / trackScrollSpan));
+
+        document.body.style.minHeight = '0px';
+        document.body.style.height = `${h + scrollBudget}px`;
+        layoutCache.trackHeight = trackHeight;
+      }
+
+      layoutCache.servicesBottomInTrack = postServicesWrap
+        ? postServicesWrap.offsetTop
+        : layoutCache.trackHeight;
+
+      const doc = document.documentElement;
+      const body = document.body;
+      const scrollHeight = Math.max(
+        doc.scrollHeight,
+        body.scrollHeight,
+        doc.offsetHeight,
+        body.offsetHeight
+      );
+      layoutCache.maxScroll = Math.max(0, scrollHeight - h);
+
+      rebuildRevealCache();
+      lastDrawnProg = -1;
+      wakeEngine();
+    }
+
+    syncBudgetRef.current = syncScrollBudget;
+
+    function getScrollProgress() {
+      const maxScroll = layoutCache.maxScroll;
+      if (maxScroll <= 0) return 0;
+      const scrollTop =
+        window.pageYOffset !== undefined
+          ? window.pageYOffset
+          : document.documentElement.scrollTop || document.body.scrollTop || 0;
+      return clamp(scrollTop / maxScroll, 0, 1);
+    }
+
+    function startScrollTween(targetY: number, durationSec: number) {
+      const startY = window.pageYOffset || document.documentElement.scrollTop || 0;
+      activeScrollTween?.kill();
+      if (durationSec <= 0 || isReducedMotion) {
+        window.scrollTo(0, targetY);
+        activeScrollTween = null;
+        targetProgress = getScrollProgress();
+        wakeEngine();
+        return;
+      }
+      scrollProxy.y = startY;
+      activeScrollTween = gsap.to(scrollProxy, {
+        y: targetY,
+        duration: durationSec,
+        ease: 'power3.inOut',
+        onUpdate: () => {
+          window.scrollTo(0, scrollProxy.y);
+          targetProgress = getScrollProgress();
+          wakeEngine();
+        },
+        onComplete: () => {
+          activeScrollTween = null;
+          targetProgress = getScrollProgress();
+          wakeEngine();
+        },
+      });
     }
 
     function openSplash(options: { settleAtTop?: boolean } = {}) {
@@ -376,6 +575,7 @@ export function HomeExperience({
       splashTarget = 1;
       splashState = 'opening';
       autoLockUntil = now + (settleAtTop ? 750 : 250);
+      wakeEngine();
 
       if (isReducedMotion) {
         splashRaw = 1;
@@ -383,18 +583,16 @@ export function HomeExperience({
       }
 
       if (settleAtTop) {
-        startScrollTween(0, 520);
+        startScrollTween(0, 0.55);
       }
     }
 
     function scrollToProgress(targetProg: number, href = '') {
-      const { w, h } = getViewportSize();
-      const whiteScrollTrack = whiteScrollTrackRef.current;
+      const { w, h, trackHeight, maxScroll } = layoutCache;
       const mm = mobileMetricsRef.current;
       let resolvedProg = targetProg;
 
-      if (w <= 860 && whiteScrollTrack && href) {
-        const trackHeight = whiteScrollTrack.offsetHeight || h;
+      if (w <= 860 && whiteScrollTrackRef.current && href) {
         const maxTrackTravel = Math.max(1, 60 + trackHeight - h);
         const targetEl =
           href === '#styles'
@@ -420,30 +618,15 @@ export function HomeExperience({
         }
       }
 
-      const maxScroll = getMaxScroll();
       if (maxScroll <= 0) return;
 
       if (splashState === 'closed') {
         openSplash({ settleAtTop: false });
       }
-      scrollTween = null;
-      window.scrollTo({
-        top: resolvedProg * maxScroll,
-        behavior: isReducedMotion ? 'auto' : 'smooth',
-      });
+      startScrollTween(resolvedProg * maxScroll, isReducedMotion ? 0 : 0.78);
     }
 
     scrollToProgressRef.current = scrollToProgress;
-
-    function getScrollProgress() {
-      const doc = document.documentElement;
-      const body = document.body;
-      const scrollTop =
-        window.pageYOffset !== undefined ? window.pageYOffset : doc.scrollTop || body.scrollTop || 0;
-      const maxScroll = getMaxScroll();
-      if (maxScroll <= 0) return 0;
-      return clamp(scrollTop / maxScroll, 0, 1);
-    }
 
     function buildUnifiedFramePath(
       w: number,
@@ -585,7 +768,7 @@ export function HomeExperience({
     }
 
     function updateUIProgress(progress: number, sRaw: number) {
-      const { w, h } = getViewportSize();
+      const { w, h, trackHeight, servicesBottomInTrack, catLiveCompactH, hdrLiveCompactH, catLiveFullH, hdrLiveFullH } = layoutCache;
       const isMobile = w <= 860;
       const pad = isMobile ? 8 : 14;
       const mm = mobileMetricsRef.current;
@@ -602,7 +785,9 @@ export function HomeExperience({
       const architecturalFrameSvg = architecturalFrameSvgRef.current;
       const architecturalFramePath = architecturalFramePathRef.current;
       if (architecturalFrameSvg && architecturalFramePath) {
-        const stateKey = `${w}x${h}:${tWindow >= 1 ? 1 : tWindow.toFixed(4)}:${tCurtainRise.toFixed(4)}:${Math.round(
+        const clampedTWindow = tWindow <= 0.002 ? 0 : tWindow >= 0.999 ? 1 : Number(tWindow.toFixed(4));
+        const clampedTRise = tCurtainRise <= 0.001 ? 0 : tCurtainRise >= 0.999 ? 1 : Number(tCurtainRise.toFixed(4));
+        const stateKey = `${w}x${h}:${clampedTWindow}:${clampedTRise}:${Math.round(
           headerDotMetrics.x
         )},${Math.round(headerDotMetrics.y)}`;
         if (stateKey !== lastFramePathState) {
@@ -624,19 +809,16 @@ export function HomeExperience({
       }
 
       const risePx = Math.max(0, h - pad - currentBottomY);
-
       const coverActive = tCurtainRise < 0.995;
-      const heroVideo = heroVideoRef.current;
-      if (heroVideo) {
+
+      if (heroVideoEl) {
         isCoverVideoActive = coverActive;
-        heroVideo.style.display = coverActive ? 'block' : 'none';
-        heroVideo.style.transform = coverActive
-          ? `translate3d(0, ${(-risePx * 0.08).toFixed(1)}px, 0) scale(1.06)`
-          : 'none';
+        heroVideoEl.style.display = coverActive ? 'block' : 'none';
         if (coverActive) {
-          if (heroVideo.paused) ensureHeroVideoPlayback();
-        } else if (!heroVideo.paused) {
-          heroVideo.pause();
+          setHeroVideoY?.(Number((-risePx * 0.08).toFixed(1)));
+          if (heroVideoEl.paused) ensureHeroVideoPlayback();
+        } else if (!heroVideoEl.paused) {
+          heroVideoEl.pause();
         }
       }
       if (viewportOverlayRef.current) {
@@ -667,24 +849,20 @@ export function HomeExperience({
       }
 
       const navReveal = easeOutCubic(clamp((tWindow - 0.52) / 0.48, 0, 1));
-      if (navCenterZoneRef.current) {
-        navCenterZoneRef.current.style.opacity = String(navReveal);
-        navCenterZoneRef.current.style.transform = `translateY(${((1 - navReveal) * -10).toFixed(2)}px)`;
-        navCenterZoneRef.current.style.pointerEvents = navReveal > 0.7 ? 'auto' : 'none';
+      const navYOffset = Number(((1 - navReveal) * -10).toFixed(2));
+      if (navCenterEl) {
+        navCenterEl.style.opacity = String(navReveal);
+        setNavCenterY?.(navYOffset);
+        navCenterEl.style.pointerEvents = navReveal > 0.7 ? 'auto' : 'none';
       }
-      if (navActionsZoneRef.current) {
-        navActionsZoneRef.current.style.opacity = String(navReveal);
-        navActionsZoneRef.current.style.transform = `translateY(${((1 - navReveal) * -10).toFixed(2)}px)`;
-        navActionsZoneRef.current.style.pointerEvents = navReveal > 0.7 ? 'auto' : 'none';
-      }
-
-      if (navbarContainerRef.current) {
-        navbarContainerRef.current.classList.toggle('unified', tCurtainRise >= 0.96);
+      if (navActionsEl) {
+        navActionsEl.style.opacity = String(navReveal);
+        setNavActionsY?.(navYOffset);
+        navActionsEl.style.pointerEvents = navReveal > 0.7 ? 'auto' : 'none';
       }
 
-      if (navbarRef.current) {
-        navbarRef.current.classList.toggle('scrolled', progress > 0.035 && sRaw > 0.9);
-      }
+      navbarContainerRef.current?.classList.toggle('unified', tCurtainRise >= 0.96);
+      navbarRef.current?.classList.toggle('scrolled', progress > 0.035 && sRaw > 0.9);
 
       const getHeroEnterProgress = (val: number, start: number, end: number) =>
         easeOutCubic(clamp((val - start) / (end - start), 0, 1));
@@ -695,33 +873,34 @@ export function HomeExperience({
       const enterCta = getHeroEnterProgress(tWindow, 0.58, 0.98);
       const coverFadeOut = clamp(1 - Math.max(0, tCurtainRise - 0.14) / 0.44, 0, 1);
 
-      if (heroViewRef.current) {
+      if (heroViewEl) {
         const showCover = coverActive && tWindow >= 0.25 && coverFadeOut > 0.005;
-        heroViewRef.current.style.display = showCover ? 'flex' : 'none';
-        heroViewRef.current.style.transform = `translate3d(0, ${(-risePx * 0.24).toFixed(1)}px, 0)`;
-        heroViewRef.current.style.pointerEvents = enterCta * coverFadeOut > 0.25 ? 'auto' : 'none';
+        heroViewEl.style.display = showCover ? 'flex' : 'none';
+        if (showCover) {
+          setHeroY?.(Number((-risePx * 0.24).toFixed(1)));
+        }
+        heroViewEl.style.pointerEvents = enterCta * coverFadeOut > 0.25 ? 'auto' : 'none';
       }
 
-      if (heroEyebrowRef.current) {
-        heroEyebrowRef.current.style.opacity = String(enterEyebrow * coverFadeOut);
-        heroEyebrowRef.current.style.transform = `translateY(${((1 - enterEyebrow) * 16).toFixed(1)}px)`;
-      }
-
-      if (heroTitleRef.current) {
-        heroTitleRef.current.style.opacity = String(enterTitle * coverFadeOut);
-        heroTitleRef.current.style.transform = `translateY(${((1 - enterTitle) * 20).toFixed(1)}px)`;
-      }
-
-      if (heroDescRef.current) {
-        heroDescRef.current.style.opacity = String(enterDesc * coverFadeOut);
-        heroDescRef.current.style.transform = `translateY(${((1 - enterDesc) * 20).toFixed(1)}px)`;
-      }
-
-      if (heroCtaRef.current) {
-        const ctaOp = enterCta * coverFadeOut;
-        heroCtaRef.current.style.opacity = String(ctaOp);
-        heroCtaRef.current.style.transform = `translateY(${((1 - enterCta) * 20).toFixed(1)}px)`;
-        heroCtaRef.current.style.pointerEvents = ctaOp > 0.35 ? 'auto' : 'none';
+      if (coverActive && tWindow >= 0.25) {
+        if (heroEyebrowEl) {
+          heroEyebrowEl.style.opacity = String(enterEyebrow * coverFadeOut);
+          setEyebrowY?.(Number(((1 - enterEyebrow) * 16).toFixed(1)));
+        }
+        if (heroTitleEl) {
+          heroTitleEl.style.opacity = String(enterTitle * coverFadeOut);
+          setTitleY?.(Number(((1 - enterTitle) * 20).toFixed(1)));
+        }
+        if (heroDescEl) {
+          heroDescEl.style.opacity = String(enterDesc * coverFadeOut);
+          setDescY?.(Number(((1 - enterDesc) * 20).toFixed(1)));
+        }
+        if (heroCtaEl) {
+          const ctaOp = enterCta * coverFadeOut;
+          heroCtaEl.style.opacity = String(ctaOp);
+          setCtaY?.(Number(((1 - enterCta) * 20).toFixed(1)));
+          heroCtaEl.style.pointerEvents = ctaOp > 0.35 ? 'auto' : 'none';
+        }
       }
 
       const whiteContentStage = whiteContentStageRef.current;
@@ -741,28 +920,20 @@ export function HomeExperience({
         }
       }
 
-      const whiteScrollTrack = whiteScrollTrackRef.current;
-      const categoryBarBand = categoryBarBandRef.current;
-      const servicesHeaderEl = servicesHeaderRef.current;
-      const postServicesWrap = postServicesWrapRef.current;
-      const servicesSubtitleEl = servicesHeaderEl?.querySelector('.section-subtitle') as HTMLElement | null;
-
-      if (whiteScrollTrack) {
+      if (whiteScrollTrackEl) {
         const enterGlobal = easeOutCubic(clamp(tCurtainRise / 0.22, 0, 1));
         const revealSpan = Math.max(100, Math.min(180, h * 0.22));
         const headerSafeTop = isMobile ? 60 : 72;
 
         if (!isMobile) {
           clearMobileInlineStyles();
-        } else {
+        } else if (!mobileStylesApplied) {
           mobileStylesApplied = true;
-          whiteScrollTrack.style.paddingTop = `${mm.reserveH}px`;
-          whiteScrollTrack.style.background = '#ffffff';
+          whiteScrollTrackEl.style.paddingTop = `${mm.reserveH}px`;
+          whiteScrollTrackEl.style.background = '#ffffff';
         }
 
-        const trackHeight = whiteScrollTrack.offsetHeight || h;
         const maxTrackTravel = Math.max(0, headerSafeTop + trackHeight - h);
-
         let trackY = headerSafeTop;
         if (progress < HERO_RISE_END) {
           trackY = Math.max(headerSafeTop, currentBottomY);
@@ -771,7 +942,7 @@ export function HomeExperience({
           trackY = headerSafeTop - tTrackScroll * maxTrackTravel;
         }
 
-        whiteScrollTrack.style.transform = `translate3d(0, ${trackY.toFixed(1)}px, 0)`;
+        setTrackY?.(Number(trackY.toFixed(1)));
 
         if (isMobile) {
           const riseEnd = mm.riseEnd;
@@ -785,23 +956,19 @@ export function HomeExperience({
           const isPinned = currentBottomY <= headerSafeTop + 2 || progress >= riseEnd;
           const isCompact = tCompact >= 0.22;
 
-          categoryBarBand?.classList.toggle('is-mobile-compact', isCompact);
+          categoryBarEl?.classList.toggle('is-mobile-compact', isCompact);
           servicesHeaderEl?.classList.toggle('is-mobile-compact', isCompact);
 
+          const servicesSubtitleEl = servicesHeaderEl?.querySelector('.section-subtitle') as HTMLElement | null;
           if (servicesSubtitleEl) {
             servicesSubtitleEl.style.opacity = String(1 - tSubFade);
             servicesSubtitleEl.style.maxHeight = `${(60 * (1 - tSubFade)).toFixed(1)}px`;
             servicesSubtitleEl.style.marginTop = `${(4 * (1 - tSubFade)).toFixed(1)}px`;
           }
 
-          const catLiveH = categoryBarBand
-            ? categoryBarBand.offsetHeight || (isCompact ? mm.catCompactH : mm.catFullH)
-            : mm.catCompactH;
-          const hdrLiveH = servicesHeaderEl
-            ? servicesHeaderEl.offsetHeight || (isCompact ? mm.hdrCompactH : mm.hdrFullH)
-            : mm.hdrCompactH;
+          const catLiveH = isCompact ? catLiveCompactH : catLiveFullH;
+          const hdrLiveH = isCompact ? hdrLiveCompactH : hdrLiveFullH;
 
-          const servicesBottomInTrack = postServicesWrap ? postServicesWrap.offsetTop : trackHeight;
           const servicesBottomScreenY = servicesBottomInTrack + trackY;
           const pinnedBlockH = catLiveH + hdrLiveH;
           const releaseShiftY = Math.max(0, headerSafeTop + pinnedBlockH - servicesBottomScreenY);
@@ -812,15 +979,15 @@ export function HomeExperience({
           const localCatY = desiredCatY - trackY;
           const localHdrY = desiredHdrY - trackY;
 
-          if (categoryBarBand) {
-            categoryBarBand.classList.toggle('is-mobile-pinned', isPinned && releaseShiftY < 2);
-            categoryBarBand.style.position = 'absolute';
-            categoryBarBand.style.top = '0px';
-            categoryBarBand.style.left = '0px';
-            categoryBarBand.style.width = '100%';
-            categoryBarBand.style.zIndex = '65';
-            categoryBarBand.style.opacity = String(enterGlobal);
-            categoryBarBand.style.transform = `translate3d(0, ${localCatY.toFixed(1)}px, 0)`;
+          if (categoryBarEl) {
+            categoryBarEl.classList.toggle('is-mobile-pinned', isPinned && releaseShiftY < 2);
+            categoryBarEl.style.position = 'absolute';
+            categoryBarEl.style.top = '0px';
+            categoryBarEl.style.left = '0px';
+            categoryBarEl.style.width = '100%';
+            categoryBarEl.style.zIndex = '65';
+            categoryBarEl.style.opacity = String(enterGlobal);
+            setCatY?.(Number(localCatY.toFixed(1)));
           }
 
           if (servicesHeaderEl) {
@@ -830,30 +997,30 @@ export function HomeExperience({
             servicesHeaderEl.style.width = '100%';
             servicesHeaderEl.style.zIndex = '62';
             servicesHeaderEl.style.opacity = String(enterGlobal);
-            servicesHeaderEl.style.transform = `translate3d(0, ${localHdrY.toFixed(1)}px, 0)`;
+            setHdrY?.(Number(localHdrY.toFixed(1)));
           }
         }
 
-        const revealItems = whiteScrollTrack.querySelectorAll('.reveal-item');
-        for (let i = 0; i < revealItems.length; i++) {
-          const item = revealItems[i] as HTMLElement;
-          if (isMobile && item === servicesHeaderEl) continue;
-          if (item.classList.contains('is-hidden-cat')) continue;
-          const stagger = parseFloat(item.getAttribute('data-stagger') || '0');
-          let itemTop = 0;
-          let cur: HTMLElement | null = item;
-          while (cur && cur !== whiteScrollTrack) {
-            itemTop += cur.offsetTop || 0;
-            cur = cur.offsetParent as HTMLElement | null;
-          }
-          const screenTop = itemTop + trackY;
-          const rawReveal = clamp((h * 0.98 - screenTop) / revealSpan, 0, 1);
-          const staggerShift = stagger * 0.04;
-          const staggeredReveal = clamp((rawReveal - staggerShift) / (1 - staggerShift), 0, 1);
-          const easedReveal = easeOutCubic(staggeredReveal) * enterGlobal;
+        // Pure arithmetic loop over pre-cached reveal elements (ZERO DOM reflow)
+        if (tCurtainRise > 0.001) {
+          for (let i = 0; i < revealCache.length; i++) {
+            const entry = revealCache[i];
+            if (isMobile && entry.el === servicesHeaderEl) continue;
 
-          item.style.opacity = String(easedReveal);
-          item.style.transform = `translate3d(0, ${((1 - easedReveal) * 18).toFixed(1)}px, 0)`;
+            const screenTop = entry.topInTrack + trackY;
+            const rawReveal = clamp((h * 0.98 - screenTop) / revealSpan, 0, 1);
+            const staggerShift = entry.stagger * 0.04;
+            const staggeredReveal = clamp((rawReveal - staggerShift) / (1 - staggerShift), 0, 1);
+            const easedReveal = Number((easeOutCubic(staggeredReveal) * enterGlobal).toFixed(3));
+            const yShift = Number(((1 - easedReveal) * 18).toFixed(1));
+
+            if (entry.lastOpacity !== easedReveal || entry.lastY !== yShift) {
+              entry.lastOpacity = easedReveal;
+              entry.lastY = yShift;
+              entry.el.style.opacity = String(easedReveal);
+              entry.el.style.transform = `translate3d(0, ${yShift}px, 0)`;
+            }
+          }
         }
       }
 
@@ -864,87 +1031,15 @@ export function HomeExperience({
       }
     }
 
-    function syncScrollBudget() {
-      const whiteScrollTrack = whiteScrollTrackRef.current;
-      const categoryBarBand = categoryBarBandRef.current;
-      const servicesHeaderEl = servicesHeaderRef.current;
-      if (!whiteScrollTrack) return;
-
-      const { h } = getViewportSize();
-      const { w } = getViewportSize();
-      const isMobile = w <= 860;
-      const mm = mobileMetricsRef.current;
-
-      if (!isMobile) {
-        clearMobileInlineStyles();
-        const headerSafeTop = 72;
-        const trackHeight = whiteScrollTrack.offsetHeight || h;
-        const maxTrackTravel = Math.max(0, headerSafeTop + trackHeight - h);
-        const trackScrollSpan = 0.75;
-        const scrollBudget = Math.max(Math.round(h * 1.6), Math.round(maxTrackTravel / trackScrollSpan));
-        document.body.style.minHeight = '0px';
-        document.body.style.height = `${h + scrollBudget}px`;
-        return;
-      }
-
-      const headerSafeTop = 60;
-      const servicesSubtitleEl = servicesHeaderEl?.querySelector('.section-subtitle') as HTMLElement | null;
-      if (categoryBarBand && servicesHeaderEl) {
-        const prevCatCompact = categoryBarBand.classList.contains('is-mobile-compact');
-        const prevHdrCompact = servicesHeaderEl.classList.contains('is-mobile-compact');
-        const prevSubMax = servicesSubtitleEl ? servicesSubtitleEl.style.maxHeight : '';
-        const prevSubMargin = servicesSubtitleEl ? servicesSubtitleEl.style.marginTop : '';
-
-        categoryBarBand.classList.remove('is-mobile-compact');
-        servicesHeaderEl.classList.remove('is-mobile-compact');
-        if (servicesSubtitleEl) {
-          servicesSubtitleEl.style.maxHeight = '60px';
-          servicesSubtitleEl.style.marginTop = '4px';
-        }
-        mm.catFullH = categoryBarBand.offsetHeight || 52;
-        mm.hdrFullH = servicesHeaderEl.offsetHeight || 96;
-
-        categoryBarBand.classList.add('is-mobile-compact');
-        servicesHeaderEl.classList.add('is-mobile-compact');
-        if (servicesSubtitleEl) {
-          servicesSubtitleEl.style.maxHeight = '0px';
-          servicesSubtitleEl.style.marginTop = '0px';
-        }
-        mm.catCompactH = categoryBarBand.offsetHeight || 40;
-        mm.hdrCompactH = servicesHeaderEl.offsetHeight || 34;
-
-        categoryBarBand.classList.toggle('is-mobile-compact', prevCatCompact);
-        servicesHeaderEl.classList.toggle('is-mobile-compact', prevHdrCompact);
-        if (servicesSubtitleEl) {
-          servicesSubtitleEl.style.maxHeight = prevSubMax;
-          servicesSubtitleEl.style.marginTop = prevSubMargin;
-        }
-      }
-
-      mm.riseEnd = 0.2;
-      mm.headerEnd = 0.255;
-      mm.reserveH = mm.catFullH + mm.hdrFullH;
-      whiteScrollTrack.style.paddingTop = `${mm.reserveH}px`;
-
-      const trackHeight = whiteScrollTrack.offsetHeight || h;
-      const maxTrackTravel = Math.max(0, headerSafeTop + trackHeight - h);
-      const trackScrollSpan = 1 - mm.riseEnd;
-      const scrollBudget = Math.max(Math.round(h * 1.8), Math.round(maxTrackTravel / trackScrollSpan));
-
-      document.body.style.minHeight = '0px';
-      document.body.style.height = `${h + scrollBudget}px`;
-    }
-
-    syncBudgetRef.current = syncScrollBudget;
-
     function handleScrollTrigger() {
       const now = performance.now();
-      const maxScroll = getMaxScroll();
-      const scrollTop = window.pageYOffset || document.documentElement.scrollTop || 0;
-      const prog = maxScroll > 0 ? clamp(scrollTop / maxScroll, 0, 1) : 0;
+      const scrollTop =
+        window.pageYOffset || document.documentElement.scrollTop || 0;
+      const prog = layoutCache.maxScroll > 0 ? clamp(scrollTop / layoutCache.maxScroll, 0, 1) : 0;
 
-      if (scrollTween) {
+      if (activeScrollTween) {
         targetProgress = prog;
+        wakeEngine();
         return;
       }
       if (now < autoLockUntil) return;
@@ -952,18 +1047,28 @@ export function HomeExperience({
         openSplash({ settleAtTop: true });
       }
       targetProgress = prog;
+      wakeEngine();
     }
 
     const onWheel = (e: WheelEvent) => {
       ensureHeroVideoPlayback();
+      if (activeScrollTween) {
+        activeScrollTween.kill();
+        activeScrollTween = null;
+      }
       if (splashState === 'closed' && e.deltaY > 4) {
         openSplash({ settleAtTop: true });
       }
+      wakeEngine();
     };
 
     let touchStartY: number | null = null;
     const onTouchStart = (e: TouchEvent) => {
       ensureHeroVideoPlayback();
+      if (activeScrollTween) {
+        activeScrollTween.kill();
+        activeScrollTween = null;
+      }
       if (splashState === 'closed' && e.touches?.length === 1) {
         touchStartY = e.touches[0].clientY;
       }
@@ -975,6 +1080,7 @@ export function HomeExperience({
         touchStartY = null;
         openSplash({ settleAtTop: true });
       }
+      wakeEngine();
     };
     const onTouchEnd = () => {
       touchStartY = null;
@@ -987,35 +1093,35 @@ export function HomeExperience({
         openSplash({ settleAtTop: true });
         return;
       }
-      const step = getViewportSize().h * 0.4;
+      const step = layoutCache.h * 0.42;
+      const curY = window.pageYOffset || document.documentElement.scrollTop || 0;
       if (e.key === 'ArrowDown' || e.key === 'PageDown' || e.key === ' ') {
-        window.scrollBy({ top: step, behavior: 'smooth' });
+        e.preventDefault();
+        startScrollTween(Math.min(layoutCache.maxScroll, curY + step), isReducedMotion ? 0 : 0.45);
       } else if (e.key === 'ArrowUp' || e.key === 'PageUp') {
-        window.scrollBy({ top: -step, behavior: 'smooth' });
+        e.preventDefault();
+        startScrollTween(Math.max(0, curY - step), isReducedMotion ? 0 : 0.45);
       }
     };
 
     const onResize = () => {
-      syncScrollBudget();
-      measureLogoTarget();
-      lastFramePathState = '';
-      targetProgress = getScrollProgress();
-      updateUIProgress(smoothedProgress, splashRaw);
+      cancelAnimationFrame(resizeRaf);
+      resizeRaf = requestAnimationFrame(() => {
+        syncScrollBudget();
+        measureLogoTarget();
+        lastFramePathState = '';
+        targetProgress = getScrollProgress();
+        updateUIProgress(smoothedProgress, splashRaw);
+      });
     };
 
-    const animate = (now: number) => {
-      const dt = Math.min((now - lastTime) / 1000, 0.1);
-      lastTime = now;
+    const tick = (_time: number, deltaMs: number) => {
+      if (!needsRender && !activeScrollTween && splashRaw === splashTarget) {
+        return;
+      }
 
-      if (scrollTween) {
-        const elapsed = now - scrollTween.startTime;
-        const u = clamp(elapsed / scrollTween.duration, 0, 1);
-        const eased = easeInOutCubic(u);
-        const nextY = lerp(scrollTween.startY, scrollTween.targetY, eased);
-        window.scrollTo(0, nextY);
-        targetProgress = getScrollProgress();
-        if (u >= 1) scrollTween = null;
-      } else {
+      const dt = Math.min((deltaMs || 16.67) / 1000, 0.08);
+      if (!activeScrollTween) {
         targetProgress = getScrollProgress();
       }
 
@@ -1023,7 +1129,7 @@ export function HomeExperience({
         splashRaw = splashTarget;
         splashState = splashTarget === 1 ? 'open' : 'closed';
       } else if (splashRaw < splashTarget) {
-        splashRaw = Math.min(splashTarget, splashRaw + dt / 1.05);
+        splashRaw = Math.min(splashTarget, splashRaw + dt / 1.0);
         if (splashRaw >= 1) {
           splashRaw = 1;
           splashState = 'open';
@@ -1039,20 +1145,42 @@ export function HomeExperience({
       if (isReducedMotion) {
         smoothedProgress = targetProgress;
       } else {
-        const progressFactor = 1 - Math.exp(-10 * dt);
+        const progressFactor = 1 - Math.exp(-12 * dt);
         smoothedProgress += (targetProgress - smoothedProgress) * progressFactor;
-        if (Math.abs(targetProgress - smoothedProgress) < 0.0001) {
+        if (Math.abs(targetProgress - smoothedProgress) < 0.00008) {
           smoothedProgress = targetProgress;
         }
       }
 
-      updateUIProgress(smoothedProgress, splashRaw);
-      rafId = requestAnimationFrame(animate);
+      if (
+        lastDrawnProg !== smoothedProgress ||
+        lastDrawnSplash !== splashRaw
+      ) {
+        updateUIProgress(smoothedProgress, splashRaw);
+        lastDrawnProg = smoothedProgress;
+        lastDrawnSplash = splashRaw;
+      }
+
+      // Put ticker to sleep when motion settles
+      if (
+        splashRaw === splashTarget &&
+        Math.abs(targetProgress - smoothedProgress) < 0.00008 &&
+        !activeScrollTween
+      ) {
+        needsRender = false;
+      }
     };
 
-    const heroVideoEl = heroVideoRef.current;
     heroVideoEl?.addEventListener('canplay', ensureHeroVideoPlayback);
     heroVideoEl?.addEventListener('loadeddata', ensureHeroVideoPlayback);
+
+    const resizeObserver =
+      typeof ResizeObserver !== 'undefined' && whiteScrollTrackEl
+        ? new ResizeObserver(() => onResize())
+        : null;
+    if (resizeObserver && whiteScrollTrackEl) {
+      resizeObserver.observe(whiteScrollTrackEl);
+    }
 
     window.addEventListener('wheel', onWheel, { passive: true });
     window.addEventListener('touchstart', onTouchStart, { passive: true });
@@ -1086,14 +1214,13 @@ export function HomeExperience({
 
     const initialHash = window.location.hash;
     if (initialHash && HASH_PROGRESS[initialHash] !== undefined) {
-      const maxScroll = getMaxScroll();
       const prog = HASH_PROGRESS[initialHash];
       splashState = 'open';
       splashRaw = 1;
       splashTarget = 1;
       targetProgress = prog;
       smoothedProgress = prog;
-      window.scrollTo(0, prog * maxScroll);
+      window.scrollTo(0, prog * layoutCache.maxScroll);
     } else {
       window.scrollTo(0, 0);
       targetProgress = 0;
@@ -1110,10 +1237,13 @@ export function HomeExperience({
     }
 
     updateUIProgress(smoothedProgress, splashRaw);
-    rafId = requestAnimationFrame(animate);
+    gsap.ticker.add(tick);
 
     return () => {
-      cancelAnimationFrame(rafId);
+      gsap.ticker.remove(tick);
+      activeScrollTween?.kill();
+      cancelAnimationFrame(resizeRaf);
+      resizeObserver?.disconnect();
       document.body.classList.remove('is-home-page');
       document.body.style.height = '';
       document.body.style.minHeight = '';
@@ -1143,6 +1273,7 @@ export function HomeExperience({
       <video
         ref={heroVideoRef}
         id="hero-video"
+        src={heroVideoSrc}
         autoPlay
         muted
         loop
@@ -1150,9 +1281,12 @@ export function HomeExperience({
         preload="auto"
         poster="/assets/fuji-climb.jpg"
         aria-hidden="true"
-      >
-        <source src={siteSettings.heroVideoUrl} type="video/mp4" />
-      </video>
+        onError={() => {
+          if (heroVideoSrc !== '/assets/hero-japan.mp4') {
+            setHeroVideoSrc('/assets/hero-japan.mp4');
+          }
+        }}
+      />
       <div ref={viewportOverlayRef} className="viewport-overlay" />
 
       {/* Unified Architectural White Curtain & Animated Header Bezel SVG */}

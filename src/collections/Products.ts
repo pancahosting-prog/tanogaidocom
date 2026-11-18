@@ -45,6 +45,12 @@ export const Products: CollectionConfig = {
     { name: 'priceJpy', type: 'text', required: true },
     { name: 'imagePath', type: 'text', required: true },
     {
+      name: 'uploadedImage',
+      type: 'upload',
+      relationTo: 'media',
+      label: 'Upload Product Image (ImageKit Proxy)',
+    },
+    {
       name: 'gallery',
       type: 'array',
       fields: [

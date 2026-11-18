@@ -2,6 +2,7 @@
 
 import React, { useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
+import { ArrowRight, ArrowUpRight, Check, Search } from 'lucide-react';
 import type { ServiceItem } from '@/types/cms';
 import { SERVICE_CATEGORIES, getWhatsAppUrl } from '@/data/fallback-data';
 import { Navbar } from '@/components/Navbar';
@@ -71,7 +72,7 @@ export function ServicesCatalogClient({ services }: { services: ServiceItem[] })
         mobileCtaLabel="Free Consultation"
       />
 
-      <main className="catalog-main">
+      <main className="services-main">
         {/* Breadcrumb Bar */}
         <div className="breadcrumb-bar">
           <div className="page-container">
@@ -85,40 +86,50 @@ export function ServicesCatalogClient({ services }: { services: ServiceItem[] })
           </div>
         </div>
 
-        {/* Catalog Hero */}
-        <section className="catalog-hero-band">
+        {/* Editorial Hero Band */}
+        <section className="services-hero-band">
           <div className="page-container">
-            <div className="catalog-hero-banner">
+            <div className="services-hero-grid">
               <div>
                 <div className="eyebrow-row">
                   <span className="eyebrow">COMPLETE JAPAN &amp; VISA CONCIERGE</span>
                   <span className="eyebrow-line" aria-hidden="true" />
                 </div>
-                <h1 className="catalog-hero-title">
-                  20+ Specialized <span>Concierge Services</span>
+                <h1 className="services-hero-title">
+                  {services.length}+ Specialized <span>Concierge Services</span>
                 </h1>
-                <p className="catalog-hero-desc">
+                <p className="services-hero-desc">
                   Explore every travel, guiding, visa processing, rail pass, private vehicle charter, golf,
                   prewedding, property survey, and logistics solution crafted by PT. Tanogaido Fantasi
                   Pratama since 2007.
                 </p>
               </div>
-              <div className="catalog-count-badge">
-                <div className="catalog-count-num">{services.length} Core Services</div>
-                <div className="catalog-count-label">5 Service Divisions</div>
+              <div className="services-hero-stats">
+                <div className="hero-stat-box">
+                  <div className="hero-stat-val">{services.length}+</div>
+                  <div className="hero-stat-label">Specialized Japan &amp; Global Services</div>
+                </div>
+                <div className="hero-stat-box">
+                  <div className="hero-stat-val">5</div>
+                  <div className="hero-stat-label">Dedicated Concierge Divisions</div>
+                </div>
+                <div className="hero-stat-box">
+                  <div className="hero-stat-val">2007</div>
+                  <div className="hero-stat-label">Trusted Track Record</div>
+                </div>
               </div>
             </div>
           </div>
         </section>
 
-        {/* Filter & Search Bar */}
-        <section className="catalog-controls-band" aria-label="Filter Services">
+        {/* Sticky Filter & Search Toolbar */}
+        <section className="services-toolbar-band" aria-label="Filter Services">
           <div className="page-container">
-            <div className="catalog-controls-row">
-              <div className="catalog-tabs" role="tablist" aria-label="Service Categories">
+            <div className="services-toolbar-inner">
+              <div className="svc-filter-tabs" role="tablist" aria-label="Service Categories">
                 <button
                   type="button"
-                  className={`catalog-tab ${activeCat === 'all' ? 'active' : ''}`}
+                  className={`svc-filter-tab ${activeCat === 'all' ? 'active' : ''}`}
                   role="tab"
                   aria-selected={activeCat === 'all'}
                   onClick={() => setActiveCat('all')}
@@ -129,7 +140,7 @@ export function ServicesCatalogClient({ services }: { services: ServiceItem[] })
                   <button
                     key={c.id}
                     type="button"
-                    className={`catalog-tab ${activeCat === c.id ? 'active' : ''}`}
+                    className={`svc-filter-tab ${activeCat === c.id ? 'active' : ''}`}
                     role="tab"
                     aria-selected={activeCat === c.id}
                     onClick={() => setActiveCat(c.id)}
@@ -139,22 +150,19 @@ export function ServicesCatalogClient({ services }: { services: ServiceItem[] })
                 ))}
               </div>
 
-              <div className="catalog-right-controls">
-                <div className="catalog-search-wrap">
-                  <svg viewBox="0 0 24 24" fill="none" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <circle cx="11" cy="11" r="8" />
-                    <line x1="21" y1="21" x2="16.65" y2="16.65" />
-                  </svg>
+              <div className="svc-search-wrap">
+                <div className="svc-search-box">
+                  <Search aria-hidden="true" />
                   <input
                     type="search"
-                    className="catalog-search"
-                    placeholder="Search service (e.g., Visa, Golf, WiFi...)"
+                    className="svc-search-input"
+                    placeholder="Search service (Visa, Golf, WiFi...)"
                     aria-label="Search Tanogaido services"
                     value={query}
                     onChange={(e) => setQuery(e.target.value)}
                   />
                 </div>
-                <span className="catalog-result-count">
+                <span className="svc-count-pill">
                   Showing {filteredServices.length}{' '}
                   {filteredServices.length === 1 ? 'Service' : 'Services'}
                 </span>
@@ -163,86 +171,71 @@ export function ServicesCatalogClient({ services }: { services: ServiceItem[] })
           </div>
         </section>
 
-        {/* Full Catalog Listing */}
-        <section className="catalog-list-band">
+        {/* Services Catalog Grid */}
+        <section className="services-catalog-band">
           <div className="page-container" id="catalog-container">
             {sections.length === 0 ? (
-              <div className="catalog-empty">
+              <div className="services-empty">
                 No Tanogaido service matches that keyword. Try clearing your filter or search for{' '}
                 <strong>Japan</strong>, <strong>Visa</strong>, or <strong>Tour</strong>.
               </div>
             ) : (
               sections.map((section) => (
-                <div key={section.id} className="catalog-category-section">
-                  <div className="catalog-cat-head">
+                <div key={section.id} className="services-cat-section">
+                  <div className="services-cat-head">
                     <h2>{section.label}</h2>
                     <span>
                       {section.items.length} {section.items.length === 1 ? 'service' : 'services'}
                     </span>
                   </div>
-                  <div className="catalog-grid">
+                  <div className="services-full-grid">
                     {section.items.map((svc) => (
                       <article
                         key={svc.slug}
-                        className={`catalog-card ${
+                        className={`full-service-card ${
                           highlightedSlug === svc.slug ? 'is-highlighted' : ''
                         }`}
                         id={`service-${svc.slug}`}
                       >
-                        <Link
-                          href={`/services/${svc.slug}`}
-                          className="catalog-card-img-link"
-                          aria-label={`View details for ${svc.title}`}
-                        >
-                          <div className="catalog-card-img">
+                        <div className="full-service-media">
+                          <Link
+                            href={`/services/${svc.slug}`}
+                            className="full-service-media-link"
+                            aria-label={`View details for ${svc.title}`}
+                          >
                             <img src={svc.imagePath} alt={svc.title} loading="lazy" />
-                          </div>
-                        </Link>
-                        <div className="catalog-card-body">
-                          <span className="catalog-card-kicker">{svc.kicker}</span>
-                          <h3 className="catalog-card-title">
+                          </Link>
+                          <span className="full-service-cat-tag">{svc.categoryLabel}</span>
+                        </div>
+                        <div className="full-service-body">
+                          <span className="full-service-kicker">{svc.kicker}</span>
+                          <h3 className="full-service-title">
                             <Link href={`/services/${svc.slug}`}>{svc.title}</Link>
                           </h3>
-                          <p className="catalog-card-desc">{svc.shortDesc}</p>
-                          <ul className="catalog-feature-list">
+                          <p className="full-service-desc">{svc.shortDesc}</p>
+                          <ul className="full-service-list">
                             {svc.features.map((f) => (
                               <li key={f}>
-                                <svg
-                                  viewBox="0 0 24 24"
-                                  fill="none"
-                                  strokeWidth="2.4"
-                                  strokeLinecap="round"
-                                  strokeLinejoin="round"
-                                >
-                                  <polyline points="20 6 9 17 4 12" />
-                                </svg>
+                                <Check aria-hidden="true" strokeWidth={2.4} />
                                 <span>{f}</span>
                               </li>
                             ))}
                           </ul>
-                          <div className="catalog-card-footer">
+                          <div className="full-service-actions">
                             <Link
                               href={`/services/${svc.slug}`}
-                              className="catalog-detail-link"
+                              className="full-service-detail-btn"
                             >
-                              View Full Details &rarr;
+                              <span>Full Details</span>
                             </Link>
                             <a
                               href={getWhatsAppUrl(svc.waText)}
                               target="_blank"
                               rel="noopener noreferrer"
-                              className="catalog-wa-btn"
+                              className="full-service-cta"
                             >
-                              <span>Book via WhatsApp</span>
-                              <svg
-                                viewBox="0 0 24 24"
-                                fill="none"
-                                strokeWidth="2.2"
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                              >
-                                <path d="M5 12h14M13 6l6 6-6 6" />
-                              </svg>
+                              <span>WhatsApp</span>
+                              <ArrowRight aria-hidden="true" strokeWidth={2.2} />
                             </a>
                           </div>
                         </div>
@@ -255,7 +248,7 @@ export function ServicesCatalogClient({ services }: { services: ServiceItem[] })
           </div>
         </section>
 
-        {/* Direct Concierge Consultation Band */}
+        {/* Direct Concierge Consultation Banner */}
         <section className="concierge-banner-band">
           <div className="page-container">
             <div className="concierge-banner-card">
@@ -277,16 +270,7 @@ export function ServicesCatalogClient({ services }: { services: ServiceItem[] })
               >
                 <span>Consult on WhatsApp</span>
                 <span className="hero-cta-circle" aria-hidden="true">
-                  <svg
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2.2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  >
-                    <path d="M7 17L17 7M17 7H8M17 7V16" />
-                  </svg>
+                  <ArrowUpRight strokeWidth={2.2} />
                 </span>
               </a>
             </div>

@@ -2,6 +2,15 @@
 
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
+import {
+  ArrowLeft,
+  ArrowRight,
+  Check,
+  ChevronDown,
+  Heart,
+  ShoppingBag,
+  Star,
+} from 'lucide-react';
 import type { ProductItem, ServiceItem } from '@/types/cms';
 import { getWhatsAppUrl } from '@/data/fallback-data';
 import { useBag } from '@/components/BagProvider';
@@ -26,14 +35,14 @@ export function ProductDetailClient({
       ? product.gallery
       : [{ src: product.imagePath, label: product.title }];
 
-  const [activeImage, setActiveImage] = useState(gallery[0].src);
-  const [selectedVariant, setSelectedVariant] = useState(product.variants[0] || 'Standard');
+  const firstImage = gallery[0]?.src || product.imagePath;
+  const firstVariant = product.variants[0] || 'Standard';
+
+  const [activeImage, setActiveImage] = useState(firstImage);
+  const [selectedVariant, setSelectedVariant] = useState(firstVariant);
   const [selectedQty, setSelectedQty] = useState(1);
   const [openAcc1, setOpenAcc1] = useState(true);
   const [openAcc2, setOpenAcc2] = useState(false);
-
-  const firstImage = gallery[0]?.src || product.imagePath;
-  const firstVariant = product.variants[0] || 'Standard';
 
   useEffect(() => {
     setActiveImage(firstImage);
@@ -63,23 +72,26 @@ export function ProductDetailClient({
       />
 
       <main className="pdp-main">
-        {/* Breadcrumb Bar + Quick Bag Action */}
-        <div className="breadcrumb-bar">
-          <div className="page-container breadcrumb-flex">
-            <nav className="breadcrumb-nav" aria-label="Breadcrumb">
-              <Link href="/">Home</Link>
-              <span className="breadcrumb-sep" aria-hidden="true">
-                /
-              </span>
-              <Link href="/shop">Japan Goods Shop</Link>
-              <span className="breadcrumb-sep" aria-hidden="true">
-                /
-              </span>
+        {/* Top Navigation + Breadcrumb + Bag Bar */}
+        <div className="page-container">
+          <div className="pdp-topbar">
+            <Link href="/shop" className="pdp-back-link">
+              <ArrowLeft size={15} strokeWidth={2.2} aria-hidden="true" />
+              <span>Back to Japan Goods Shop</span>
+            </Link>
+
+            <nav className="pdp-breadcrumb" aria-label="Breadcrumb">
+              <Link href="/" style={{ color: 'inherit', textDecoration: 'none' }}>
+                Home
+              </Link>
+              <span>/</span>
+              <Link href="/shop" style={{ color: 'inherit', textDecoration: 'none' }}>
+                Shop
+              </Link>
+              <span>/</span>
               <span>{product.categoryLabel}</span>
-              <span className="breadcrumb-sep" aria-hidden="true">
-                /
-              </span>
-              <span className="breadcrumb-current">{product.title}</span>
+              <span>/</span>
+              <span>{product.title}</span>
             </nav>
 
             <button
@@ -88,18 +100,7 @@ export function ProductDetailClient({
               aria-label="Open Shopping Bag"
               onClick={openBag}
             >
-              <svg
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z" />
-                <line x1="3" y1="6" x2="21" y2="6" />
-                <path d="M16 10a4 4 0 0 1-8 0" />
-              </svg>
+              <ShoppingBag aria-hidden="true" strokeWidth={2} />
               <span>
                 Bag (<span data-bag-count>{bagCount}</span>)
               </span>
@@ -108,22 +109,20 @@ export function ProductDetailClient({
         </div>
 
         {/* Product Detail Stage */}
-        <section className="pdp-stage">
+        <section className="pdp-section">
           <div className="page-container">
-            <div className="pdp-layout">
-              {/* Left Gallery */}
+            <div className="pdp-grid">
+              {/* Left Gallery Column */}
               <div className="pdp-gallery">
-                <div className="pdp-main-frame">
+                <div className="pdp-stage">
                   <img src={activeImage} alt={product.title} />
                   <button
                     type="button"
-                    className={`pdp-fav-float ${saved ? 'saved' : ''}`}
+                    className={`pdp-stage-fav ${saved ? 'saved' : ''}`}
                     aria-label="Save to Wishlist"
                     onClick={() => toggleFavorite(product.slug)}
                   >
-                    <svg viewBox="0 0 24 24" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                      <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
-                    </svg>
+                    <Heart strokeWidth={2} aria-hidden="true" />
                   </button>
                 </div>
                 <div className="pdp-thumbs">
@@ -142,15 +141,13 @@ export function ProductDetailClient({
               </div>
 
               {/* Right Details Column */}
-              <div className="pdp-info-col">
-                <div className="pdp-kicker-row">
-                  <span className="pdp-kicker">
+              <div className="pdp-info">
+                <div className="pdp-meta-line">
+                  <span className="pdp-eyebrow">
                     {product.origin} &middot; {product.categoryLabel}
                   </span>
                   <span className="pdp-rating">
-                    <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor" aria-hidden="true">
-                      <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
-                    </svg>
+                    <Star aria-hidden="true" />
                     <span>
                       {product.rating} ({product.reviewCount} concierge reviews)
                     </span>
@@ -162,15 +159,15 @@ export function ProductDetailClient({
                 <div className="pdp-price-bar">
                   <span className="pdp-price">${product.price}</span>
                   <span className="pdp-price-jpy">{product.priceJpy}</span>
-                  <span className="pdp-status-tag">{product.status}</span>
+                  <span className="pdp-stock-note">{product.status}</span>
                 </div>
 
                 <p className="pdp-short-desc">{product.shortDesc}</p>
 
                 {/* Variant Selector */}
-                <div className="pdp-option-block">
-                  <span className="pdp-option-label">Select Variant / Edition</span>
-                  <div className="pdp-variants">
+                <div>
+                  <span className="pdp-block-label">Select Variant / Edition</span>
+                  <div className="pdp-variant-row">
                     {product.variants.map((v) => (
                       <button
                         key={v}
@@ -185,8 +182,8 @@ export function ProductDetailClient({
                 </div>
 
                 {/* Desktop Purchase Controls */}
-                <div className="pdp-actions-desktop">
-                  <div className="pdp-qty-stepper" aria-label="Quantity selector">
+                <div className="pdp-purchase-row">
+                  <div className="pdp-qty-box" aria-label="Quantity selector">
                     <button
                       type="button"
                       aria-label="Decrease quantity"
@@ -212,19 +209,10 @@ export function ProductDetailClient({
                   href={waHref}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="pdp-wa-direct"
+                  className="pdp-wa-cta"
                 >
                   <span>Order Directly via WhatsApp</span>
-                  <svg
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    strokeWidth="2.2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    aria-hidden="true"
-                  >
-                    <path d="M5 12h14M13 6l6 6-6 6" />
-                  </svg>
+                  <ArrowRight size={15} strokeWidth={2.2} aria-hidden="true" />
                 </a>
 
                 {/* Provenance / Craft Story */}
@@ -233,22 +221,13 @@ export function ProductDetailClient({
                   <p>{product.craftStory}</p>
                 </div>
 
-                {/* Technical Specs */}
-                <div className="pdp-specs-box">
-                  <span className="pdp-option-label">Key Specifications</span>
-                  <ul className="pdp-specs-list">
+                {/* Key Specifications */}
+                <div>
+                  <span className="pdp-block-label">Key Specifications</span>
+                  <ul className="pdp-spec-list">
                     {product.specs.map((spec) => (
                       <li key={spec}>
-                        <svg
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          strokeWidth="2.4"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        >
-                          <polyline points="20 6 9 17 4 12" />
-                        </svg>
+                        <Check aria-hidden="true" strokeWidth={2.4} />
                         <span>{spec}</span>
                       </li>
                     ))}
@@ -265,18 +244,9 @@ export function ProductDetailClient({
                       onClick={() => setOpenAcc1((prev) => !prev)}
                     >
                       <span>Shipping &amp; Customs Delivery</span>
-                      <svg
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2.2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      >
-                        <polyline points="6 9 12 15 18 9" />
-                      </svg>
+                      <ChevronDown aria-hidden="true" strokeWidth={2.2} />
                     </button>
-                    <div className="pdp-acc-body">
+                    <div className="pdp-acc-panel">
                       <p>{product.shippingNote}</p>
                       <p style={{ marginTop: 6 }}>
                         Free express air shipping applies automatically to all Tanogaido Shop orders over $150.
@@ -292,18 +262,9 @@ export function ProductDetailClient({
                       onClick={() => setOpenAcc2((prev) => !prev)}
                     >
                       <span>Concierge Guarantee &amp; Packaging</span>
-                      <svg
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2.2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      >
-                        <polyline points="6 9 12 15 18 9" />
-                      </svg>
+                      <ChevronDown aria-hidden="true" strokeWidth={2.2} />
                     </button>
-                    <div className="pdp-acc-body">
+                    <div className="pdp-acc-panel">
                       <p>
                         Every item is verified in person by our bilingual staff in Kyoto or Tokyo with original
                         artisan origin guarantees and protective multi-layer export crating.

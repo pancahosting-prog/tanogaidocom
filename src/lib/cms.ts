@@ -18,13 +18,46 @@ import type {
   TripItem,
 } from '@/types/cms';
 
+import {
+  extractProxyMediaUrl,
+  getImageKitConfig,
+  buildProxyMediaUrl,
+} from '@/lib/imagekit';
+
 function normalizeAssetPath(p?: string | null, fallback = ''): string {
   const val = (p || fallback || '').trim();
   if (!val) return '';
+
+  const { urlEndpoint } = getImageKitConfig();
+  if (urlEndpoint && val.startsWith(urlEndpoint)) {
+    const rest = val.slice(urlEndpoint.length);
+    return buildProxyMediaUrl(rest);
+  }
+  const ikMatch = /^https?:\/\/ik\.imagekit\.io\/[^/]+(\/.*)$/i.exec(val);
+  if (ikMatch && ikMatch[1]) {
+    return buildProxyMediaUrl(ikMatch[1]);
+  }
+
   if (val.startsWith('http://') || val.startsWith('https://') || val.startsWith('/')) {
     return val;
   }
   return `/${val}`;
+}
+
+function normalizeHeroVideoUrl(
+  videoMedia: unknown,
+  url?: string | null,
+  fallback = '/assets/hero-japan.mp4'
+): string {
+  const uploadedUrl = extractProxyMediaUrl(videoMedia);
+  if (uploadedUrl) {
+    return normalizeAssetPath(uploadedUrl, fallback);
+  }
+  const trimmed = (url || '').trim();
+  if (!trimmed || trimmed.includes('dn4jqfz3s') || trimmed.includes('japan_3_y7b62u')) {
+    return fallback;
+  }
+  return normalizeAssetPath(trimmed, fallback);
 }
 
 function hasDatabaseConfigured(): boolean {
@@ -48,6 +81,11 @@ export async function getPayloadClient() {
 }
 
 function mapServiceDoc(doc: Record<string, unknown>, fallback?: ServiceItem): ServiceItem {
+  const uploadedCardUrl = extractProxyMediaUrl(doc.uploadedImage);
+  const resolvedImagePath = uploadedCardUrl
+    ? normalizeAssetPath(uploadedCardUrl, fallback?.imagePath)
+    : normalizeAssetPath(doc.imagePath as string, fallback?.imagePath);
+
   return {
     slug: String(doc.slug || fallback?.slug || ''),
     title: String(doc.title || fallback?.title || ''),
@@ -55,7 +93,7 @@ function mapServiceDoc(doc: Record<string, unknown>, fallback?: ServiceItem): Se
     categoryLabel: String(doc.categoryLabel || fallback?.categoryLabel || ''),
     kicker: String(doc.kicker || fallback?.kicker || ''),
     shortDesc: String(doc.shortDesc || fallback?.shortDesc || ''),
-    imagePath: normalizeAssetPath(doc.imagePath as string, fallback?.imagePath),
+    imagePath: resolvedImagePath,
     heroImagePath: normalizeAssetPath(doc.heroImagePath as string, fallback?.heroImagePath),
     heroImageAlt: String(doc.heroImageAlt || fallback?.heroImageAlt || ''),
     detailImagePath: normalizeAssetPath(doc.detailImagePath as string, fallback?.detailImagePath),
@@ -118,6 +156,11 @@ function mapServiceDoc(doc: Record<string, unknown>, fallback?: ServiceItem): Se
 }
 
 function mapProductDoc(doc: Record<string, unknown>, fallback?: ProductItem): ProductItem {
+  const uploadedProductUrl = extractProxyMediaUrl(doc.uploadedImage);
+  const resolvedProductImage = uploadedProductUrl
+    ? normalizeAssetPath(uploadedProductUrl, fallback?.imagePath)
+    : normalizeAssetPath(doc.imagePath as string, fallback?.imagePath);
+
   return {
     slug: String(doc.slug || fallback?.slug || ''),
     title: String(doc.title || fallback?.title || ''),
@@ -129,7 +172,7 @@ function mapProductDoc(doc: Record<string, unknown>, fallback?: ProductItem): Pr
     reviewCount: Number(doc.reviewCount ?? fallback?.reviewCount ?? 20),
     price: Number(doc.price ?? fallback?.price ?? 0),
     priceJpy: String(doc.priceJpy || fallback?.priceJpy || ''),
-    imagePath: normalizeAssetPath(doc.imagePath as string, fallback?.imagePath),
+    imagePath: resolvedProductImage,
     gallery: Array.isArray(doc.gallery)
       ? doc.gallery.map((g: { src?: string; label?: string }) => ({
           src: normalizeAssetPath(g?.src, fallback?.imagePath),
@@ -250,7 +293,10 @@ export const getTrips = unstable_cache(
         locationLabel: String(d.locationLabel || ''),
         priceFrom: String(d.priceFrom || ''),
         shortDesc: String(d.shortDesc || ''),
-        imagePath: normalizeAssetPath(d.imagePath as string, '/assets/fuji-climb.jpg'),
+        imagePath: normalizeAssetPath(
+          extractProxyMediaUrl(d.uploadedImage) || (d.imagePath as string),
+          '/assets/fuji-climb.jpg'
+        ),
         waText: String(d.waText || ''),
         sortOrder: Number(d.sortOrder ?? 1),
       }));
@@ -284,7 +330,10 @@ export const getTestimonials = unstable_cache(
         author: String(d.author || ''),
         trip: String(d.trip || ''),
         quote: String(d.quote || ''),
-        avatarPath: normalizeAssetPath(d.avatarPath as string, '/assets/avatars/traveler-1.jpg'),
+        avatarPath: normalizeAssetPath(
+          extractProxyMediaUrl(d.uploadedAvatar) || (d.avatarPath as string),
+          '/assets/avatars/traveler-1.jpg'
+        ),
         sortOrder: Number(d.sortOrder ?? 1),
       }));
     } catch {
@@ -322,7 +371,11 @@ export const getSiteSettings = unstable_cache(
         heroTitleLead: String(data.heroTitleLead || FALLBACK_SITE_SETTINGS.heroTitleLead),
         heroTitleAccent: String(data.heroTitleAccent || FALLBACK_SITE_SETTINGS.heroTitleAccent),
         heroDescription: String(data.heroDescription || FALLBACK_SITE_SETTINGS.heroDescription),
-        heroVideoUrl: String(data.heroVideoUrl || FALLBACK_SITE_SETTINGS.heroVideoUrl),
+        heroVideoUrl: normalizeHeroVideoUrl(
+          (data as unknown as Record<string, unknown>).heroVideoMedia,
+          data.heroVideoUrl as string,
+          FALLBACK_SITE_SETTINGS.heroVideoUrl
+        ),
       };
     } catch {
       return FALLBACK_SITE_SETTINGS;

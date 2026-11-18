@@ -27,6 +27,12 @@ export const Testimonials: CollectionConfig = {
     { name: 'trip', type: 'text', required: true },
     { name: 'quote', type: 'textarea', required: true },
     { name: 'avatarPath', type: 'text', required: true },
+    {
+      name: 'uploadedAvatar',
+      type: 'upload',
+      relationTo: 'media',
+      label: 'Upload Avatar (ImageKit Proxy)',
+    },
     { name: 'sortOrder', type: 'number', defaultValue: 1 },
   ],
 };

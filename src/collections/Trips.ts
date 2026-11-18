@@ -30,6 +30,12 @@ export const Trips: CollectionConfig = {
     { name: 'priceFrom', type: 'text', required: true },
     { name: 'shortDesc', type: 'textarea', required: true },
     { name: 'imagePath', type: 'text', required: true },
+    {
+      name: 'uploadedImage',
+      type: 'upload',
+      relationTo: 'media',
+      label: 'Upload Trip Image (ImageKit Proxy)',
+    },
     { name: 'waText', type: 'text', required: true },
     { name: 'sortOrder', type: 'number', defaultValue: 1 },
   ],
