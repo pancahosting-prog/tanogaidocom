@@ -47,7 +47,9 @@ export default buildConfig({
   db: mongooseAdapter({
     url: process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/tanogaido',
     connectOptions: {
-      serverSelectionTimeoutMS: 2500,
+      serverSelectionTimeoutMS: process.env.MONGODB_URI ? 10000 : 2500,
+      connectTimeoutMS: 10000,
+      socketTimeoutMS: 20000,
     },
   }),
   sharp,

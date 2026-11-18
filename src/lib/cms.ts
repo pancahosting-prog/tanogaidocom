@@ -31,7 +31,7 @@ function hasDatabaseConfigured(): boolean {
   return Boolean(process.env.MONGODB_URI && process.env.MONGODB_URI.trim().length > 0);
 }
 
-async function withTimeout<T>(promise: Promise<T>, ms = 2500): Promise<T> {
+async function withTimeout<T>(promise: Promise<T>, ms = 8000): Promise<T> {
   let timer: ReturnType<typeof setTimeout>;
   const timeoutPromise = new Promise<never>((_, reject) => {
     timer = setTimeout(() => reject(new Error('MongoDB query timeout')), ms);
