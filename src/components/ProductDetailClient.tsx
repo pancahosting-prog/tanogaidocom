@@ -115,7 +115,12 @@ export function ProductDetailClient({
               {/* Left Gallery Column */}
               <div className="pdp-gallery">
                 <div className="pdp-stage">
-                  <img src={activeImage} alt={product.title} />
+                  <img
+                    src={activeImage}
+                    alt={product.title}
+                    fetchPriority="high"
+                    decoding="async"
+                  />
                   <button
                     type="button"
                     className={`pdp-stage-fav ${saved ? 'saved' : ''}`}

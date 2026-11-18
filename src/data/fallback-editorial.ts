@@ -641,4 +641,56 @@ export const FALLBACK_PAGES: PageItem[] = [
       ),
     ]),
   },
+  {
+    slug: 'panduan-tour-guide-visa-jepang',
+    title: 'Jasa Tour Guide Jepang, Visa & Sewa Mobil Indonesia | Panduan Lengkap',
+    eyebrow: 'PANDUAN WISATA INDONESIA - JEPANG',
+    subtitle:
+      'Solusi terpadu wisatawan Indonesia ke Jepang: tour guide berbahasa Indonesia resmi, pengurusan visa Jepang, JR Pass, Pocket WiFi, hingga sewa mobil Alphard & HiAce di Tokyo, Kyoto, dan Osaka.',
+    heroImagePath: '/assets/cards/card-4.jpg',
+    heroImageAlt: 'Jasa tour guide Jepang resmi berbahasa Indonesia oleh Tanogaido',
+    status: 'published',
+    publishedAt: '2026-04-12T08:00:00.000Z',
+    internalKeywords: [
+      'jasa tour guide Jepang',
+      'tour guide Jepang berbahasa Indonesia',
+      'pengurusan visa Jepang',
+      'sewa mobil di Jepang',
+    ],
+    showToc: true,
+    enableAutoInternalLinks: true,
+    showInFooter: false,
+    sortOrder: 4,
+    seoTitle: 'Jasa Tour Guide Jepang, Visa & Rental Mobil Resmi | Tanogaido',
+    metaDescription:
+      'Cari jasa tour guide Jepang berbahasa Indonesia, pengurusan visa Jepang, JR Pass, atau sewa mobil pribadi? Konsultasikan perjalanan Anda bersama PT. Tanogaido Fantasi Pratama.',
+    focusKeyword: 'jasa tour guide Jepang',
+    faqs: [
+      {
+        q: 'Apakah Tanogaido menyediakan tour guide Jepang yang bisa bahasa Indonesia?',
+        a: 'Ya. Seluruh pemandu kami di Tokyo, Kyoto, Osaka, Hokkaido, hingga Gunung Fuji fasih berbahasa Indonesia, Jepang, dan Inggris serta memahami kebutuhan wisata keluarga maupun halal-friendly.',
+      },
+      {
+        q: 'Berapa lama proses pengurusan visa wisata Jepang melalui Tanogaido?',
+        a: 'Registrasi bebas visa e-paspor umumnya selesai dalam 3–5 hari kerja, sedangkan visa tempel reguler atau multiple-entry diproses sekitar 5–7 hari kerja setelah dokumen lengkap.',
+      },
+    ],
+    content: lexDoc([
+      lexParagraph(
+        'Sejak 2007, PT. Tanogaido Fantasi Pratama mendampingi ribuan keluarga, pasangan bulan madu, dan rombongan korporat Indonesia menikmati liburan yang nyaman melalui layanan Japan Tour Guide berbahasa Indonesia dan Jepang.'
+      ),
+      lexHeading('h2', 'Keunggulan Memakai Jasa Tour Guide Jepang Resmi'),
+      lexParagraph(
+        'Memakai Japan Tour Guide berlisensi menghemat waktu berpindah stasiun kereta Tokyo dan Kyoto, membantu reservasi restoran halal atau kuliner autentik, serta memandu itinerary fleksibel melalui layanan Private Japan Tour.'
+      ),
+      lexHeading('h2', 'Pengurusan Visa Jepang, JR Pass, dan Pocket WiFi'),
+      lexParagraph(
+        'Sebelum berangkat, tim kami memastikan dokumen Anda siap melalui layanan Japan Visa Processing, menyediakan JR Pass Tickets sesuai rute antarkota, serta menyiapkan Pocket WiFi Rental agar internet stabil sejak mendarat di Haneda atau Narita.'
+      ),
+      lexHeading('h2', 'Sewa Mobil Pribadi & Tour Bus di Tokyo, Fuji, dan Kyoto'),
+      lexParagraph(
+        'Untuk rombongan keluarga dengan anak-anak atau orang tua, layanan Car & Tour Bus Rental menghadirkan Alphard, HiAce, hingga bus pariwisata berizin resmi lengkap dengan pengemudi berpengalaman.'
+      ),
+    ]),
+  },
 ];

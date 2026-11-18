@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
 import { ArrowRight, ArrowUpRight, Search } from 'lucide-react';
 import type { BlogCategoryItem, BlogPostItem } from '@/types/cms';
@@ -17,6 +17,18 @@ export function BlogCatalogClient({ posts, categories }: BlogCatalogClientProps)
   const [selectedCat, setSelectedCat] = useState<string>('all');
   const [query, setQuery] = useState('');
   const [visibleCount, setVisibleCount] = useState(INITIAL_VISIBLE);
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const qParam = params.get('q');
+    if (qParam) {
+      setQuery(qParam);
+    }
+    const catParam = params.get('category');
+    if (catParam && categories.some((c) => c.slug === catParam)) {
+      setSelectedCat(catParam);
+    }
+  }, [categories]);
 
   const featuredPost = useMemo(() => {
     return posts.find((p) => p.featured) || posts[0] || null;
@@ -51,6 +63,11 @@ export function BlogCatalogClient({ posts, categories }: BlogCatalogClientProps)
 
   return (
     <div className="blog-catalog-shell">
+      <header className="blog-index-header">
+        <div className="blog-index-eyebrow">TANOGAIDO EDITORIAL JOURNAL</div>
+        <h1 className="blog-index-title">Japan Travel Guides, Visa &amp; Cultural Stories</h1>
+      </header>
+
       {/* Featured Hero Banner (Matches editorial showcase reference) */}
       {featuredPost && selectedCat === 'all' && !query.trim() && (
         <section className="blog-featured-section" aria-label="Featured Article">
@@ -59,13 +76,15 @@ export function BlogCatalogClient({ posts, categories }: BlogCatalogClientProps)
               src={featuredPost.coverImagePath}
               alt={featuredPost.coverImageAlt || featuredPost.title}
               className="blog-featured-img"
+              fetchPriority="high"
+              decoding="async"
               referrerPolicy="no-referrer"
             />
             <div className="blog-featured-scrim" aria-hidden="true" />
             <div className="blog-featured-overlay">
               <div className="blog-featured-copy">
                 <span className="blog-featured-kicker">Featured</span>
-                <h1 className="blog-featured-title">{featuredPost.title}</h1>
+                <h2 className="blog-featured-title">{featuredPost.title}</h2>
                 <p className="blog-featured-excerpt">{featuredPost.excerpt}</p>
               </div>
               <span className="blog-featured-arrow" aria-hidden="true">
@@ -148,6 +167,7 @@ export function BlogCatalogClient({ posts, categories }: BlogCatalogClientProps)
                       src={post.coverImagePath}
                       alt={post.coverImageAlt || post.title}
                       loading="lazy"
+                      decoding="async"
                       referrerPolicy="no-referrer"
                     />
                   </div>
@@ -162,6 +182,8 @@ export function BlogCatalogClient({ posts, categories }: BlogCatalogClientProps)
                         src={post.authorAvatarPath}
                         alt={post.authorName}
                         className="blog-card-avatar"
+                        loading="lazy"
+                        decoding="async"
                         referrerPolicy="no-referrer"
                       />
                       <span className="blog-card-author">{post.authorName}</span>

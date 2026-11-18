@@ -115,6 +115,8 @@ export function ShopCatalogClient({
                 <img
                   src="/assets/products/shop-hero.jpg"
                   alt="Curated collection of authentic Japanese craft tea goods and travel essentials"
+                  fetchPriority="high"
+                  decoding="async"
                 />
               </div>
             </div>

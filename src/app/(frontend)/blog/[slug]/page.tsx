@@ -55,7 +55,14 @@ export async function generateMetadata({
     description,
     keywords: [post.focusKeyword, ...post.tags].filter(Boolean) as string[],
     robots: post.noIndex ? { index: false, follow: false } : { index: true, follow: true },
-    alternates: { canonical },
+    alternates: {
+      canonical,
+      languages: {
+        en: canonical,
+        'id-ID': canonical,
+        'x-default': canonical,
+      },
+    },
     openGraph: {
       type: 'article',
       siteName: 'Tanogaido',
@@ -254,6 +261,8 @@ export default async function BlogDetailPage({
             <img
               src={post.coverImagePath}
               alt={post.coverImageAlt || post.title}
+              fetchPriority="high"
+              decoding="async"
               referrerPolicy="no-referrer"
             />
           </figure>

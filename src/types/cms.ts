@@ -130,6 +130,7 @@ export interface SiteSettingsData {
   heroTitleAccent: string;
   heroDescription: string;
   heroVideoUrl: string;
+  googleSiteVerification?: string;
 }
 
 export interface LexicalTextNode {

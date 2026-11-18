@@ -2,11 +2,19 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { getServices, getSiteSettings } from '@/lib/cms';
 import { getWhatsAppUrl } from '@/data/fallback-data';
+import { getSiteOrigin } from '@/lib/editorial';
+import {
+  buildAboutPageJsonLd,
+  buildBreadcrumbJsonLd,
+  buildOrganizationJsonLd,
+} from '@/lib/seo';
 import { Navbar } from '@/components/Navbar';
 import { NewsletterBand } from '@/components/NewsletterBand';
 import { Footer } from '@/components/Footer';
 
 export const revalidate = 60;
+
+const SITE_URL = getSiteOrigin();
 
 export const metadata: Metadata = {
   title: 'About Us — PT. Tanogaido Fantasi Pratama | Tanogaido',
@@ -14,14 +22,27 @@ export const metadata: Metadata = {
     'PT. Tanogaido Fantasi Pratama — Your Gateway to Japan since 2007. Integrated Japan tours, visa assistance, rail passes, education, and shopping concierge.',
   alternates: {
     canonical: '/about',
+    languages: {
+      en: '/about',
+      'id-ID': '/about',
+      'x-default': '/about',
+    },
   },
   openGraph: {
     type: 'website',
     siteName: 'Tanogaido',
+    url: `${SITE_URL}/about`,
     title: 'About Us — PT. Tanogaido Fantasi Pratama | Tanogaido',
     description:
       'Connecting Indonesia and Japan since 2007 through travel, education, mobility, and curated Japanese goods.',
     images: [{ url: '/assets/tokyo-pulse.jpg', alt: 'PT. Tanogaido Fantasi Pratama' }],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'About Us — PT. Tanogaido Fantasi Pratama | Tanogaido',
+    description:
+      'Connecting Indonesia and Japan since 2007 through travel, education, mobility, and curated Japanese goods.',
+    images: ['/assets/tokyo-pulse.jpg'],
   },
 };
 
@@ -31,8 +52,31 @@ export default async function AboutPage() {
     `Hello ${siteSettings.companyName}, I would like to connect about your Japan services.`
   );
 
+  const aboutJsonLd = buildAboutPageJsonLd(siteSettings, SITE_URL);
+  const orgJsonLd = buildOrganizationJsonLd(siteSettings, SITE_URL);
+  const breadcrumbJsonLd = buildBreadcrumbJsonLd(
+    [
+      { name: 'Home', path: '/' },
+      { name: 'About Us', path: '/about' },
+    ],
+    SITE_URL
+  );
+
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(aboutJsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(orgJsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+      />
+
       <Navbar
         services={services}
         ctaLabel="Explore Now"

@@ -7,9 +7,10 @@ import type {
   TestimonialItem,
   TripItem,
 } from '@/types/cms';
+import { getSiteOrigin } from '@/lib/editorial';
 
 export const WA_NUMBER = '6281318939319';
-export const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://tanogaido.com';
+export const BASE_URL = getSiteOrigin();
 
 export function getWhatsAppUrl(text: string, waNumber = WA_NUMBER): string {
   return `https://wa.me/${waNumber}?text=${encodeURIComponent(text)}`;

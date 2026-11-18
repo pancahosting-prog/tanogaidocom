@@ -61,7 +61,14 @@ export async function generateMetadata({
     description,
     keywords: page.focusKeyword ? [page.focusKeyword] : undefined,
     robots: page.noIndex ? { index: false, follow: false } : { index: true, follow: true },
-    alternates: { canonical },
+    alternates: {
+      canonical,
+      languages: {
+        en: canonical,
+        'id-ID': canonical,
+        'x-default': canonical,
+      },
+    },
     openGraph: {
       type: 'website',
       siteName: 'Tanogaido',
@@ -220,6 +227,8 @@ export default async function CmsRootPage({
                   <img
                     src={page.heroImagePath}
                     alt={page.heroImageAlt || page.title}
+                    fetchPriority="high"
+                    decoding="async"
                     referrerPolicy="no-referrer"
                   />
                 </div>

@@ -385,6 +385,11 @@ export const getSiteSettings = unstable_cache(
           data.heroVideoUrl as string,
           FALLBACK_SITE_SETTINGS.heroVideoUrl
         ),
+        googleSiteVerification: String(
+          (data as unknown as Record<string, unknown>).googleSiteVerification ||
+            process.env.GOOGLE_SITE_VERIFICATION ||
+            ''
+        ).trim(),
       };
     } catch {
       return FALLBACK_SITE_SETTINGS;

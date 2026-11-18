@@ -7975,6 +7975,31 @@
   padding-bottom: 56px;
 }
 
+.blog-index-header {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-bottom: 18px;
+}
+
+.blog-index-eyebrow {
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--primary-red);
+}
+
+.blog-index-title {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: clamp(24px, 2.4vw, 32px);
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+  color: #11141c;
+  margin: 0;
+}
+
 /* Featured Blog Hero Card (matches editorial showcase layout) */
 .blog-featured-section {
   margin-bottom: 48px;

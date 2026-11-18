@@ -60,5 +60,14 @@ export const SiteSettings: GlobalConfig = {
           'Opsional: Upload video MP4/WebM melalui Media (tersimpan di ImageKit, disajikan via /media/...). Jika kosong, memakai Hero Video URL.',
       },
     },
+    {
+      name: 'googleSiteVerification',
+      type: 'text',
+      label: 'Google Search Console Verification Code',
+      admin: {
+        description:
+          'Opsional: Tempel kode token verifikasi Google Search Console (nilai `content` dari meta google-site-verification).',
+      },
+    },
   ],
 };

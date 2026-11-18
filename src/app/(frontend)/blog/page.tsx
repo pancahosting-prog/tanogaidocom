@@ -17,6 +17,11 @@ export const metadata: Metadata = {
     'Read curated Japan travel guides, 2026 JR Pass & Shinkansen comparisons, Indonesian visa checklists, and authentic Kyoto cultural stories by Tanogaido.',
   alternates: {
     canonical: '/blog',
+    languages: {
+      en: '/blog',
+      'id-ID': '/blog',
+      'x-default': '/blog',
+    },
   },
   openGraph: {
     type: 'website',

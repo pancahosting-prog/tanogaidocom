@@ -3,6 +3,8 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { getServiceBySlug, getServices, getSiteSettings } from '@/lib/cms';
 import { getWhatsAppUrl } from '@/data/fallback-data';
+import { getSiteOrigin } from '@/lib/editorial';
+import { toAbsoluteUrl } from '@/lib/seo';
 import { Navbar } from '@/components/Navbar';
 import { NewsletterBand } from '@/components/NewsletterBand';
 import { Footer } from '@/components/Footer';
@@ -10,7 +12,7 @@ import { Footer } from '@/components/Footer';
 export const revalidate = 60;
 export const dynamicParams = true;
 
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://tanogaido.com';
+const SITE_URL = getSiteOrigin();
 
 export async function generateStaticParams() {
   const services = await getServices();
@@ -36,6 +38,11 @@ export async function generateMetadata({
     keywords: service.keywords,
     alternates: {
       canonical: `/services/${service.slug}`,
+      languages: {
+        en: `/services/${service.slug}`,
+        'id-ID': `/services/${service.slug}`,
+        'x-default': `/services/${service.slug}`,
+      },
     },
     openGraph: {
       type: 'website',
@@ -91,7 +98,7 @@ export default async function ServiceDetailPage({
     serviceType: service.categoryLabel,
     description: service.metaDescription || service.shortDesc,
     url: serviceUrl,
-    image: `${SITE_URL}${service.heroImagePath || service.imagePath}`,
+    image: toAbsoluteUrl(service.heroImagePath || service.imagePath, SITE_URL),
     provider: {
       '@type': 'TravelAgency',
       name: siteSettings.companyName || 'PT. Tanogaido Fantasi Pratama',
@@ -191,6 +198,8 @@ export default async function ServiceDetailPage({
                 className="svc-hero-bg"
                 src={service.heroImagePath || service.imagePath}
                 alt={service.heroImageAlt || service.title}
+                fetchPriority="high"
+                decoding="async"
               />
               <div className="svc-hero-scrim" aria-hidden="true" />
               <div className="svc-hero-inner">
