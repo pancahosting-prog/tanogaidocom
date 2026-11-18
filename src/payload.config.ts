@@ -1,18 +1,21 @@
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { mongooseAdapter } from '@payloadcms/db-mongodb';
-import { lexicalEditor } from '@payloadcms/richtext-lexical';
 import { buildConfig } from 'payload';
 import sharp from 'sharp';
 
 import { Users } from './collections/Users';
 import { Media } from './collections/Media';
+import { Posts } from './collections/Posts';
+import { Categories } from './collections/Categories';
+import { Pages } from './collections/Pages';
 import { Services } from './collections/Services';
 import { Products } from './collections/Products';
 import { Trips } from './collections/Trips';
 import { Testimonials } from './collections/Testimonials';
 import { Subscribers } from './collections/Subscribers';
 import { Orders } from './collections/Orders';
+import { wpLexicalEditor } from './collections/wpLexicalEditor';
 import { SiteSettings } from './globals/SiteSettings';
 
 const filename = fileURLToPath(import.meta.url);
@@ -25,21 +28,32 @@ export default buildConfig({
       baseDir: path.resolve(dirname),
     },
     meta: {
-      titleSuffix: '— Tanogaido CMS',
+      titleSuffix: '‹ Tanogaido Admin',
+    },
+    components: {
+      graphics: {
+        Logo: '/components/admin/WpBrand#TanogaidoWpLogo',
+        Icon: '/components/admin/WpBrand#TanogaidoWpIcon',
+      },
+      beforeNavLinks: ['/components/admin/WpQuickLinks#WpQuickLinks'],
+      beforeDashboard: ['/components/admin/WpDashboardWidget#WpDashboardWidget'],
     },
   },
   collections: [
-    Users,
+    Posts,
+    Categories,
+    Pages,
     Media,
     Services,
     Products,
     Trips,
     Testimonials,
-    Subscribers,
     Orders,
+    Subscribers,
+    Users,
   ],
   globals: [SiteSettings],
-  editor: lexicalEditor(),
+  editor: wpLexicalEditor,
   secret: process.env.PAYLOAD_SECRET || 'tanogaido-dev-secret-change-in-production',
   typescript: {
     outputFile: path.resolve(dirname, 'payload-types.ts'),

@@ -3,6 +3,9 @@ import { triggerRevalidation } from '@/lib/revalidate';
 
 export const SiteSettings: GlobalConfig = {
   slug: 'site-settings',
+  admin: {
+    group: 'Settings',
+  },
   access: {
     read: () => true,
   },

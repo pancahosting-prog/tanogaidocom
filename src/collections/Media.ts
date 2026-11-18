@@ -8,6 +8,9 @@ import {
 
 export const Media: CollectionConfig = {
   slug: 'media',
+  admin: {
+    group: 'Media',
+  },
   access: {
     read: () => true,
   },

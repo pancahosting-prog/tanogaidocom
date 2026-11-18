@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from 'next';
 import { Playfair_Display, Plus_Jakarta_Sans } from 'next/font/google';
 import '@/styles/tanogaido.css';
 import { BagProvider } from '@/components/BagProvider';
+import { getSiteOrigin } from '@/lib/editorial';
 
 const playfair = Playfair_Display({
   subsets: ['latin'],
@@ -17,7 +18,7 @@ const plusJakarta = Plus_Jakarta_Sans({
   display: 'swap',
 });
 
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://tanogaido.com';
+const SITE_URL = getSiteOrigin();
 
 export const viewport: Viewport = {
   width: 'device-width',

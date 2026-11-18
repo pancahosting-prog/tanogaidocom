@@ -255,6 +255,7 @@ export function Navbar({
   }, []);
 
   const isServicesActive = pathname?.startsWith('/services');
+  const isBlogActive = pathname?.startsWith('/blog');
   const isShopActive = pathname?.startsWith('/shop') || pathname === '/product';
   const isAboutActive = pathname === '/about';
 
@@ -388,6 +389,20 @@ export function Navbar({
                 ) : (
                   <Link href="/#passes">JR Pass</Link>
                 )}
+              </li>
+
+              <li
+                onMouseEnter={() => {
+                  if (!isTouchDevice) scheduleClose();
+                }}
+              >
+                <Link
+                  href="/blog"
+                  className={isBlogActive ? 'nav-active' : undefined}
+                  aria-current={isBlogActive ? 'page' : undefined}
+                >
+                  Blog
+                </Link>
               </li>
 
               <li
@@ -712,6 +727,12 @@ export function Navbar({
                   JR Pass
                 </Link>
               )}
+            </li>
+
+            <li>
+              <Link href="/blog" className={`mobile-nav-item ${isBlogActive ? 'nav-active' : ''}`}>
+                Blog
+              </Link>
             </li>
 
             <li>

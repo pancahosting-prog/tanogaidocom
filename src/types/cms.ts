@@ -131,3 +131,126 @@ export interface SiteSettingsData {
   heroDescription: string;
   heroVideoUrl: string;
 }
+
+export interface LexicalTextNode {
+  type: 'text';
+  text: string;
+  format?: number;
+  mode?: string;
+  style?: string;
+  detail?: number;
+  version?: number;
+}
+
+export interface LexicalNode {
+  type: string;
+  version?: number;
+  tag?: string;
+  listType?: 'bullet' | 'number' | 'check';
+  format?: string | number;
+  indent?: number;
+  direction?: string | null;
+  text?: string;
+  url?: string;
+  newTab?: boolean;
+  fields?: Record<string, unknown>;
+  value?: Record<string, unknown> | number;
+  relationTo?: string;
+  children?: LexicalNode[];
+  [key: string]: unknown;
+}
+
+export interface LexicalEditorState {
+  root: {
+    type: string;
+    children: LexicalNode[];
+    direction?: string | null;
+    format?: string;
+    indent?: number;
+    version?: number;
+  };
+}
+
+export interface TocHeading {
+  id: string;
+  text: string;
+  level: 2 | 3 | 4;
+}
+
+export type InternalLinkKind = 'service' | 'product' | 'post' | 'page';
+
+export interface InternalLinkTarget {
+  phrase: string;
+  href: string;
+  title: string;
+  kind: InternalLinkKind;
+}
+
+export interface EditorialFaq {
+  q: string;
+  a: string;
+}
+
+export interface BlogCategoryItem {
+  id?: string;
+  slug: string;
+  name: string;
+  description?: string;
+  seoTitle?: string;
+  metaDescription?: string;
+}
+
+export interface BlogPostItem {
+  id?: string;
+  slug: string;
+  title: string;
+  excerpt: string;
+  categorySlug: string;
+  categoryName: string;
+  featured: boolean;
+  status: 'draft' | 'published';
+  publishedAt: string;
+  updatedAt?: string;
+  authorName: string;
+  authorRole: string;
+  authorAvatarPath: string;
+  coverImagePath: string;
+  coverImageAlt: string;
+  content: LexicalEditorState;
+  tags: string[];
+  internalKeywords: string[];
+  enableToc: boolean;
+  enableAutoInternalLinks: boolean;
+  seoTitle: string;
+  metaDescription: string;
+  focusKeyword?: string;
+  canonicalUrl?: string;
+  noIndex?: boolean;
+  faqs: EditorialFaq[];
+}
+
+export interface PageItem {
+  id?: string;
+  slug: string;
+  title: string;
+  eyebrow: string;
+  subtitle: string;
+  heroImagePath?: string;
+  heroImageAlt?: string;
+  status: 'draft' | 'published';
+  publishedAt: string;
+  updatedAt?: string;
+  content: LexicalEditorState;
+  internalKeywords: string[];
+  showToc: boolean;
+  enableAutoInternalLinks: boolean;
+  showInFooter: boolean;
+  sortOrder: number;
+  seoTitle: string;
+  metaDescription: string;
+  focusKeyword?: string;
+  canonicalUrl?: string;
+  noIndex?: boolean;
+  faqs: EditorialFaq[];
+}
+

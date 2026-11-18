@@ -80,6 +80,9 @@ export function Footer({
                     </a>
                   </li>
                   <li>
+                    <Link href="/blog">Japan Travel Blog</Link>
+                  </li>
+                  <li>
                     <Link href="/shop">Japan Goods Shop</Link>
                   </li>
                   <li>
@@ -95,7 +98,10 @@ export function Footer({
                     <Link href="/services">All 20 Services</Link>
                   </li>
                   <li>
-                    <Link href="/#trips">Featured Trips</Link>
+                    <Link href="/blog">Japan Travel Blog</Link>
+                  </li>
+                  <li>
+                    <Link href="/japan-travel-guide">Travel Guide 2026</Link>
                   </li>
                   <li>
                     <Link href="/shop">Japan Goods Shop</Link>
@@ -256,6 +262,7 @@ export function Footer({
                 >
                   Itineraries
                 </a>
+                <Link href="/blog">Blog</Link>
                 <Link href="/shop">Shop</Link>
                 <Link href="/about">About Us</Link>
                 <a
@@ -269,9 +276,10 @@ export function Footer({
             ) : (
               <>
                 <Link href="/services">Our Services</Link>
+                <Link href="/blog">Blog</Link>
                 <Link href="/shop">Shop</Link>
                 <Link href="/about">About Us</Link>
-                <Link href="/about#contact">Contact</Link>
+                <Link href="/privacy-and-terms">Privacy &amp; Terms</Link>
               </>
             )}
           </div>

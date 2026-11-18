@@ -8,7 +8,16 @@ import {
   FALLBACK_TESTIMONIALS,
   FALLBACK_TRIPS,
 } from '@/data/fallback-data';
+import {
+  FALLBACK_BLOG_CATEGORIES,
+  FALLBACK_BLOG_POSTS,
+  FALLBACK_PAGES,
+} from '@/data/fallback-editorial';
 import type {
+  BlogCategoryItem,
+  BlogPostItem,
+  LexicalEditorState,
+  PageItem,
   ProductCategorySlug,
   ProductItem,
   ServiceCategorySlug,
@@ -384,3 +393,210 @@ export const getSiteSettings = unstable_cache(
   ['tanogaido-site-settings'],
   { revalidate: 60, tags: ['tanogaido-cms'] }
 );
+
+function mapPostDoc(doc: Record<string, unknown>, fallback?: BlogPostItem): BlogPostItem {
+  const categoryObj =
+    doc.category && typeof doc.category === 'object'
+      ? (doc.category as { slug?: string; name?: string })
+      : null;
+  const coverUrl =
+    extractProxyMediaUrl(doc.uploadedCover) || (doc.coverImagePath as string) || fallback?.coverImagePath;
+  const avatarUrl =
+    extractProxyMediaUrl(doc.authorAvatarMedia) ||
+    (doc.authorAvatarPath as string) ||
+    fallback?.authorAvatarPath ||
+    '/assets/avatars/traveler-1.jpg';
+
+  return {
+    id: String(doc.id || fallback?.id || ''),
+    slug: String(doc.slug || fallback?.slug || ''),
+    title: String(doc.title || fallback?.title || ''),
+    excerpt: String(doc.excerpt || fallback?.excerpt || ''),
+    categorySlug: String(categoryObj?.slug || fallback?.categorySlug || 'travel-planning'),
+    categoryName: String(categoryObj?.name || fallback?.categoryName || 'Travel Planning'),
+    featured: typeof doc.featured === 'boolean' ? doc.featured : Boolean(fallback?.featured),
+    status: (doc.status as 'draft' | 'published') || fallback?.status || 'published',
+    publishedAt: String(doc.publishedAt || fallback?.publishedAt || new Date().toISOString()),
+    updatedAt: String(doc.updatedAt || fallback?.updatedAt || doc.publishedAt || ''),
+    authorName: String(doc.authorName || fallback?.authorName || 'Rina Takahashi'),
+    authorRole: String(doc.authorRole || fallback?.authorRole || 'Japan Travel Concierge'),
+    authorAvatarPath: normalizeAssetPath(avatarUrl, '/assets/avatars/traveler-1.jpg'),
+    coverImagePath: normalizeAssetPath(coverUrl, '/assets/tokyo-pulse.jpg'),
+    coverImageAlt: String(doc.coverImageAlt || fallback?.coverImageAlt || doc.title || ''),
+    content: (doc.content as LexicalEditorState) || fallback?.content || { root: { type: 'root', children: [] } },
+    tags: Array.isArray(doc.tags)
+      ? doc.tags.map((t: { tag?: string }) => String(t?.tag || '')).filter(Boolean)
+      : fallback?.tags || [],
+    internalKeywords: Array.isArray(doc.internalKeywords)
+      ? doc.internalKeywords.map((k: { keyword?: string }) => String(k?.keyword || '')).filter(Boolean)
+      : fallback?.internalKeywords || [],
+    enableToc: typeof doc.enableToc === 'boolean' ? doc.enableToc : true,
+    enableAutoInternalLinks:
+      typeof doc.enableAutoInternalLinks === 'boolean' ? doc.enableAutoInternalLinks : true,
+    seoTitle: String(doc.seoTitle || fallback?.seoTitle || ''),
+    metaDescription: String(doc.metaDescription || fallback?.metaDescription || ''),
+    focusKeyword: String(doc.focusKeyword || fallback?.focusKeyword || ''),
+    canonicalUrl: String(doc.canonicalUrl || fallback?.canonicalUrl || ''),
+    noIndex: Boolean(doc.noIndex),
+    faqs: Array.isArray(doc.faqs)
+      ? doc.faqs.map((f: { q?: string; a?: string }) => ({
+          q: String(f?.q || ''),
+          a: String(f?.a || ''),
+        }))
+      : fallback?.faqs || [],
+  };
+}
+
+function mapPageDoc(doc: Record<string, unknown>, fallback?: PageItem): PageItem {
+  const heroUrl =
+    extractProxyMediaUrl(doc.uploadedHeroImage) ||
+    (doc.heroImagePath as string) ||
+    fallback?.heroImagePath;
+
+  return {
+    id: String(doc.id || fallback?.id || ''),
+    slug: String(doc.slug || fallback?.slug || ''),
+    title: String(doc.title || fallback?.title || ''),
+    eyebrow: String(doc.eyebrow || fallback?.eyebrow || 'TANOGAIDO GUIDE'),
+    subtitle: String(doc.subtitle || fallback?.subtitle || ''),
+    heroImagePath: heroUrl ? normalizeAssetPath(heroUrl, fallback?.heroImagePath) : undefined,
+    heroImageAlt: String(doc.heroImageAlt || fallback?.heroImageAlt || doc.title || ''),
+    status: (doc.status as 'draft' | 'published') || fallback?.status || 'published',
+    publishedAt: String(doc.publishedAt || fallback?.publishedAt || new Date().toISOString()),
+    updatedAt: String(doc.updatedAt || fallback?.updatedAt || doc.publishedAt || ''),
+    content: (doc.content as LexicalEditorState) || fallback?.content || { root: { type: 'root', children: [] } },
+    internalKeywords: Array.isArray(doc.internalKeywords)
+      ? doc.internalKeywords.map((k: { keyword?: string }) => String(k?.keyword || '')).filter(Boolean)
+      : fallback?.internalKeywords || [],
+    showToc: typeof doc.showToc === 'boolean' ? doc.showToc : true,
+    enableAutoInternalLinks:
+      typeof doc.enableAutoInternalLinks === 'boolean' ? doc.enableAutoInternalLinks : true,
+    showInFooter: typeof doc.showInFooter === 'boolean' ? doc.showInFooter : Boolean(fallback?.showInFooter),
+    sortOrder: Number(doc.sortOrder ?? fallback?.sortOrder ?? 1),
+    seoTitle: String(doc.seoTitle || fallback?.seoTitle || ''),
+    metaDescription: String(doc.metaDescription || fallback?.metaDescription || ''),
+    focusKeyword: String(doc.focusKeyword || fallback?.focusKeyword || ''),
+    canonicalUrl: String(doc.canonicalUrl || fallback?.canonicalUrl || ''),
+    noIndex: Boolean(doc.noIndex),
+    faqs: Array.isArray(doc.faqs)
+      ? doc.faqs.map((f: { q?: string; a?: string }) => ({
+          q: String(f?.q || ''),
+          a: String(f?.a || ''),
+        }))
+      : fallback?.faqs || [],
+  };
+}
+
+export const getBlogCategories = unstable_cache(
+  async (): Promise<BlogCategoryItem[]> => {
+    if (!hasDatabaseConfigured()) {
+      return FALLBACK_BLOG_CATEGORIES;
+    }
+    try {
+      const payload = await withTimeout(getPayloadClient());
+      const result = await withTimeout(
+        payload.find({
+          collection: 'categories',
+          limit: 50,
+          sort: 'name',
+        })
+      );
+      if (!result.docs?.length) {
+        return FALLBACK_BLOG_CATEGORIES;
+      }
+      return result.docs.map((d) => ({
+        id: String(d.id),
+        slug: String(d.slug || ''),
+        name: String(d.name || ''),
+        description: String(d.description || ''),
+        seoTitle: String(d.seoTitle || ''),
+        metaDescription: String(d.metaDescription || ''),
+      }));
+    } catch {
+      return FALLBACK_BLOG_CATEGORIES;
+    }
+  },
+  ['tanogaido-blog-categories'],
+  { revalidate: 60, tags: ['tanogaido-cms'] }
+);
+
+export const getBlogPosts = unstable_cache(
+  async (): Promise<BlogPostItem[]> => {
+    if (!hasDatabaseConfigured()) {
+      return FALLBACK_BLOG_POSTS;
+    }
+    try {
+      const payload = await withTimeout(getPayloadClient());
+      const result = await withTimeout(
+        payload.find({
+          collection: 'posts',
+          where: { status: { equals: 'published' } },
+          limit: 100,
+          sort: '-publishedAt',
+          depth: 2,
+        })
+      );
+      if (!result.docs?.length) {
+        return FALLBACK_BLOG_POSTS;
+      }
+      const fallbackMap = new Map(FALLBACK_BLOG_POSTS.map((p) => [p.slug, p]));
+      return result.docs.map((d) =>
+        mapPostDoc(d as unknown as Record<string, unknown>, fallbackMap.get(String(d.slug)))
+      );
+    } catch {
+      return FALLBACK_BLOG_POSTS;
+    }
+  },
+  ['tanogaido-blog-posts'],
+  { revalidate: 60, tags: ['tanogaido-cms'] }
+);
+
+export const getBlogPostBySlug = unstable_cache(
+  async (slug: string): Promise<BlogPostItem | null> => {
+    const posts = await getBlogPosts();
+    return posts.find((p) => p.slug === slug) || null;
+  },
+  ['tanogaido-blog-post-by-slug'],
+  { revalidate: 60, tags: ['tanogaido-cms'] }
+);
+
+export const getPages = unstable_cache(
+  async (): Promise<PageItem[]> => {
+    if (!hasDatabaseConfigured()) {
+      return FALLBACK_PAGES;
+    }
+    try {
+      const payload = await withTimeout(getPayloadClient());
+      const result = await withTimeout(
+        payload.find({
+          collection: 'pages',
+          where: { status: { equals: 'published' } },
+          limit: 100,
+          sort: 'sortOrder',
+          depth: 2,
+        })
+      );
+      if (!result.docs?.length) {
+        return FALLBACK_PAGES;
+      }
+      const fallbackMap = new Map(FALLBACK_PAGES.map((p) => [p.slug, p]));
+      return result.docs.map((d) =>
+        mapPageDoc(d as unknown as Record<string, unknown>, fallbackMap.get(String(d.slug)))
+      );
+    } catch {
+      return FALLBACK_PAGES;
+    }
+  },
+  ['tanogaido-cms-pages'],
+  { revalidate: 60, tags: ['tanogaido-cms'] }
+);
+
+export const getPageBySlug = unstable_cache(
+  async (slug: string): Promise<PageItem | null> => {
+    const pages = await getPages();
+    return pages.find((p) => p.slug === slug) || null;
+  },
+  ['tanogaido-cms-page-by-slug'],
+  { revalidate: 60, tags: ['tanogaido-cms'] }
+);
+

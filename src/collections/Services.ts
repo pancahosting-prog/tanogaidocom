@@ -4,6 +4,7 @@ import { triggerRevalidation } from '@/lib/revalidate';
 export const Services: CollectionConfig = {
   slug: 'services',
   admin: {
+    group: 'Tanogaido',
     useAsTitle: 'title',
     defaultColumns: ['title', 'categoryLabel', 'slug', 'showOnHome', 'sortOrder'],
   },

@@ -33,6 +33,11 @@ import {
   FALLBACK_TESTIMONIALS,
   FALLBACK_TRIPS,
 } from '../data/fallback-data';
+import {
+  FALLBACK_BLOG_CATEGORIES,
+  FALLBACK_BLOG_POSTS,
+  FALLBACK_PAGES,
+} from '../data/fallback-editorial';
 
 const ADMIN_USERNAME = process.env.SEED_ADMIN_USERNAME || 'admin';
 const ADMIN_EMAIL = process.env.SEED_ADMIN_EMAIL || 'admin@tanogaido.com';
@@ -203,6 +208,99 @@ async function seed() {
     data: FALLBACK_SITE_SETTINGS,
   });
   console.log('Updated site-settings global.');
+
+  // 7. Blog Categories
+  const categoryIdMap = new Map<string, string>();
+  for (const cat of FALLBACK_BLOG_CATEGORIES) {
+    const existing = await payload.find({
+      collection: 'categories',
+      where: { slug: { equals: cat.slug } },
+      limit: 1,
+    });
+    if (existing.docs.length > 0) {
+      await payload.update({ collection: 'categories', id: existing.docs[0].id, data: cat });
+      categoryIdMap.set(cat.slug, String(existing.docs[0].id));
+    } else {
+      const created = await payload.create({ collection: 'categories', data: cat });
+      categoryIdMap.set(cat.slug, String(created.id));
+    }
+  }
+  console.log(`Synced ${FALLBACK_BLOG_CATEGORIES.length} blog categories.`);
+
+  // 8. Blog Posts
+  for (const post of FALLBACK_BLOG_POSTS) {
+    const existing = await payload.find({
+      collection: 'posts',
+      where: { slug: { equals: post.slug } },
+      limit: 1,
+    });
+    const catId = categoryIdMap.get(post.categorySlug);
+    const data = {
+      slug: post.slug,
+      title: post.title,
+      excerpt: post.excerpt,
+      status: post.status,
+      publishedAt: post.publishedAt,
+      featured: post.featured,
+      category: catId || undefined,
+      coverImagePath: post.coverImagePath,
+      coverImageAlt: post.coverImageAlt,
+      authorName: post.authorName,
+      authorRole: post.authorRole,
+      authorAvatarPath: post.authorAvatarPath,
+      content: post.content as unknown as Record<string, unknown>,
+      tags: post.tags.map((tag) => ({ tag })),
+      internalKeywords: post.internalKeywords.map((keyword) => ({ keyword })),
+      enableToc: post.enableToc,
+      enableAutoInternalLinks: post.enableAutoInternalLinks,
+      seoTitle: post.seoTitle,
+      metaDescription: post.metaDescription,
+      focusKeyword: post.focusKeyword,
+      faqs: post.faqs,
+    };
+    if (existing.docs.length > 0) {
+      await payload.update({ collection: 'posts', id: existing.docs[0].id, data });
+    } else {
+      await payload.create({ collection: 'posts', data });
+    }
+  }
+  console.log(`Synced ${FALLBACK_BLOG_POSTS.length} blog posts.`);
+
+  // 9. Standalone Pages (/slug)
+  for (const pg of FALLBACK_PAGES) {
+    const existing = await payload.find({
+      collection: 'pages',
+      where: { slug: { equals: pg.slug } },
+      limit: 1,
+    });
+    const data = {
+      slug: pg.slug,
+      title: pg.title,
+      eyebrow: pg.eyebrow,
+      subtitle: pg.subtitle,
+      heroImagePath: pg.heroImagePath,
+      heroImageAlt: pg.heroImageAlt,
+      status: pg.status,
+      publishedAt: pg.publishedAt,
+      content: pg.content as unknown as Record<string, unknown>,
+      internalKeywords: pg.internalKeywords.map((keyword) => ({ keyword })),
+      showToc: pg.showToc,
+      enableAutoInternalLinks: pg.enableAutoInternalLinks,
+      showInFooter: pg.showInFooter,
+      sortOrder: pg.sortOrder,
+      seoTitle: pg.seoTitle,
+      metaDescription: pg.metaDescription,
+      focusKeyword: pg.focusKeyword,
+      faqs: pg.faqs,
+    };
+    if (existing.docs.length > 0) {
+      await payload.update({ collection: 'pages', id: existing.docs[0].id, data });
+    } else {
+      await payload.create({ collection: 'pages', data });
+    }
+  }
+  console.log(`Synced ${FALLBACK_PAGES.length} CMS pages.`);
+
   console.log('Seed completed successfully.');
   process.exit(0);
 }

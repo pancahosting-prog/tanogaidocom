@@ -9,6 +9,7 @@ export const Users: CollectionConfig = {
     },
   },
   admin: {
+    group: 'Users',
     useAsTitle: 'username',
     defaultColumns: ['username', 'email', 'name', 'role'],
   },

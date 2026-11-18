@@ -4,6 +4,7 @@ import { triggerRevalidation } from '@/lib/revalidate';
 export const Testimonials: CollectionConfig = {
   slug: 'testimonials',
   admin: {
+    group: 'Tanogaido',
     useAsTitle: 'author',
     defaultColumns: ['author', 'trip', 'sortOrder'],
   },
