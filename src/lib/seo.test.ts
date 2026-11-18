@@ -8,6 +8,7 @@ import {
   buildOrganizationJsonLd,
   buildProductJsonLd,
   buildWebSiteJsonLd,
+  normalizeGoogleVerificationToken,
   toAbsoluteUrl,
 } from './seo';
 
@@ -84,4 +85,18 @@ test('buildCollectionPageJsonLd, buildAboutPageJsonLd, and buildBreadcrumbJsonLd
   );
   assert.equal(crumbs.itemListElement.length, 2);
   assert.equal(crumbs.itemListElement[1].item, 'https://tanogaido.com/shop');
+});
+
+test('normalizeGoogleVerificationToken supports raw token and full meta tag strings', () => {
+  assert.equal(normalizeGoogleVerificationToken('  abc123XYZ  '), 'abc123XYZ');
+  assert.equal(
+    normalizeGoogleVerificationToken('<meta name="google-site-verification" content="token-9988" />'),
+    'token-9988'
+  );
+  assert.equal(
+    normalizeGoogleVerificationToken("<meta name='google-site-verification' content='singleQuoteTok'>"),
+    'singleQuoteTok'
+  );
+  assert.equal(normalizeGoogleVerificationToken(''), '');
+  assert.equal(normalizeGoogleVerificationToken(null), '');
 });

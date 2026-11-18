@@ -12,6 +12,7 @@
     "generate:types": "npx payload generate:types"
   },
   "dependencies": {
+    "@google/genai": "^3.6.0",
     "@payloadcms/db-mongodb": "^3.40.0",
     "@payloadcms/next": "^3.40.0",
     "@payloadcms/richtext-lexical": "^3.40.0",

@@ -16,6 +16,16 @@ export function toAbsoluteUrl(
   return `${siteOrigin}${normalizedPath}`;
 }
 
+export function normalizeGoogleVerificationToken(input: string | undefined | null): string {
+  const raw = String(input || '').trim();
+  if (!raw) return '';
+  const metaMatch = raw.match(/content\s*=\s*["']([^"']+)["']/i);
+  if (metaMatch?.[1]) {
+    return metaMatch[1].trim();
+  }
+  return raw;
+}
+
 export function buildOrganizationJsonLd(
   siteSettings: SiteSettingsData,
   siteOrigin: string = getSiteOrigin()

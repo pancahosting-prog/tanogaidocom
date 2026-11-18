@@ -32,6 +32,7 @@ import {
   getImageKitConfig,
   buildProxyMediaUrl,
 } from '@/lib/imagekit';
+import { normalizeGoogleVerificationToken } from '@/lib/seo';
 
 function normalizeAssetPath(p?: string | null, fallback = ''): string {
   const val = (p || fallback || '').trim();
@@ -385,11 +386,9 @@ export const getSiteSettings = unstable_cache(
           data.heroVideoUrl as string,
           FALLBACK_SITE_SETTINGS.heroVideoUrl
         ),
-        googleSiteVerification: String(
-          (data as unknown as Record<string, unknown>).googleSiteVerification ||
-            process.env.GOOGLE_SITE_VERIFICATION ||
-            ''
-        ).trim(),
+        googleSiteVerification: normalizeGoogleVerificationToken(
+          (data as unknown as Record<string, unknown>).googleSiteVerification as string | undefined
+        ),
       };
     } catch {
       return FALLBACK_SITE_SETTINGS;

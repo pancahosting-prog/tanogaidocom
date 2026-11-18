@@ -2,8 +2,10 @@ import type { Metadata, Viewport } from 'next';
 import { Playfair_Display, Plus_Jakarta_Sans } from 'next/font/google';
 import '@/styles/tanogaido.css';
 import { BagProvider } from '@/components/BagProvider';
+import { FloatingConcierge } from '@/components/FloatingConcierge';
 import { getSiteOrigin } from '@/lib/editorial';
 import { getSiteSettings } from '@/lib/cms';
+import { normalizeGoogleVerificationToken } from '@/lib/seo';
 
 const playfair = Playfair_Display({
   subsets: ['latin'],
@@ -30,8 +32,7 @@ export const viewport: Viewport = {
 
 export async function generateMetadata(): Promise<Metadata> {
   const siteSettings = await getSiteSettings();
-  const googleToken =
-    siteSettings.googleSiteVerification || process.env.GOOGLE_SITE_VERIFICATION || undefined;
+  const googleToken = normalizeGoogleVerificationToken(siteSettings.googleSiteVerification) || undefined;
 
   return {
     metadataBase: new URL(SITE_URL),
@@ -81,15 +82,23 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 
-export default function FrontendLayout({
+export default async function FrontendLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const siteSettings = await getSiteSettings();
+
   return (
     <html lang="en" className={`${playfair.variable} ${plusJakarta.variable}`}>
       <body>
-        <BagProvider>{children}</BagProvider>
+        <BagProvider>
+          {children}
+          <FloatingConcierge
+            whatsappNumber={siteSettings.whatsappNumber}
+            brandName={siteSettings.brandName}
+          />
+        </BagProvider>
       </body>
     </html>
   );

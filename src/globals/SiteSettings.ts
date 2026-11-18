@@ -1,5 +1,6 @@
 import type { GlobalConfig } from 'payload';
 import { triggerRevalidation } from '@/lib/revalidate';
+import { GEMINI_MODEL_OPTIONS } from '@/lib/gemini-cs';
 
 export const SiteSettings: GlobalConfig = {
   slug: 'site-settings',
@@ -11,8 +12,9 @@ export const SiteSettings: GlobalConfig = {
   },
   hooks: {
     afterChange: [
-      async () => {
-        await triggerRevalidation(['/', '/about', '/services', '/shop']);
+      async ({ req }) => {
+        if (req.context?.skipRevalidate) return;
+        await triggerRevalidation(['/', '/about', '/services', '/shop', '/blog'], { layout: true });
       },
     ],
   },
@@ -63,11 +65,64 @@ export const SiteSettings: GlobalConfig = {
     {
       name: 'googleSiteVerification',
       type: 'text',
-      label: 'Google Search Console Verification Code',
+      label: 'Google Site Verification (Search Console)',
       admin: {
+        placeholder: 'Tempel kode token atau seluruh tag <meta name="google-site-verification" ...>',
         description:
-          'Opsional: Tempel kode token verifikasi Google Search Console (nilai `content` dari meta google-site-verification).',
+          'Dikelola langsung dari Settings ini: tempel token verifikasi Google Search Console atau seluruh tag <meta name="google-site-verification" content="..." />.',
       },
+    },
+    {
+      type: 'collapsible',
+      label: 'AI Customer Service (Gemini Auto-Rolling Pool)',
+      admin: {
+        initCollapsed: false,
+      },
+      fields: [
+        {
+          name: 'geminiModel',
+          type: 'select',
+          label: 'Gemini Model',
+          defaultValue: 'gemini-3.1-flash-lite',
+          options: GEMINI_MODEL_OPTIONS.map((opt) => ({
+            label: opt.label,
+            value: opt.value,
+          })),
+          admin: {
+            description:
+              'Pilih model Gemini untuk Floating AI Customer Service (tersimpan di database).',
+          },
+        },
+        {
+          name: 'geminiApiKeysBulk',
+          type: 'textarea',
+          label: 'Gemini API Keys Pool (Bisa Tempel > 10 Key Sekaligus)',
+          access: {
+            read: ({ req }) => Boolean(req.user),
+            update: ({ req }) => Boolean(req.user),
+          },
+          admin: {
+            placeholder: 'AIzaSy...\nAIzaSy...\nAIzaSy...',
+            description:
+              'Tempel banyak Gemini API Key sekaligus (lebih dari 10 key didukung — pisahkan per baris baru atau koma). Sistem otomatis rolling dari key ke-1 ke key ke-2 dst jika kuota habis/limit. Disimpan di MongoDB & tidak pernah dikirim ke browser pengunjung.',
+          },
+        },
+        {
+          name: 'geminiActiveKeyIndex',
+          type: 'number',
+          label: 'Active Key Index (Auto-Rolling Cursor)',
+          defaultValue: 0,
+          min: 0,
+          access: {
+            read: ({ req }) => Boolean(req.user),
+            update: ({ req }) => Boolean(req.user),
+          },
+          admin: {
+            description:
+              'Menunjukkan posisi index API key yang sedang aktif (dimulai dari 0). Otomatis berpindah saat key sebelumnya mencapai limit.',
+          },
+        },
+      ],
     },
   ],
 };
